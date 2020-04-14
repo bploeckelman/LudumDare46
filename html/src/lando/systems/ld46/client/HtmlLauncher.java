@@ -3,6 +3,7 @@ package lando.systems.ld46.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 
 public class HtmlLauncher extends GwtApplication {
@@ -10,7 +11,7 @@ public class HtmlLauncher extends GwtApplication {
         // USE THIS CODE FOR A FIXED SIZE APPLICATION
         @Override
         public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(480, 320);
+                return new GwtApplicationConfiguration(Config.windowWidth, Config.windowHeight);
         }
         // END CODE FOR FIXED SIZE APPLICATION
 
