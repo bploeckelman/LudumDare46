@@ -56,15 +56,15 @@ pipeline {
                     message: getMessage(),
                     qos: '2',
                     topic: "jenkins/${env.GIT_REPO_NAME}"
-            githubNotify account: 'bploeckelman',
-                    context: 'inthelifeofdoug',
-                    credentialsId: 'githubuserAccess',
-                    description: 'a description?',
-                    gitApiUrl: '',
-                    repo: "${env.GIT_REPO_NAME}",
-                    sha: "${GIT_COMMIT}",
-                    status: "${currentBuild.currentResult}",
-                    targetUrl: ''
+//            githubNotify account: 'bploeckelman',
+//                    context: 'inthelifeofdoug',
+//                    credentialsId: 'githubuserAccess',
+//                    description: 'a description?',
+//                    gitApiUrl: '',
+//                    repo: "${env.GIT_REPO_NAME}",
+//                    sha: "${GIT_COMMIT}",
+//                    status: "${currentBuild.currentResult}",
+//                    targetUrl: ''
         }
     }
 
