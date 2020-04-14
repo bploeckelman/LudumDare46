@@ -1,6 +1,6 @@
 # Ludum Dare 46 
 
-[![BuildStatus](https://jenkins.home.inthelifeofdoug.com/buildStatus/icon?job=LudumDares%2FLudumDare46%2Fmaster)](https://jenkins.home.inthelifeofdoug.com/job/LudumDares/job/LudumDare46/job/master/)
+[![BuildStatus](https://jenkins.home.inthelifeofdoug.com/buildStatus/icon?job=LudumDares%2FLudumDare46%2Fmaster)](https://jenkins.home.inthelifeofdoug.com/blue/organizations/jenkins/LudumDares%2FLudumDare46/branches/)
 
 ## Build Requirements
 
