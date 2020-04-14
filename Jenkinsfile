@@ -63,7 +63,7 @@ pipeline {
                     gitApiUrl: '',
                     repo: "${env.GIT_REPO_NAME}",
                     sha: "${GIT_COMMIT}",
-                    status: '${currentBuild.currentResult}',
+                    status: "${currentBuild.currentResult}",
                     targetUrl: ''
         }
     }
