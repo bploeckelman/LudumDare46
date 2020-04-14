@@ -85,7 +85,8 @@ def getBeginMessage() {
             title: "${env.GIT_REPO_NAME}",
             project: "${currentBuild.projectName}",
             duration: "${currentBuild.durationString}",
-            commitmessage: "${env.GIT_COMMIT_MSG}"
+            commitmessage: "${env.GIT_COMMIT_MSG}",
+            buildURL: "${env.BUILD_URL}"
     ]
     return JsonOutput.toJson(message)
 
@@ -98,7 +99,8 @@ def getMessage() {
             title: "${env.GIT_REPO_NAME}",
             project: "${currentBuild.projectName}",
             duration: "${currentBuild.durationString}",
-            commitmessage: "${env.GIT_COMMIT_MSG}"
+            commitmessage: "${env.GIT_COMMIT_MSG}",
+            buildURL: "${env.BUILD_URL}"
     ]
     if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
         message.link = "http://${env.REMOTE_DIR}"
