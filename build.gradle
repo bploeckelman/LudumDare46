@@ -53,6 +53,7 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
+        implementation "org.mini2Dx:universal-tween-engine:$tweenEngineVersion:sources"
     }
 }
 
