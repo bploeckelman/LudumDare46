@@ -14,5 +14,6 @@ public class DesktopLauncher {
 		config.resizable = Config.resizable;
 		config.fullscreen = Config.fullscreen;
 		config.vSyncEnabled = Config.vsync;
+		config.forceExit = false;
 		new LwjglApplication(new Game(), config); }
 }
