@@ -9,7 +9,7 @@ pipeline {
     }
 
     stages {
-        stage("Build") {
+        stage("Setup") {
             steps {
                 script {
                     env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
@@ -20,14 +20,30 @@ pipeline {
                             message: getBeginMessage(),
                             qos: '2',
                             topic: "jenkins/${env.GIT_REPO_NAME}"
-
-                    sh './gradlew clean'
-                    sh './gradlew desktop:sprites'
+                }
+            }
+        }
+        stage("Build Sprites") {
+            steps{
+                sh './gradlew clean'
+                sh './gradlew desktop:sprites'
+            }
+        }
+        stage("Build Desktop") {
+            steps {
+                script {
+                    sh './gradlew desktop:dist'
+                }
+            }
+        }
+        stage("Build HTML") {
+            steps {
+                script {
                     sh './gradlew html:dist'
                 }
             }
         }
-        stage("UploadSSH") {
+        stage("Upload to Host") {
             steps{
                 script {
                     sshPublisher(
@@ -56,15 +72,6 @@ pipeline {
                     message: getMessage(),
                     qos: '2',
                     topic: "jenkins/${env.GIT_REPO_NAME}"
-//            githubNotify account: 'bploeckelman',
-//                    context: 'inthelifeofdoug',
-//                    credentialsId: 'githubuserAccess',
-//                    description: 'a description?',
-//                    gitApiUrl: '',
-//                    repo: "${env.GIT_REPO_NAME}",
-//                    sha: "${GIT_COMMIT}",
-//                    status: "${currentBuild.currentResult}",
-//                    targetUrl: ''
         }
     }
 
