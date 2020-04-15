@@ -1,5 +1,6 @@
 #!groovy
 import groovy.json.JsonOutput
+import hudson.Util;
 
 pipeline {
     agent any
@@ -104,7 +105,7 @@ def getMessageAttrib() {
             status: "${currentBuild.currentResult}",
             title: "${env.GIT_REPO_NAME}",
             project: "${currentBuild.projectName}",
-            duration: "${currentBuild.durationString}",
+            duration: "${Util.getTimeSpanString(System.currentTimeMillis() - currentBuild.startTimeInMillis)}",
             commitmessage: "${env.GIT_COMMIT_MSG}",
             buildURL: "${env.BUILD_URL}",
             changesets: "${changes}"
@@ -118,11 +119,12 @@ def getMessageAttrib() {
 def getBeginMessage() {
     def message = getMessageAttrib()
     message.status = "STARTING"
-    return JsonOutput.toJson(message)
+    def builder = new groovy.json.JsonBuilder()
+    return JsonOutput.prettyPrint(JsonOutput.toJson(message))
 
 }
 
 def getMessage() {
     def message = getMessageAttrib()
-    return JsonOutput.toJson(message)
+    return JsonOutput.prettyPrint(JsonOutput.toJson(message))
 }
