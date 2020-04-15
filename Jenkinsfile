@@ -109,21 +109,21 @@ def getMessageAttrib() {
             buildURL: "${env.BUILD_URL}",
             changesets: changes
     ]
-    if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
-        message.link = "http://${env.REMOTE_DIR}"
-    }
+
     return message
 }
 
 def getBeginMessage() {
     def message = getMessageAttrib()
     message.status = "STARTING"
-    def builder = new groovy.json.JsonBuilder()
     return JsonOutput.prettyPrint(JsonOutput.toJson(message))
 
 }
 
 def getMessage() {
     def message = getMessageAttrib()
+    if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
+        message.link = "http://${env.REMOTE_DIR}"
+    }
     return JsonOutput.prettyPrint(JsonOutput.toJson(message))
 }
