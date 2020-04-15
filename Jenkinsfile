@@ -95,7 +95,6 @@ def getMessageAttrib() {
                 echo "  ${file.editType.name} ${file.path}"
                 commit.files << "${file.editType.name} ${file.path}"
             }
-
             changes << commit
         }
     }
