@@ -97,7 +97,7 @@ def getMessageAttrib() {
 
 def getBeginMessage() {
     def message = getMessageAttrib()
-    message.status = 'STARTING' as groovy.lang.GString
+    message.status = "STARTING"
     return JsonOutput.toJson(message)
 
 }
