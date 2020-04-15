@@ -78,14 +78,7 @@ pipeline {
 
 }
 
-def getBeginMessage() {
-    def message = getMessage()
-    message.status = "STARTING"
-    return JsonOutput.toJson(message)
-
-}
-
-def getMessage() {
+def getMessageAttrib() {
     def message = [
             buildnumber: "${BUILD_NUMBER}",
             status: "${currentBuild.currentResult}",
@@ -99,6 +92,17 @@ def getMessage() {
     if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
         message.link = "http://${env.REMOTE_DIR}"
     }
+    return message
+}
 
+def getBeginMessage() {
+    def message = getMessageAttrib()
+    message.status = 'STARTING' as groovy.lang.GString
+    return JsonOutput.toJson(message)
+
+}
+
+def getMessage() {
+    def message = getMessageAttrib()
     return JsonOutput.toJson(message)
 }
