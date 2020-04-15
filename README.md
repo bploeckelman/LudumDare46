@@ -32,16 +32,16 @@ To import the project into IntelliJ, follow these steps:
 - File -> New -> Project (from version control) -> GitHub
 - (or Check out from Version Control -> GitHub)
     - Choose *Password* authorization and enter your GitHub username and password
-    - Git Repository URL: *https://github.com/bploeckelman/LudumDare45.git*
+    - Git Repository URL: *https://github.com/bploeckelman/LudumDare46.git*
     - Parent Directory: *{your choice}*
-    - Directory Name: *LudumDare45*
+    - Directory Name: *LudumDare46*
     - *Clone*
 - 'Unlinked Gradle project' popup -> Import Gradle Project
     - *Check* _'use auto-import'_
     - *Uncheck* _'Create separate module per source set'_
 - Run -> Edit Configurations -> *+* -> Application
     - Name: *desktop*
-    - Main class: *lando.systems.ld45.desktop.DesktopLauncher*
+    - Main class: *lando.systems.ld46.desktop.DesktopLauncher*
     - Working Directory: {project root}*\core\assets*
     - Use classpath of module: *desktop*
     - Before Launch: *+* -> Run Gradle Task
@@ -64,8 +64,8 @@ If you need to install `git` and clone the project, do that first:
 
     brew install git
     mkdir ~/code && cd ~/code
-    git clone git@github.com:bploeckelman/LudumDare45.git
-    cd LudumDare45
+    git clone git@github.com:bploeckelman/LudumDare46.git
+    cd LudumDare46
 
 Install Build requirements:
 

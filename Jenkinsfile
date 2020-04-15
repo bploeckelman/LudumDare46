@@ -79,15 +79,8 @@ pipeline {
 }
 
 def getBeginMessage() {
-    def message = [
-            buildnumber: "${BUILD_NUMBER}",
-            status: "Starting",
-            title: "${env.GIT_REPO_NAME}",
-            project: "${currentBuild.projectName}",
-            duration: "${currentBuild.durationString}",
-            commitmessage: "${env.GIT_COMMIT_MSG}",
-            buildURL: "${env.BUILD_URL}"
-    ]
+    def message = getMessage()
+    message.status = "STARTING"
     return JsonOutput.toJson(message)
 
 }
@@ -100,7 +93,8 @@ def getMessage() {
             project: "${currentBuild.projectName}",
             duration: "${currentBuild.durationString}",
             commitmessage: "${env.GIT_COMMIT_MSG}",
-            buildURL: "${env.BUILD_URL}"
+            buildURL: "${env.BUILD_URL}",
+            changesets: "${currentBuild.changeSets}"
     ]
     if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
         message.link = "http://${env.REMOTE_DIR}"
