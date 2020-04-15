@@ -79,17 +79,23 @@ pipeline {
 }
 
 def getMessageAttrib() {
+    def changes = []
     def changeLogSets = currentBuild.changeSets
     for (int i = 0; i < changeLogSets.size(); i++) {
         def entries = changeLogSets[i].items
         for (int j = 0; j < entries.length; j++) {
             def entry = entries[j]
             echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+            def commit = [commitId: "${entry.commitId}", author: "${entry.author}", message: "${entry.msg}", fileCount: "${files.size()}"]
             def files = new ArrayList(entry.affectedFiles)
+            commit.files = [];
             for (int k = 0; k < files.size(); k++) {
                 def file = files[k]
                 echo "  ${file.editType.name} ${file.path}"
+                commit.files << "${file.editType.name} ${file.path}"
             }
+
+            changes << commit
         }
     }
 
@@ -101,7 +107,7 @@ def getMessageAttrib() {
             duration: "${currentBuild.durationString}",
             commitmessage: "${env.GIT_COMMIT_MSG}",
             buildURL: "${env.BUILD_URL}",
-            changesets: "${currentBuild.changeSets}"
+            changesets: "${changes}"
     ]
     if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
         message.link = "http://${env.REMOTE_DIR}"
