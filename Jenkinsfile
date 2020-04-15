@@ -107,7 +107,7 @@ def getMessageAttrib() {
             duration: "${Util.getTimeSpanString(System.currentTimeMillis() - currentBuild.startTimeInMillis)}",
             commitmessage: "${env.GIT_COMMIT_MSG}",
             buildURL: "${env.BUILD_URL}",
-            changesets: "${changes}"
+            changesets: changes
     ]
     if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
         message.link = "http://${env.REMOTE_DIR}"
