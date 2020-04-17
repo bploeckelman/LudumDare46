@@ -3,8 +3,6 @@ package lando.systems.ld46;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -15,6 +13,7 @@ public class Assets implements Disposable {
 
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
+    private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
 
     public enum Loading { SYNC, ASYNC }
 
@@ -24,6 +23,7 @@ public class Assets implements Disposable {
     public GlyphLayout layout;
     public AssetManager mgr;
 
+    public Texture launchImage;
     public Texture pixel;
 
     public TextureRegion debugTexture;
@@ -62,6 +62,7 @@ public class Assets implements Disposable {
         mgr = new AssetManager();
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
+        mgr.load(launchTextureAsset);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -75,6 +76,7 @@ public class Assets implements Disposable {
         initialized = true;
 
         pixel = mgr.get(pixelTextureAsset);
+        launchImage = mgr.get(launchTextureAsset);
 
         // Cache TextureRegions from TextureAtlas in fields for quicker access
         atlas = mgr.get(atlasAsset);

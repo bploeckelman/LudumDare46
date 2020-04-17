@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.accessors.*;
 import lando.systems.ld46.screens.BaseScreen;
+import lando.systems.ld46.screens.LaunchScreen;
 import lando.systems.ld46.screens.TitleScreen;
 
 public class Game extends ApplicationAdapter {
@@ -68,7 +69,7 @@ public class Game extends ApplicationAdapter {
 		}
 
 
-		setScreen(new TitleScreen(this));
+		setScreen(new LaunchScreen(this));
 	}
 
 	@Override
@@ -85,10 +86,12 @@ public class Game extends ApplicationAdapter {
 		if (nextScreen != null) {
 			nextScreen.update(dt);
 			transitionFBO.begin();
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			nextScreen.render(assets.batch);
 			transitionFBO.end();
 
 			originalFBO.begin();
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			currentScreen.render(assets.batch);
 			originalFBO.end();
 
