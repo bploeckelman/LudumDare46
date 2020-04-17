@@ -8,4 +8,5 @@ public class Config {
     public static boolean fullscreen = false;
     public static boolean vsync = true;
     public static boolean debug = false;
+    public static boolean shaderDebug = true;
 }

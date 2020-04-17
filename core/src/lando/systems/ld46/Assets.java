@@ -30,6 +30,19 @@ public class Assets implements Disposable {
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
 
+    public Array<ShaderProgram> randomTransitions;
+    public ShaderProgram blindsShader;
+    public ShaderProgram fadeShader;
+    public ShaderProgram radialShader;
+    public ShaderProgram doomShader;
+    public ShaderProgram pizelizeShader;
+    public ShaderProgram doorwayShader;
+    public ShaderProgram crosshatchShader;
+    public ShaderProgram rippleShader;
+    public ShaderProgram heartShader;
+    public ShaderProgram stereoShader;
+    public ShaderProgram circleCropShader;
+
     public TextureAtlas atlas;
 
     public Assets() {
@@ -69,7 +82,39 @@ public class Assets implements Disposable {
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
 
+        randomTransitions = new Array<>();
+        blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");
+        fadeShader = loadShader("shaders/default.vert", "shaders/dissolve.frag");
+        radialShader = loadShader("shaders/default.vert", "shaders/radial.frag");
+        doomShader = loadShader("shaders/default.vert", "shaders/doomdrip.frag");
+        pizelizeShader = loadShader("shaders/default.vert", "shaders/pixelize.frag");
+        doorwayShader = loadShader("shaders/default.vert", "shaders/doorway.frag");
+        crosshatchShader = loadShader("shaders/default.vert", "shaders/crosshatch.frag");
+        rippleShader = loadShader("shaders/default.vert", "shaders/ripple.frag");
+        heartShader = loadShader("shaders/default.vert", "shaders/heart.frag");
+        stereoShader = loadShader("shaders/default.vert", "shaders/stereo.frag");
+        circleCropShader = loadShader("shaders/default.vert", "shaders/circlecrop.frag");
+
+        randomTransitions.add(radialShader);
+
         return 1f;
+    }
+
+    private static ShaderProgram loadShader(String vertSourcePath, String fragSourcePath) {
+        ShaderProgram.pedantic = false;
+        ShaderProgram shaderProgram = new ShaderProgram(
+                Gdx.files.internal(vertSourcePath),
+                Gdx.files.internal(fragSourcePath));
+
+        if (!shaderProgram.isCompiled()) {
+            Gdx.app.error("LoadShader", "compilation failed:\n" + shaderProgram.getLog());
+            throw new GdxRuntimeException("LoadShader: compilation failed:\n" + shaderProgram.getLog());
+        } else if (Config.shaderDebug){
+            Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+            Gdx.app.debug("LoadShader", "ShaderProgram compilation log: " + shaderProgram.getLog());
+        }
+
+        return shaderProgram;
     }
 
     @Override
