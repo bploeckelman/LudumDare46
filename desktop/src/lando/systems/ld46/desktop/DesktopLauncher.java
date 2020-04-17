@@ -16,7 +16,4 @@ public class DesktopLauncher {
 		config.vSyncEnabled = Config.vsync;
 		config.forceExit = false;
 		new LwjglApplication(new Game(), config); }
-
-
-		FRIST!!!!1!!
 }
