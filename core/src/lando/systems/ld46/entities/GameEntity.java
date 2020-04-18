@@ -164,17 +164,17 @@ public class GameEntity {
     public void render(SpriteBatch batch) {
         if (keyframe == null) return;
 
-//        if (Config.debug) {
-//            batch.setColor(Color.RED);
-//            assets.ninePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
-//            batch.setColor(Color.WHITE);
-//
-//            batch.setColor(Color.YELLOW);
-//            for (Rectangle tile : tiles) {
-//                assets.ninePatch.draw(batch, tile.x, tile.y, tile.width, tile.height);
-//            }
-//            batch.setColor(Color.WHITE);
-//        }
+        if (Config.debug) {
+            batch.setColor(Color.RED);
+            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
+            batch.setColor(Color.WHITE);
+
+            batch.setColor(Color.YELLOW);
+            for (Rectangle tile : tiles) {
+                assets.debugNinePatch.draw(batch, tile.x, tile.y, tile.width, tile.height);
+            }
+            batch.setColor(Color.WHITE);
+        }
 
         float scaleX = (direction == Direction.right) ? 1 : -1;
         float scaleY = 1;

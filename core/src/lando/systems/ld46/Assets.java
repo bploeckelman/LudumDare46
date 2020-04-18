@@ -26,11 +26,14 @@ public class Assets implements Disposable {
     public Texture launchImage;
     public Texture pixel;
 
+    public NinePatch debugNinePatch;
+
     public TextureRegion debugTexture;
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
 
     public Animation<TextureRegion> playerAnimation;
+    public Animation<TextureRegion> mechAnimation;
 
     public Array<ShaderProgram> randomTransitions;
     public ShaderProgram blindsShader;
@@ -84,12 +87,18 @@ public class Assets implements Disposable {
 
         // Cache TextureRegions from TextureAtlas in fields for quicker access
         atlas = mgr.get(atlasAsset);
+
+        debugNinePatch = new NinePatch(atlas.findRegion("debug_patch"), 6, 6, 6, 6);
+
         debugTexture = atlas.findRegion("badlogic");
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
 
         Array<TextureAtlas.AtlasRegion> playerAnimFrames = atlas.findRegions("dime_walk");
         playerAnimation = new Animation<>(0.1f, playerAnimFrames, Animation.PlayMode.LOOP);
+
+        Array<TextureAtlas.AtlasRegion> mechAnimFrames = atlas.findRegions("bm_walk_side");
+        mechAnimation = new Animation<>(0.1f, mechAnimFrames, Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");

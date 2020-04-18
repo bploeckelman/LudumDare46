@@ -5,17 +5,21 @@ import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
+import lando.systems.ld46.entities.ZombieMech;
 
 public class GameScreen extends BaseScreen {
 
     public Player player;
     public Level testLevel;
 
+    public ZombieMech zombieMech;
+
     public GameScreen(Game game) {
         super(game);
 
         this.testLevel = new Level(LevelDescriptor.test, this);
         this.player = new Player(this, 300, 300);
+        this.zombieMech = new ZombieMech(this, 400, 300);
     }
 
     @Override
@@ -27,6 +31,7 @@ public class GameScreen extends BaseScreen {
             batch.begin();
             {
                 player.render(batch);
+                zombieMech.render(batch);
             }
             batch.end();
             testLevel.render(Level.LayerType.foreground, worldCamera);
@@ -37,6 +42,7 @@ public class GameScreen extends BaseScreen {
     public void update(float dt) {
         testLevel.update(dt);
         player.update(dt);
+        zombieMech.update(dt);
     }
 
 }
