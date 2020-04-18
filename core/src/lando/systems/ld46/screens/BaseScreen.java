@@ -37,6 +37,10 @@ public abstract class BaseScreen extends InputAdapter {
         shaker.update(dt);
     }
 
+
+    public void renderFrameBuffers(SpriteBatch batch )  {
+    }
+
     public abstract void render(SpriteBatch batch);
 
 }

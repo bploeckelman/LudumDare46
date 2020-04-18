@@ -82,9 +82,11 @@ public class Game extends ApplicationAdapter {
 //		audio.update(dt);
 		tween.update(dt);
 		currentScreen.update(dt);
+		currentScreen.renderFrameBuffers(assets.batch);
 
 		if (nextScreen != null) {
 			nextScreen.update(dt);
+			nextScreen.renderFrameBuffers(assets.batch);
 			transitionFBO.begin();
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			nextScreen.render(assets.batch);
