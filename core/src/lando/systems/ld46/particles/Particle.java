@@ -5,14 +5,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
+import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.utils.SimplePath;
 
-public class Particle implements Pool.Poolable {
+public class Particle implements Pool.Poolable, PhysicsComponent {
 
     // TODO: add additional interpolators so that some properties can be interpolated independent of others (alpha vs anim for exaample)
     // TODO: add a 'drop shadow' flag to particle and initializer to improve readability for things like text particles
@@ -35,16 +34,15 @@ public class Particle implements Pool.Poolable {
 
     private float xStart;
     private float yStart;
-    public Vector2 position;
+    private Vector2 position;
 
     private boolean targeted;
     private float xTarget;
     private float yTarget;
 
-    public Vector2 velocity;
+    private Vector2 velocity;
 
-    private float xAcc;
-    private float yAcc;
+    private Vector2 accel;
     private float accDamp;
 
     private float widthStart;
@@ -69,10 +67,14 @@ public class Particle implements Pool.Poolable {
 
     private boolean dead;
     private boolean persistent;
+    private boolean isPhysics;
+    private Circle collisionBounds;
 
     public Particle() {
         velocity = new Vector2();
         position = new Vector2();
+        accel = new Vector2();
+        collisionBounds = new Circle();
         reset();
     }
 
@@ -106,14 +108,14 @@ public class Particle implements Pool.Poolable {
         } else if (targeted) {
             position.x = MathUtils.lerp(xStart, xTarget, progress);
             position.y = MathUtils.lerp(yStart, yTarget, progress);
-        } else {
-            xAcc *= accDamp;
-            yAcc *= accDamp;
-            if (MathUtils.isEqual(xAcc, 0f, 0.01f)) xAcc = 0f;
-            if (MathUtils.isEqual(yAcc, 0f, 0.01f)) yAcc = 0f;
+        } else if (!isPhysics) {
+            accel.x *= accDamp;
+            accel.y *= accDamp;
+            if (MathUtils.isEqual(accel.x, 0f, 0.01f)) accel.x = 0f;
+            if (MathUtils.isEqual(accel.y, 0f, 0.01f)) accel.y = 0f;
 
-            velocity.x += xAcc * dt;
-            velocity.y += yAcc * dt;
+            velocity.x += accel.x * dt;
+            velocity.y += accel.y * dt;
 
             position.x += velocity.x * dt;
             position.y += velocity.y * dt;
@@ -145,6 +147,30 @@ public class Particle implements Pool.Poolable {
         return dead;
     }
 
+    boolean hasPhysics() { return isPhysics;}
+
+
+    @Override
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public Vector2 getAcceleration() {
+        return accel;
+    }
+
+    @Override
+    public Shape2D getCollisionBounds() {
+        collisionBounds.set(position.x , position.y, height);
+        return collisionBounds;
+    }
+
     @Override
     public void reset() {
         this.path = null;
@@ -165,8 +191,7 @@ public class Particle implements Pool.Poolable {
 
         this.velocity.set(0,0);
 
-        this.xAcc = 0f;
-        this.yAcc = 0f;
+        this.accel.set(0, 0);
         this.accDamp = 0f;
 
         this.widthStart = 0f;
@@ -200,7 +225,10 @@ public class Particle implements Pool.Poolable {
 
         this.dead = true;
         this.persistent = false;
+        this.isPhysics = false;
+        this.collisionBounds.set(0,0,0);
     }
+
 
     // ------------------------------------------------------------------------
 
@@ -252,6 +280,7 @@ public class Particle implements Pool.Poolable {
 
         private boolean persistent = false;
         private boolean timed = false;
+        private boolean isPhysics = false;
         private float ttlMax = 0f;
 
         Initializer(Particle particle) {
@@ -410,6 +439,11 @@ public class Particle implements Pool.Poolable {
             return this;
         }
 
+        Initializer makePhysics() {
+            this.isPhysics = true;
+            return this;
+        }
+
         Particle init() {
             if (keyframe  != null) {
                 particle.keyframe  = keyframe;
@@ -441,8 +475,7 @@ public class Particle implements Pool.Poolable {
 
             particle.velocity.set(xVel, yVel);
 
-            particle.xAcc = xAcc;
-            particle.yAcc = yAcc;
+            particle.accel.set(xAcc, yAcc);
             particle.accDamp = accDamp;
 
             particle.widthStart = widthStart;
@@ -485,6 +518,7 @@ public class Particle implements Pool.Poolable {
 
             particle.persistent = persistent;
             particle.dead = false;
+            particle.isPhysics = isPhysics;
 
             return particle;
         }

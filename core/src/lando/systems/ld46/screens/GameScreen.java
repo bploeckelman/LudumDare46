@@ -5,9 +5,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
+
+import com.badlogic.gdx.math.Vector3;
+import lando.systems.ld46.Config;
+import lando.systems.ld46.Game;
+import lando.systems.ld46.entities.Player;
+import lando.systems.ld46.physics.PhysicsSystem;
+import lando.systems.ld46.world.Level;
+import lando.systems.ld46.world.LevelDescriptor;
+
 import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.world.Level;
@@ -18,14 +28,17 @@ public class GameScreen extends BaseScreen {
     public Player player;
     public Level level;
 
+    private Vector3 touchPos;
     public ZombieMech zombieMech;
+    PhysicsSystem physicsSystem;
 
     public GameScreen(Game game) {
         super(game);
-
+        this.physicsSystem = new PhysicsSystem(this);
         this.level = new Level(LevelDescriptor.test, this);
         this.player = new Player(this, level.playerSpawn);
         this.zombieMech = new ZombieMech(this, 400, 300);
+        touchPos = new Vector3();
     }
 
     @Override
@@ -44,6 +57,12 @@ public class GameScreen extends BaseScreen {
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
+
+            if (Config.debug) {
+                batch.begin();
+                level.renderDebug(batch);
+                batch.end();
+            }
         }
     }
 
@@ -54,12 +73,15 @@ public class GameScreen extends BaseScreen {
         if (Gdx.app.getType() == Application.ApplicationType.Desktop && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        worldCamera.unproject(touchPos);
 
         if (Gdx.input.justTouched()) {
-            particles.addParticles(MathUtils.random(worldCamera.viewportWidth), MathUtils.random(worldCamera.viewportHeight));
+            particles.makePhysicsParticles(touchPos.x, touchPos.y);
             game.audio.playSound(Audio.Sounds.sample_sound, true);
         }
         particles.update(dt);
+        physicsSystem.update(dt);
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);

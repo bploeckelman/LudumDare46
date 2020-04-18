@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
+import lando.systems.ld46.physics.PhysicsComponent;
 
 public class Particles implements Disposable {
 
@@ -18,9 +19,11 @@ public class Particles implements Disposable {
     private final Assets assets;
     private final ObjectMap<Layer, Array<Particle>> activeParticles;
     private final Pool<Particle> particlePool = Pools.get(Particle.class, MAX_PARTICLES);
+    private Array<PhysicsComponent> physicsParticles;
 
     public Particles(Assets assets) {
         this.assets = assets;
+        physicsParticles = new Array<>();
         this.activeParticles = new ObjectMap<>();
         int particlesPerLayer = MAX_PARTICLES / Layer.values().length;
         this.activeParticles.put(Layer.background, new Array<>(false, particlesPerLayer));
@@ -46,6 +49,17 @@ public class Particles implements Disposable {
                 }
             }
         }
+    }
+
+    public Array<PhysicsComponent> getPhysicalParticles() {
+        physicsParticles.clear();
+        for (Layer layer : Layer.values()) {
+            for (int i = activeParticles.get(layer).size -1; i >= 0; i--) {
+                Particle particle = activeParticles.get(layer).get(i);
+                if (particle.hasPhysics()) physicsParticles.add(particle);
+            }
+        }
+        return physicsParticles;
     }
 
     public void draw(SpriteBatch batch, Layer layer) {
@@ -85,6 +99,26 @@ public class Particles implements Disposable {
                     .endRotation(360f)
                     .timeToLive(1.5f)
                     .interpolation(Interpolation.slowFast)
+                    .init());
+        }
+    }
+
+    public void makePhysicsParticles(float x, float y) {
+        TextureRegion keyframe = assets.whiteCircle;
+
+        int numParticles = 100;
+        for (int i = 0; i < numParticles; ++i) {
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(keyframe)
+                    .startPos(x, y)
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 100f))
+                    .startSize(10f, 10f)
+                    .endSize(0f, 0f)
+                    .startAlpha(1f)
+                    .endAlpha(0f)
+                    .timeToLive(3f)
+                    .makePhysics()
+                    .interpolation(Interpolation.fastSlow)
                     .init());
         }
     }

@@ -1,7 +1,9 @@
 package lando.systems.ld46.world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,9 +12,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
+import lando.systems.ld46.Config;
+import lando.systems.ld46.physics.Segment2D;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.utils.Utils;
 
 public class Level {
 
@@ -36,6 +42,7 @@ public class Level {
     public TiledMap map;
     public TiledMapRenderer renderer;
     public ObjectMap<LayerType, Layer> layers;
+    public Array<Segment2D> collisionSegments;
 
     public MapLayer objectsLayer;
     public SpawnPlayer playerSpawn;
@@ -148,12 +155,17 @@ public class Level {
         }
 
         // Validate that we have required entities
+
         if (playerSpawn == null) {
             throw new GdxRuntimeException("Map missing required object: 'spawn-player'");
         }
         if (exit == null) {
             throw new GdxRuntimeException("Map missing required object: 'exit'");
         }
+
+
+        buildCollisionBounds();
+
     }
 
     public void update(float dt) {
@@ -168,10 +180,73 @@ public class Level {
         renderer.render(layer.index);
     }
 
+
     public void renderObjectsDebug(SpriteBatch batch) {
         exit.render(batch);
         enemySpawns.forEach(spawn -> spawn.render(batch));
         playerSpawn.render(batch);
+    }
+
+    public void renderDebug(SpriteBatch batch) {
+        float width = 3;
+        float hue = 0;
+        for (Segment2D segment : collisionSegments){
+            hue += .17;
+            batch.setColor(Utils.hsvToRgb(hue, 1f, 1f, null));
+            batch.draw(screen.assets.whitePixel, segment.start.x, segment.start.y - width/2f, 0, width/2f, segment.delta.len(), width, 1, 1, segment.getRotation());
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    private void buildCollisionBounds() {
+        collisionSegments = new Array<>();
+        TiledMapTileLayer collisionLayer = layers.get(LayerType.collision).tileLayer;
+        float tileWidth = collisionLayer.getTileWidth();
+        // Build Edges
+        for (int x = 0; x < collisionLayer.getWidth(); x++) {
+            for (int y =0; y < collisionLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = collisionLayer.getCell(x, y);
+                TiledMapTileLayer.Cell cellRight = collisionLayer.getCell(x +1, y);
+                TiledMapTileLayer.Cell cellLeft = collisionLayer.getCell(x -1, y);
+                TiledMapTileLayer.Cell cellTop = collisionLayer.getCell(x, y +1);
+                TiledMapTileLayer.Cell cellBottom = collisionLayer.getCell(x, y -1);
+                if (cell != null && cellRight == null) {
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, y * tileWidth, (x+1) * tileWidth, (y+1) * tileWidth));
+                }
+                if (cell != null && cellLeft == null) {
+                    collisionSegments.add(new Segment2D((x) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y) * tileWidth));
+                }
+                if (cell != null && cellTop == null) {
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y+1) * tileWidth));
+                }
+                if (cell != null && cellBottom == null) {
+                    collisionSegments.add(new Segment2D((x) * tileWidth, (y) * tileWidth, (x+1) * tileWidth, (y) * tileWidth));
+                }
+            }
+        }
+
+        // consolidate segments
+        boolean fixed = true;
+        while (fixed){
+            fixed = false;
+            for (int i = 0; i < collisionSegments.size; i++) {
+                Segment2D seg = collisionSegments.get(i);
+                for (int j = collisionSegments.size - 1; j > i; j--) {
+                    Segment2D next = collisionSegments.get(j);
+                    if (seg.getRotation() != next.getRotation()) continue;
+                    if (seg.end.epsilonEquals(next.start)) {
+                        seg.setEnd(next.end);
+                        collisionSegments.removeIndex(j);
+                        fixed = true;
+                    } else if (seg.start.epsilonEquals(next.end)){
+                        seg.setStart(next.start);
+                        collisionSegments.removeIndex(j);
+                        fixed = true;
+                    }
+                }
+            }
+        }
+        int i = 0;
     }
 
     public void getTiles(float startX, float startY, float endX, float endY, Array<Rectangle> tiles) {
