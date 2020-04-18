@@ -35,6 +35,9 @@ public class Assets implements Disposable {
     public TextureRegion whiteCircle;
 
     public Animation<TextureRegion> playerAnimation;
+    public Animation<TextureRegion> playerMoveAnimation;
+    public Animation<TextureRegion> playerAttackAnimation;
+
     public Animation<TextureRegion> mechAnimation;
 
     public Array<ShaderProgram> randomTransitions;
@@ -102,8 +105,9 @@ public class Assets implements Disposable {
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
 
-        Array<TextureAtlas.AtlasRegion> playerAnimFrames = atlas.findRegions("dime_walk");
-        playerAnimation = new Animation<>(0.1f, playerAnimFrames, Animation.PlayMode.LOOP);
+        playerAnimation = new Animation<>(0.1f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
+        playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);
+        playerAttackAnimation = new Animation<>(0.1f, atlas.findRegions("doc-punch"), Animation.PlayMode.LOOP);
 
         Array<TextureAtlas.AtlasRegion> mechAnimFrames = atlas.findRegions("bm_walk_side");
         mechAnimation = new Animation<>(0.1f, mechAnimFrames, Animation.PlayMode.LOOP);

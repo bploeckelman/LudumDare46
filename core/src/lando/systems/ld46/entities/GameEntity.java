@@ -55,6 +55,11 @@ public class GameEntity {
         this.stateTime = 0f;
     }
 
+    protected void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+        stateTime = 0;
+    }
+
     public void changeDirection() {
         setDirection((direction == Direction.left) ? Direction.right : Direction.left);
     }
@@ -74,7 +79,7 @@ public class GameEntity {
 
         stateTime += dt;
         if (animation != null) {
-            float frameTime = state == State.walking ? stateTime: 0;
+            float frameTime = state != State.jumping ? stateTime: 0;
             keyframe = animation.getKeyFrame(frameTime);
         }
     }

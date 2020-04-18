@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
-public class Player extends GameEntity {
+public class Player extends MoveEntity {
 
     enum JumpState { none, jumping }
 
@@ -24,7 +24,7 @@ public class Player extends GameEntity {
     }
 
     public Player(GameScreen screen, float x, float y) {
-        super(screen, screen.game.assets.playerAnimation);
+        super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
         this.collisionBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight());
         this.imageBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight());
         this.position.set(x, y);
