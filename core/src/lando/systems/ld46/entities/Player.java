@@ -78,12 +78,12 @@ public class Player extends MoveEntity {
 
         // Vertical ------------------------------------------
 
-        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W);
+        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         if (jumpPressed) {
             jump();
         }
 
-        boolean punchPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+        boolean punchPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
         if (punchPressed) {
             punch();
         }

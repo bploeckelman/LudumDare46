@@ -87,10 +87,10 @@ public class GameScreen extends BaseScreen {
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         worldCamera.unproject(touchPos);
 
-        if (Gdx.input.justTouched()) {
-            particles.makePhysicsParticles(touchPos.x, touchPos.y);
-            game.audio.playSound(Audio.Sounds.sample_sound, true);
-        }
+        // if (Gdx.input.justTouched()) {
+        //     particles.makePhysicsParticles(touchPos.x, touchPos.y);
+        //     game.audio.playSound(Audio.Sounds.sample_sound, true);
+        // }
         particles.update(dt);
 
         level.update(dt);
