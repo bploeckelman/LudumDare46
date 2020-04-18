@@ -18,7 +18,16 @@ public class Level {
 
     public static final float TILE_SIZE = 32f;
 
-    public enum Layer { background, collision, foreground }
+    public enum LayerType { background, collision, foreground }
+    public static class Layer {
+        public final int[] index;
+        public final TiledMapTileLayer tileLayer;
+
+        public Layer(int index, TiledMapTileLayer tileLayer) {
+            this.index = new int[]{ index };
+            this.tileLayer = tileLayer;
+        }
+    }
 
     private Assets assets;
     private GameScreen screen;
@@ -26,7 +35,7 @@ public class Level {
     public String name;
     public TiledMap map;
     public TiledMapRenderer renderer;
-    public ObjectMap<Layer, TiledMapTileLayer> layers;
+    public ObjectMap<LayerType, Layer> layers;
 
     public MapLayer objectsLayer;
 //    public SpawnPlayer playerSpawn;
@@ -55,15 +64,34 @@ public class Level {
         // Load map properties
         this.name = map.getProperties().get("name", "[UNNAMED]", String.class);
 
-        // Validate map layers
-        MapLayers layers = map.getLayers();
+        // Load and validate map layers
+        MapLayers mapLayers = map.getLayers();
         this.layers = new ObjectMap<>();
-        this.layers.put(Layer.background, (TiledMapTileLayer) layers.get("background"));
-        this.layers.put(Layer.collision, (TiledMapTileLayer) layers.get("collision"));
-        this.layers.put(Layer.foreground, (TiledMapTileLayer) layers.get("foreground"));
-        this.objectsLayer = layers.get("objects");
-        if (this.layers.get(Layer.background) == null || this.layers.get(Layer.collision) == null || this.layers.get(Layer.foreground) == null || this.objectsLayer == null) {
-            throw new GdxRuntimeException("Missing required map layer. (required: 'background', 'collision', 'foreground', 'objects')");
+        for (int i = 0; i < mapLayers.size(); ++i) {
+            MapLayer mapLayer = mapLayers.get(i);
+            if (mapLayer.getName().equalsIgnoreCase("objects")) {
+                this.objectsLayer = mapLayer;
+            } else if (mapLayer instanceof TiledMapTileLayer){
+                Layer layer = new Layer(i, (TiledMapTileLayer) mapLayer);
+                if      (mapLayer.getName().equalsIgnoreCase("background")) this.layers.put(LayerType.background, layer);
+                else if (mapLayer.getName().equalsIgnoreCase("collision"))  this.layers.put(LayerType.collision,  layer);
+                else if (mapLayer.getName().equalsIgnoreCase("foreground")) this.layers.put(LayerType.foreground, layer);
+            } else {
+                Gdx.app.log("Level", "Tilemap has a weird layer that is neither 'objects' nor one of the TiledMapTileLayer types: '" + mapLayer.getName() + "'");
+            }
+        }
+
+        if (this.layers.get(LayerType.background) == null) {
+            throw new GdxRuntimeException("Tilemap missing required layer: 'background'. (required layers: 'background', 'collision', 'foreground', 'objects')");
+        }
+        if (this.layers.get(LayerType.collision) == null) {
+            throw new GdxRuntimeException("Tilemap missing required layer: 'collision'. (required layers: 'background', 'collision', 'foreground', 'objects')");
+        }
+        if (this.layers.get(LayerType.foreground) == null) {
+            throw new GdxRuntimeException("Tilemap missing required layer: 'foreground'. (required layers: 'background', 'collision', 'foreground', 'objects')");
+        }
+        if (this.objectsLayer == null) {
+            throw new GdxRuntimeException("Tilemap missing required layer: 'objects'. (required layers: 'background', 'collision', 'foreground', 'objects')");
         }
 
         // Load map objects
@@ -124,9 +152,12 @@ public class Level {
         // TODO
     }
 
-    public void render(OrthographicCamera camera) {
+    public void render(LayerType layerType, OrthographicCamera camera) {
+        Layer layer = layers.get(layerType);
+        if (layer == null || layer.tileLayer == null || layer.index.length != 1) return;
+
         renderer.setView(camera);
-        renderer.render();
+        renderer.render(layer.index);
     }
 
     public void getTiles(float startX, float startY, float endX, float endY, Array<Rectangle> tiles) {
@@ -144,7 +175,7 @@ public class Level {
         rectPool.freeAll(tiles);
         tiles.clear();
 
-        TiledMapTileLayer collisionLayer = layers.get(Layer.collision);
+        TiledMapTileLayer collisionLayer = layers.get(LayerType.collision).tileLayer;
         int iStartX = (int) (startX / collisionLayer.getTileWidth());
         int iStartY = (int) (startY / collisionLayer.getTileHeight());
         int iEndX   = (int) (endX   / collisionLayer.getTileWidth());

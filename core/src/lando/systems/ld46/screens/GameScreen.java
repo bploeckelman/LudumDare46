@@ -21,18 +21,22 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(worldCamera.combined);
-        batch.begin();
         {
-            testLevel.render(worldCamera);
-            player.render(batch);
+            testLevel.render(Level.LayerType.background, worldCamera);
+            testLevel.render(Level.LayerType.collision, worldCamera);
+            batch.begin();
+            {
+                player.render(batch);
+            }
+            batch.end();
+            testLevel.render(Level.LayerType.foreground, worldCamera);
         }
-        batch.end();
     }
 
     @Override
     public void update(float dt) {
+        testLevel.update(dt);
         player.update(dt);
-        testLevel.render(worldCamera);
     }
 
 }
