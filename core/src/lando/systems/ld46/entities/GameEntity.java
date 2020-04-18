@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Assets;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
@@ -25,7 +26,7 @@ public class GameEntity implements PhysicsComponent {
     private Assets assets;
 
     public GameScreen screen;
-    TextureRegion keyframe;
+    protected TextureRegion keyframe;
     Animation<TextureRegion> animation;
 
     public State state = State.standing;
@@ -225,6 +226,7 @@ public class GameEntity implements PhysicsComponent {
         batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
                 collisionBounds.width / 2, collisionBounds.height / 2,
                 collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
+
 //        batch.draw(assets.whiteCircleOutline, collisionBounds.x, collisionBounds.y,
 //                   collisionBounds.width / 2, collisionBounds.height / 2,
 //                   collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
@@ -267,5 +269,9 @@ public class GameEntity implements PhysicsComponent {
     @Override
     public void setGrounded(boolean grounded) {
         this.grounded = grounded;
+    }
+    
+    public long playSound(Audio.Sounds sound) {
+        return screen.game.audio.playSound(sound);
     }
 }

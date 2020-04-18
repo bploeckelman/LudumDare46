@@ -20,7 +20,7 @@ public class Audio implements Disposable {
     public static final boolean shutUpYourTunes = false;
 
     public enum Sounds {
-        sample_sound
+        sample_sound, doc_punch
     }
 
     public enum Musics {
@@ -145,7 +145,10 @@ public class Audio implements Disposable {
         if (!inGame && !override) return -1;
 
         SoundContainer soundCont = sounds.get(soundOption);
-        if (soundCont == null) return 0;
+        if (soundCont == null) {
+            Gdx.app.log("NoSound", "No sound found for " + soundOption.toString());
+            return 0;
+        }
 
         Sound s = soundCont.getSound();
         return (s != null) ? s.play(volume) : 0;

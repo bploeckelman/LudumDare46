@@ -3,7 +3,10 @@ package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
@@ -17,7 +20,10 @@ public class Player extends MoveEntity {
     private final float horizontalSpeed = 50f;
     private final float horizontalSpeedMinThreshold = 5f;
 
-    private ZombieMech mech;
+    private Animation<TextureRegion> punchAnimation;
+    private float punchTime = -1;
+
+    private ZombieMech mech = null;
 
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
@@ -30,6 +36,9 @@ public class Player extends MoveEntity {
         this.collisionBounds.set(x, y, playerWidth, playerHeight);
         this.imageBounds.set(this.collisionBounds);
         this.setPosition(x, y);
+
+        punchAnimation = screen.game.assets.playerAttackAnimation;
+
         this.jumpState = JumpState.none;
     }
 
@@ -64,11 +73,19 @@ public class Player extends MoveEntity {
                 velocity.x = 0f;
             }
         }
+
+        updatePunch(dt);
+
         // Vertical ------------------------------------------
 
-        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W);
         if (jumpPressed) {
             jump();
+        }
+
+        boolean punchPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+        if (punchPressed) {
+            punch();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -83,11 +100,23 @@ public class Player extends MoveEntity {
         }
     }
 
+    private void updatePunch(float dt) {
+        if (punchTime != -1) {
+            punchTime += dt;
+            if (punchTime > punchAnimation.getAnimationDuration()) {
+                punchTime = -1;
+            } else {
+                keyframe = screen.assets.playerAttackAnimation.getKeyFrame(punchTime);
+            }
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         if (inMech()) {
             return;
         }
+
         super.render(batch);
     }
 
@@ -113,6 +142,13 @@ public class Player extends MoveEntity {
             velocity.x /= 2;
             jumpState = JumpState.jumping;
             grounded = false;
+        }
+    }
+
+    private void punch() {
+        if (punchTime == -1) {
+            playSound(Audio.Sounds.doc_punch);
+            punchTime = 0;
         }
     }
 
