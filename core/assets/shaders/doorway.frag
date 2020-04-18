@@ -66,7 +66,7 @@ vec4 transition (vec2 p) {
 }
 
 void main() {
-      vec2 flippedCoord = vec2(v_texCoord.x, 1. - v_texCoord.y);
+  vec2 flippedCoord = vec2(v_texCoord.x, 1. - v_texCoord.y);
 
-        gl_FragColor = transition(flippedCoord) * v_color;
+  gl_FragColor = transition(flippedCoord) * v_color;
 }

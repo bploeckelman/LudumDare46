@@ -43,6 +43,7 @@ public class Assets implements Disposable {
     public ShaderProgram stereoShader;
     public ShaderProgram circleCropShader;
     public ShaderProgram cubeShader;
+    public ShaderProgram dreamyShader;
 
     public TextureAtlas atlas;
 
@@ -98,6 +99,7 @@ public class Assets implements Disposable {
         stereoShader = loadShader("shaders/default.vert", "shaders/stereo.frag");
         circleCropShader = loadShader("shaders/default.vert", "shaders/circlecrop.frag");
         cubeShader = loadShader("shaders/default.vert", "shaders/cube.frag");
+        dreamyShader = loadShader("shaders/default.vert", "shaders/dreamy.frag");
 
         randomTransitions.add(radialShader);
 
