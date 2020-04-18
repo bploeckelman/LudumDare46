@@ -16,6 +16,8 @@ public class Assets implements Disposable {
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
+    private final AssetDescriptor<BitmapFont> pixelFont16Asset = new AssetDescriptor<>("fonts/emulogic-16pt.fnt", BitmapFont.class);
+    private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
 
     public enum Loading { SYNC, ASYNC }
 
@@ -61,6 +63,9 @@ public class Assets implements Disposable {
 
     public Sound sampleSound;
 
+    public BitmapFont pixelFont16;
+    public BitmapFont riseFont16;
+
     public Assets() {
         this(Loading.SYNC);
     }
@@ -79,8 +84,12 @@ public class Assets implements Disposable {
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
         mgr.load(launchTextureAsset);
+
         mgr.load("audio/sample-music.wav", Music.class);
         mgr.load("audio/sample-sound.wav", Sound.class);
+
+        mgr.load(pixelFont16Asset);
+        mgr.load(riseFont16Asset);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -131,6 +140,11 @@ public class Assets implements Disposable {
 
         sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
         sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
+
+        pixelFont16 = mgr.get(pixelFont16Asset);
+        pixelFont16.getData().markupEnabled = true;
+        riseFont16 = mgr.get(riseFont16Asset);
+        riseFont16.getData().markupEnabled = true;
 
         return 1f;
     }

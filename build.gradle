@@ -24,6 +24,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         tweenEngineVersion = '6.3.3'
+        regExoduxVersion = '0.1.10'
     }
 
     repositories {
@@ -54,6 +55,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "org.mini2Dx:universal-tween-engine:$tweenEngineVersion"
         implementation "org.mini2Dx:universal-tween-engine:$tweenEngineVersion:sources"
+        compile fileTree(dir: "../libs", include: "*.jar")
     }
 }
 

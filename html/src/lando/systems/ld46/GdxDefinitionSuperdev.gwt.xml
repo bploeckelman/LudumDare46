@@ -5,6 +5,7 @@
 
 	<inherits name='lando.systems.ld46.GdxDefinition' />
 	<inherits name='aurelienribon.tweenengine' />
+	<inherits name='regexodus' />
 
 	<!-- Add classes to reflection cache here as needed: -->
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.particles.Particle" />

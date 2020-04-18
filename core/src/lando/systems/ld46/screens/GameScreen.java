@@ -15,6 +15,7 @@ import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.physics.PhysicsSystem;
+import lando.systems.ld46.ui.typinglabel.TypingLabel;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 
@@ -29,6 +30,7 @@ public class GameScreen extends BaseScreen {
     public Level level;
 
     private Vector3 touchPos;
+    private TypingLabel textLabel;
     public ZombieMech zombieMech;
     PhysicsSystem physicsSystem;
 
@@ -39,6 +41,7 @@ public class GameScreen extends BaseScreen {
         this.player = new Player(this, level.playerSpawn);
         this.zombieMech = new ZombieMech(this, 400, 300);
         touchPos = new Vector3();
+        textLabel = new TypingLabel(game.assets.riseFont16, "{JUMP=.2}{RAINBOW}hamster must die{ENDRAINBOW}{ENDJUMP}", 200f, 50f);
     }
 
     @Override
@@ -54,6 +57,7 @@ public class GameScreen extends BaseScreen {
                 player.render(batch);
                 zombieMech.render(batch);
                 particles.draw(batch, Particles.Layer.foreground);
+                textLabel.render(batch);
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
@@ -85,6 +89,7 @@ public class GameScreen extends BaseScreen {
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);
+        textLabel.update(dt);
     }
 
 }

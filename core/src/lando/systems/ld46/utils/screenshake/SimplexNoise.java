@@ -1,5 +1,7 @@
 package lando.systems.ld46.utils.screenshake;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import java.util.Random;
 
 public class SimplexNoise {

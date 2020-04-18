@@ -3,6 +3,7 @@
 <module rename-to="html">
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
     <inherits name='aurelienribon.tweenengine' />
+	<inherits name='regexodus' />
 
 	<!-- Add classes to reflection cache here as needed: -->
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.particles.Particle" />
