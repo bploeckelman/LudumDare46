@@ -30,6 +30,8 @@ public class Assets implements Disposable {
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
 
+    public Animation<TextureRegion> playerAnimation;
+
     public Array<ShaderProgram> randomTransitions;
     public ShaderProgram blindsShader;
     public ShaderProgram fadeShader;
@@ -85,6 +87,9 @@ public class Assets implements Disposable {
         debugTexture = atlas.findRegion("badlogic");
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+
+        Array<TextureAtlas.AtlasRegion> playerAnimFrames = atlas.findRegions("dime_walk");
+        playerAnimation = new Animation<>(0.1f, playerAnimFrames, Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");

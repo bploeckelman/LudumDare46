@@ -14,7 +14,7 @@ public class LaunchScreen extends BaseScreen {
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched()){
-            game.setScreen(new TitleScreen(game), assets.cubeShader, 3f);
+            game.setScreen(new GameScreen(game), assets.cubeShader, 3f);
         }
     }
 
