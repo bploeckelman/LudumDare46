@@ -20,7 +20,7 @@ public class GameEntity {
 
     private Assets assets;
 
-    GameScreen screen;
+    public GameScreen screen;
     TextureRegion keyframe;
     Animation<TextureRegion> animation;
 
@@ -61,6 +61,12 @@ public class GameEntity {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void move(Direction direction, float moveSpeed) {
+        float speed = direction == Direction.left ? -moveSpeed : moveSpeed;
+        this.direction = direction;
+        velocity.add(speed, 0);
     }
 
     public void update(float dt) {
@@ -156,7 +162,12 @@ public class GameEntity {
         collisionBounds.y += velocity.y;
         velocity.scl(1f / dt);
 
-        position.set(collisionBounds.x, collisionBounds.y);
+        setPosition(collisionBounds.x, collisionBounds.y);
+    }
+
+    public void setPosition(float x, float y) {
+        position.set(x, y);
+        collisionBounds.setPosition(x, y);
         collisionCircle.setPosition(collisionBounds.x + collisionBounds.width / 2f, collisionBounds.y + collisionBounds.height / 2f);
         collisionCircle.setRadius(collisionBounds.width / 2f);
     }
