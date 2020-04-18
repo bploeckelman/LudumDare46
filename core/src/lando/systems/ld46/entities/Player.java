@@ -12,8 +12,8 @@ public class Player extends GameEntity {
     private JumpState jumpState;
 
     private final float jumpVelocity = 3000f;
-    private final float horizontalSpeed = 500f;
-    private final float horizontalSpeedMinThreshold = 50f;
+    private final float horizontalSpeed = 50f;
+    private final float horizontalSpeedMinThreshold = 5f;
     private final float horizontalJoystickThreshold = 0.2f;
 
     public Player(GameScreen screen, float x, float y) {
