@@ -68,7 +68,7 @@ public class GameEntity {
 
         stateTime += dt;
         if (animation != null) {
-            float frameTime = state == State.standing ? 0 : stateTime;
+            float frameTime = state == State.walking ? stateTime: 0;
             keyframe = animation.getKeyFrame(frameTime);
         }
     }

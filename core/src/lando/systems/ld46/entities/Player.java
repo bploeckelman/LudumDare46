@@ -11,7 +11,7 @@ public class Player extends GameEntity {
 
     private JumpState jumpState;
 
-    private final float jumpVelocity = 3000f;
+    private final float jumpVelocity = 150f;
     private final float horizontalSpeed = 50f;
     private final float horizontalSpeedMinThreshold = 5f;
     private final float horizontalJoystickThreshold = 0.2f;
@@ -30,31 +30,32 @@ public class Player extends GameEntity {
 
         // Horizontal ----------------------------------------
 
-        // Check for and apply horizontal movement
-        boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
-                || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
-                || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        if (moveLeftPressed) {
-            velocity.add(-horizontalSpeed, 0);
-            direction = Direction.left;
-        } else if (moveRightPressed) {
-            velocity.add(horizontalSpeed, 0);
-            direction = Direction.right;
-        }
+        if (state != State.jumping) {
+            // Check for and apply horizontal movement
+            boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
+                    || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+            boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
+                    || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+            if (moveLeftPressed) {
+                velocity.add(-horizontalSpeed, 0);
+                direction = Direction.left;
+            } else if (moveRightPressed) {
+                velocity.add(horizontalSpeed, 0);
+                direction = Direction.right;
+            }
 
-        // Apply horizontal drag
-        if (!grounded && !moveLeftPressed && !moveRightPressed) {
-            velocity.x = 0f;
-        } else {
-            velocity.x *= 0.85f;
-        }
+            // Apply horizontal drag
+            if (!grounded && !moveLeftPressed && !moveRightPressed) {
+                velocity.x = 0f;
+            } else {
+                velocity.x *= 0.85f;
+            }
 
-        // Clamp minimum horizontal velocity to zero
-        if (Math.abs(velocity.x) < horizontalSpeedMinThreshold) {
-            velocity.x = 0f;
+            // Clamp minimum horizontal velocity to zero
+            if (Math.abs(velocity.x) < horizontalSpeedMinThreshold) {
+                velocity.x = 0f;
+            }
         }
-
         // Vertical ------------------------------------------
 
         boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W);
@@ -70,6 +71,7 @@ public class Player extends GameEntity {
     private void jump(float velocityMultiplier) {
         if (grounded) {
             velocity.y = jumpVelocity * velocityMultiplier;
+            velocity.x /= 2;
             jumpState = JumpState.jumping;
             grounded = false;
         }
