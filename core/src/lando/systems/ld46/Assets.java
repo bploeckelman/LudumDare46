@@ -3,6 +3,8 @@ package lando.systems.ld46;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -52,6 +54,10 @@ public class Assets implements Disposable {
 
     public TextureAtlas atlas;
 
+    public Music sampleMusic;
+
+    public Sound sampleSound;
+
     public Assets() {
         this(Loading.SYNC);
     }
@@ -70,6 +76,8 @@ public class Assets implements Disposable {
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
         mgr.load(launchTextureAsset);
+        mgr.load("audio/sample-music.wav", Music.class);
+        mgr.load("audio/sample-sound.wav", Sound.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -116,6 +124,9 @@ public class Assets implements Disposable {
         dreamyShader = loadShader("shaders/default.vert", "shaders/dreamy.frag");
 
         randomTransitions.add(radialShader);
+
+        sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
+        sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
 
         return 1f;
     }

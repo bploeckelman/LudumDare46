@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.entities.ZombieMech;
@@ -56,6 +57,7 @@ public class GameScreen extends BaseScreen {
 
         if (Gdx.input.justTouched()) {
             particles.addParticles(MathUtils.random(worldCamera.viewportWidth), MathUtils.random(worldCamera.viewportHeight));
+            game.audio.playSound(Audio.Sounds.sample_sound, true);
         }
         particles.update(dt);
         level.update(dt);

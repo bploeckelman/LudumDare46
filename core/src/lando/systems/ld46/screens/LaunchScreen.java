@@ -2,6 +2,7 @@ package lando.systems.ld46.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Game;
 
 public class LaunchScreen extends BaseScreen {
@@ -14,6 +15,7 @@ public class LaunchScreen extends BaseScreen {
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched()){
+            game.audio.stopMusic();
             game.setScreen(new GameScreen(game), assets.cubeShader, 3f);
         }
     }

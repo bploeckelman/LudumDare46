@@ -28,6 +28,7 @@ public class Game extends ApplicationAdapter {
 //	public AudioManager audio;
 	public Assets assets;
 	public TweenManager tween;
+	public Audio audio;
 
 	private BaseScreen currentScreen;
 	private BaseScreen nextScreen;
@@ -68,6 +69,9 @@ public class Game extends ApplicationAdapter {
 			assets = new Assets();
 		}
 
+		if (audio == null) {
+			audio = new Audio(true, this);
+		}
 
 		setScreen(new LaunchScreen(this));
 	}
@@ -79,7 +83,7 @@ public class Game extends ApplicationAdapter {
 
 		float dt = Math.min(Gdx.graphics.getDeltaTime(), 1f / 30f);
 
-//		audio.update(dt);
+		audio.update(dt);
 		tween.update(dt);
 		currentScreen.update(dt);
 		currentScreen.renderFrameBuffers(assets.batch);

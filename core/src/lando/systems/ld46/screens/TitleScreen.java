@@ -1,9 +1,11 @@
 package lando.systems.ld46.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 
@@ -17,6 +19,7 @@ public class TitleScreen extends BaseScreen {
         super(game);
         placeholder = new Vector2(MathUtils.random(Config.windowWidth - size), MathUtils.random(Config.windowHeight - size));
         vel = new Vector2(MathUtils.random(-1f, 1), MathUtils.random(-1f, 1f)).nor().scl(100);
+        game.audio.playMusic(Audio.Musics.sample_music);
     }
 
     @Override
