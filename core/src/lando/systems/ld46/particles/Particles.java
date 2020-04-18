@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
@@ -75,6 +76,7 @@ public class Particles implements Disposable {
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
                     .startPos(x, y)
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 100f))
                     .startSize(10f, 10f)
                     .endSize(0f, 0f)
                     .startAlpha(1f)

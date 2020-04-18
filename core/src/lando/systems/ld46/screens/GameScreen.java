@@ -1,11 +1,14 @@
 package lando.systems.ld46.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 import lando.systems.ld46.entities.ZombieMech;
+import lando.systems.ld46.particles.Particles;
 
 public class GameScreen extends BaseScreen {
 
@@ -32,6 +35,7 @@ public class GameScreen extends BaseScreen {
             {
                 player.render(batch);
                 zombieMech.render(batch);
+                particles.draw(batch, Particles.Layer.foreground);
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
@@ -40,6 +44,12 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void update(float dt) {
+        super.update(dt);
+
+        if (Gdx.input.justTouched()) {
+            particles.addParticles(MathUtils.random(worldCamera.viewportWidth), MathUtils.random(worldCamera.viewportHeight));
+        }
+        particles.update(dt);
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);

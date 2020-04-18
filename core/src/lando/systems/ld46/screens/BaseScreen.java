@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
+import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.utils.screenshake.ScreenShakeCameraController;
 
 public abstract class BaseScreen extends InputAdapter {
@@ -13,6 +14,7 @@ public abstract class BaseScreen extends InputAdapter {
     public final Assets assets;
 //    public final AudioManager audio;
     public final SpriteBatch batch;
+    public final Particles particles;
 
     public OrthographicCamera worldCamera;
     public OrthographicCamera hudCamera;
@@ -22,6 +24,7 @@ public abstract class BaseScreen extends InputAdapter {
         this.game = game;
         this.assets = game.assets;
         this.batch = assets.batch;
+        this.particles = new Particles(assets);
 
         this.worldCamera = new OrthographicCamera();
         this.worldCamera.setToOrtho(false, Config.windowWidth, Config.windowHeight);

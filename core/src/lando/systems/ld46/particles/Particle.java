@@ -35,15 +35,13 @@ public class Particle implements Pool.Poolable {
 
     private float xStart;
     private float yStart;
-    private float x;
-    private float y;
+    public Vector2 position;
 
     private boolean targeted;
     private float xTarget;
     private float yTarget;
 
-    private float xVel;
-    private float yVel;
+    public Vector2 velocity;
 
     private float xAcc;
     private float yAcc;
@@ -73,6 +71,8 @@ public class Particle implements Pool.Poolable {
     private boolean persistent;
 
     public Particle() {
+        velocity = new Vector2();
+        position = new Vector2();
         reset();
     }
 
@@ -84,12 +84,11 @@ public class Particle implements Pool.Poolable {
                 dead = true;
             }
             lifetime = MathUtils.clamp(ttl / ttlMax , 0f, 1f);
-            progress = interpolation.apply(0f, 1f, MathUtils.clamp(1f - lifetime, 0f, 1f));
         } else {
             ttl += dt;
             lifetime = MathUtils.clamp(ttl, 0f, 1f);
-            progress = interpolation.apply(0f, 1f, MathUtils.clamp(1f - lifetime, 0f, 1f));
         }
+        progress = interpolation.apply(0f, 1f, MathUtils.clamp(1f - lifetime, 0f, 1f));
 
         if (animation != null) {
             if (!persistent && timed) animTime = progress * animation.getAnimationDuration();
@@ -102,22 +101,22 @@ public class Particle implements Pool.Poolable {
             Vector2 pathPos = path.derivativeAt(progress);
             float arcLengthProgress = progress + (dt * ttl / path.spanCount()) / pathPos.len();
             pathPos.set(path.valueAt(arcLengthProgress));
-            x = pathPos.x;
-            y = pathPos.y;
+            position.x = pathPos.x;
+            position.y = pathPos.y;
         } else if (targeted) {
-            x = MathUtils.lerp(xStart, xTarget, progress);
-            y = MathUtils.lerp(yStart, yTarget, progress);
+            position.x = MathUtils.lerp(xStart, xTarget, progress);
+            position.y = MathUtils.lerp(yStart, yTarget, progress);
         } else {
             xAcc *= accDamp;
             yAcc *= accDamp;
             if (MathUtils.isEqual(xAcc, 0f, 0.01f)) xAcc = 0f;
             if (MathUtils.isEqual(yAcc, 0f, 0.01f)) yAcc = 0f;
 
-            xVel += xAcc * dt;
-            yVel += yAcc * dt;
+            velocity.x += xAcc * dt;
+            velocity.y += yAcc * dt;
 
-            x += xVel * dt;
-            y += yVel * dt;
+            position.x += velocity.x * dt;
+            position.y += velocity.y * dt;
         }
 
         width  = MathUtils.lerp(widthStart,  widthEnd,  progress);
@@ -135,7 +134,7 @@ public class Particle implements Pool.Poolable {
         if (keyframe == null) return;
         batch.setColor(r, g, b, a);
         batch.draw(keyframe,
-                x - width / 2f, y - height / 2f,
+                position.x - width / 2f, position.y - height / 2f,
                 width / 2f, height / 2f,
                 width, height, 1f, 1f,
                 rotation);
@@ -158,15 +157,13 @@ public class Particle implements Pool.Poolable {
 
         this.xStart = 0f;
         this.yStart = 0f;
-        this.x = 0f;
-        this.y = 0f;
+        this.position.set(0,0);
 
         this.targeted = false;
         this.xTarget = 0f;
         this.yTarget = 0f;
 
-        this.xVel = 0f;
-        this.yVel = 0f;
+        this.velocity.set(0,0);
 
         this.xAcc = 0f;
         this.yAcc = 0f;
@@ -301,6 +298,12 @@ public class Particle implements Pool.Poolable {
             return this;
         }
 
+        Initializer velocityDirection(float angle, float magnitude) {
+            this.xVel = MathUtils.cosDeg(angle) * magnitude;
+            this.yVel = MathUtils.sinDeg(angle) * magnitude;
+            return this;
+        }
+
         Initializer acceleration(float x, float y) {
             this.xAcc = x;
             this.yAcc = y;
@@ -427,8 +430,7 @@ public class Particle implements Pool.Poolable {
 
             particle.xStart = xStart;
             particle.yStart = yStart;
-            particle.x = xStart;
-            particle.y = yStart;
+            particle.position.set(xStart, yStart);
 
             particle.targeted = targeted;
             particle.xTarget = xTarget;
@@ -437,8 +439,7 @@ public class Particle implements Pool.Poolable {
                 throw new GdxRuntimeException("Particles with a target must also have a time to live, is your Particle.Initializer missing a call to timeToLive()?");
             }
 
-            particle.xVel = xVel;
-            particle.yVel = yVel;
+            particle.velocity.set(xVel, yVel);
 
             particle.xAcc = xAcc;
             particle.yAcc = yAcc;
