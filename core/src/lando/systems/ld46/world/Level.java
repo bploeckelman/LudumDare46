@@ -3,6 +3,7 @@ package lando.systems.ld46.world;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -38,9 +39,9 @@ public class Level {
     public ObjectMap<LayerType, Layer> layers;
 
     public MapLayer objectsLayer;
-//    public SpawnPlayer playerSpawn;
-//    public Array<SpawnEnemy> enemySpawns;
-//    public Exit exit;
+    public SpawnPlayer playerSpawn;
+    public Array<SpawnEnemy> enemySpawns;
+    public Exit exit;
 
     public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
     private Rectangle tempRect = new Rectangle();
@@ -95,8 +96,10 @@ public class Level {
         }
 
         // Load map objects
-//        enemySpawners = new Array<EnemySpawner>();
-//        exits = new Array<Exit>();
+        playerSpawn = null;
+        enemySpawns = new Array<>();
+        exit = null;
+
         MapObjects objects = objectsLayer.getObjects();
         for (MapObject object : objects) {
             MapProperties props = object.getProperties();
@@ -106,13 +109,16 @@ public class Level {
                 continue;
             }
 
-            // TODO: instantiate objects
-
-//            if ("spawnPlayer".equalsIgnoreCase(type)) {
-//                float x = props.get("x", Float.class);
-//                float y = props.get("y", Float.class);
-//                playerSpawn = new SpawnPlayer(x, y, assets);
-//            }
+            if ("spawn-player".equalsIgnoreCase(type)) {
+                float x = props.get("x", Float.class);
+                float y = props.get("y", Float.class);
+                playerSpawn = new SpawnPlayer(x, y, assets);
+            }
+            else if ("spawn-enemy".equalsIgnoreCase(type)) {
+                float x = props.get("x", Float.class);
+                float y = props.get("y", Float.class);
+                SpawnEnemy spawn = new SpawnEnemy(x, y, assets);
+                // TODO: figure out what type of enemy and its direction and whatever and spawn it
 //            else if ("spawnEnemy".equalsIgnoreCase(type)) {
 //                float x = props.get("x", Float.class);
 //                float y = props.get("y", Float.class);
@@ -135,17 +141,23 @@ public class Level {
 //                    spawner.spawnEnemy(screen);
 //                }
 //            }
-//            else if ("exit".equalsIgnoreCase(type)) {
-//                float x = props.get("x", Float.class);
-//                float y = props.get("y", Float.class);
-//                exits.add(new Exit(x, y, assets));
-//            }
+                enemySpawns.add(spawn);
+            }
+            else if ("exit".equalsIgnoreCase(type)) {
+                float x = props.get("x", Float.class);
+                float y = props.get("y", Float.class);
+                exit = new Exit(x, y, assets);
+            }
+
         }
 
         // Validate that we have required entities
-//        if (playerSpawn == null) {
-//            throw new GdxRuntimeException("Missing required map object: 'spawnPlayer'");
-//        }
+        if (playerSpawn == null) {
+            throw new GdxRuntimeException("Map missing required object: 'spawn-player'");
+        }
+        if (exit == null) {
+            throw new GdxRuntimeException("Map missing required object: 'exit'");
+        }
     }
 
     public void update(float dt) {
@@ -158,6 +170,12 @@ public class Level {
 
         renderer.setView(camera);
         renderer.render(layer.index);
+    }
+
+    public void renderObjectsDebug(SpriteBatch batch) {
+        exit.render(batch);
+        enemySpawns.forEach(spawn -> spawn.render(batch));
+        playerSpawn.render(batch);
     }
 
     public void getTiles(float startX, float startY, float endX, float endY, Array<Rectangle> tiles) {

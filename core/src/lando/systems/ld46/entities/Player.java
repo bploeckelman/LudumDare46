@@ -4,6 +4,7 @@ package lando.systems.ld46.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.world.SpawnPlayer;
 
 public class Player extends GameEntity {
 
@@ -15,6 +16,10 @@ public class Player extends GameEntity {
     private final float horizontalSpeed = 50f;
     private final float horizontalSpeedMinThreshold = 5f;
     private final float horizontalJoystickThreshold = 0.2f;
+
+    public Player(GameScreen screen, SpawnPlayer spawn) {
+        this(screen, spawn.pos.x, spawn.pos.y);
+    }
 
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation);
