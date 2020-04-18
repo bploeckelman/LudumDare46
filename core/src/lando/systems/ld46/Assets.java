@@ -35,6 +35,7 @@ public class Assets implements Disposable {
     public TextureRegion debugTexture;
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
+    public TextureRegion ringTexture;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -113,6 +114,7 @@ public class Assets implements Disposable {
         debugTexture = atlas.findRegion("badlogic");
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+        ringTexture = atlas.findRegion("ring");
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);

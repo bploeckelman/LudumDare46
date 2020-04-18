@@ -7,13 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Config;
+import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
 
-public class GameEntity {
+public class GameEntity implements PhysicsComponent {
+
+
 
     public enum Direction {right, left}
     public enum State { standing, walking, jumping }
@@ -82,13 +86,6 @@ public class GameEntity {
             float frameTime = state != State.jumping ? stateTime: 0;
             keyframe = animation.getKeyFrame(frameTime);
         }
-    }
-
-    public void updatePosition(float dt) {
-        stateTime += dt;
-
-        // apply gravity if we are falling
-        velocity.add(0f, gravity);
 
         // clamp velocity to maximum, horizontal only
         velocity.x = Math.min(maxHorizontalVelocity, Math.max(-maxHorizontalVelocity, velocity.x));
@@ -101,79 +98,99 @@ public class GameEntity {
             state = State.walking;
         }
 
-        if (!grounded) {
-            state = State.jumping;
+        if (animation != null) {
+            float frameTime = state == State.walking ? stateTime: 0;
+            keyframe = animation.getKeyFrame(frameTime);
         }
 
-        // multiply by dt so we know how far we go in this frame
-        velocity.scl(dt);
+        collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
+        collisionCircle.setPosition(position.x, position.y);
+        collisionCircle.setRadius(collisionBounds.width / 2f);
+    }
 
-        // perform collision detection & response, on each axis, separately
-        // if entity is moving right, check tiles to the right
-        // of it's right bounding box edge, otherwise check the ones to the left
-        Rectangle entityRect = screen.level.rectPool.obtain();
-        entityRect.set(collisionBounds);
+    public void updatePosition(float dt) {
 
-        int startX, startY, endX, endY;
-        if (velocity.x > 0) startX = endX = (int) (entityRect.x + velocity.x + entityRect.width);
-        else                startX = endX = (int) (entityRect.x + velocity.x);
-        startY = (int) (entityRect.y);
-        endY   = (int) (entityRect.y + entityRect.height);
-        entityRect.x += velocity.x;
-        screen.level.getTiles(startX, startY, endX, endY, tiles);
-        for (Rectangle tile : tiles) {
-            if (entityRect.overlaps(tile)) {
-                velocity.x = 0f;
-                break;
-            }
-        }
-
-        // TODO: check for object tile interactions (horizontal)
-
-        // if the entity is moving upwards, check the tiles to the top
-        // of it's top bounding box edge, otherwise check the ones to the bottom
-        grounded = false;
-        boolean yVelocityNeedsToBeCleared = false;
-        if (velocity.y > 0) startY = endY = (int) (entityRect.y + velocity.y + entityRect.height);
-        else                startY = endY = (int) (entityRect.y + velocity.y);
-        startX = (int) (entityRect.x);
-        endX   = (int) (entityRect.x + entityRect.width);
-        entityRect.y += velocity.y;
-        screen.level.getTiles(startX, startY, endX, endY, tiles);
-        for (Rectangle tile : tiles) {
-            if (entityRect.overlaps(tile)) {
-                // actually reset the entity y-position here
-                // so its just below / above the collided tile (removes bouncing)
-                if (velocity.y > 0f) {
-                    collisionBounds.y = tile.y - collisionBounds.height;
-                } else {
-                    collisionBounds.y = tile.y + tile.height;
-                    grounded = true;
-                }
-            }
-            yVelocityNeedsToBeCleared = true;
-            break;
-        }
-
-        // TODO: check for object tile interactions (vertical)
-
-        if (yVelocityNeedsToBeCleared) {
-            velocity.y = 0f;
-        }
-
-        screen.level.rectPool.free(entityRect);
-
-        collisionBounds.x += velocity.x;
-        collisionBounds.y += velocity.y;
-        velocity.scl(1f / dt);
-
-        setPosition(collisionBounds.x, collisionBounds.y);
+//        // apply gravity if we are falling
+//        velocity.add(0f, gravity);
+//
+//        // clamp velocity to maximum, horizontal only
+//        velocity.x = Math.min(maxHorizontalVelocity, Math.max(-maxHorizontalVelocity, velocity.x));
+//
+//
+//
+//        if (!grounded) {
+//            state = State.jumping;
+//        }
+//
+//        // multiply by dt so we know how far we go in this frame
+//        velocity.scl(dt);
+//
+//        // perform collision detection & response, on each axis, separately
+//        // if entity is moving right, check tiles to the right
+//        // of it's right bounding box edge, otherwise check the ones to the left
+//        Rectangle entityRect = screen.level.rectPool.obtain();
+//        entityRect.set(collisionBounds);
+//
+//        int startX, startY, endX, endY;
+//        if (velocity.x > 0) startX = endX = (int) (entityRect.x + velocity.x + entityRect.width);
+//        else                startX = endX = (int) (entityRect.x + velocity.x);
+//        startY = (int) (entityRect.y);
+//        endY   = (int) (entityRect.y + entityRect.height);
+//        entityRect.x += velocity.x;
+//        screen.level.getTiles(startX, startY, endX, endY, tiles);
+//        for (Rectangle tile : tiles) {
+//            if (entityRect.overlaps(tile)) {
+//                velocity.x = 0f;
+//                break;
+//            }
+//        }
+//
+//        // TODO: check for object tile interactions (horizontal)
+//
+//        // if the entity is moving upwards, check the tiles to the top
+//        // of it's top bounding box edge, otherwise check the ones to the bottom
+//        grounded = false;
+//        boolean yVelocityNeedsToBeCleared = false;
+//        if (velocity.y > 0) startY = endY = (int) (entityRect.y + velocity.y + entityRect.height);
+//        else                startY = endY = (int) (entityRect.y + velocity.y);
+//        startX = (int) (entityRect.x);
+//        endX   = (int) (entityRect.x + entityRect.width);
+//        entityRect.y += velocity.y;
+//        screen.level.getTiles(startX, startY, endX, endY, tiles);
+//        for (Rectangle tile : tiles) {
+//            if (entityRect.overlaps(tile)) {
+//                // actually reset the entity y-position here
+//                // so its just below / above the collided tile (removes bouncing)
+//                if (velocity.y > 0f) {
+//                    collisionBounds.y = tile.y - collisionBounds.height;
+//                } else {
+//                    collisionBounds.y = tile.y + tile.height;
+//                    grounded = true;
+//                }
+//            }
+//            yVelocityNeedsToBeCleared = true;
+//            break;
+//        }
+//
+//        // TODO: check for object tile interactions (vertical)
+//
+//        if (yVelocityNeedsToBeCleared) {
+//            velocity.y = 0f;
+//        }
+//
+//        screen.level.rectPool.free(entityRect);
+//
+//        collisionBounds.x += velocity.x;
+//        collisionBounds.y += velocity.y;
+//        velocity.scl(1f / dt);
+//
+//        setPosition(collisionBounds.x, collisionBounds.y);
     }
 
     public void setPosition(float x, float y) {
         position.set(x, y);
-        collisionBounds.setPosition(x, y);
-        collisionCircle.setPosition(collisionBounds.x + collisionBounds.width / 2f, collisionBounds.y + collisionBounds.height / 2f);
+        collisionBounds.setPosition(x - collisionBounds.width/2f, y - collisionBounds.height/2f);
+        collisionCircle.setPosition(x, y);
         collisionCircle.setRadius(collisionBounds.width / 2f);
     }
 
@@ -181,14 +198,19 @@ public class GameEntity {
         if (keyframe == null) return;
 
         if (Config.debug) {
+//            batch.setColor(Color.RED);
+//            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
+//            batch.setColor(Color.WHITE);
+//
+//            batch.setColor(Color.YELLOW);
+//            for (Rectangle tile : tiles) {
+//                assets.debugNinePatch.draw(batch, tile.x, tile.y, tile.width, tile.height);
+//            }
+//            batch.setColor(Color.WHITE);
             batch.setColor(Color.RED);
-            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
-            batch.setColor(Color.WHITE);
-
+            batch.draw(assets.ringTexture, collisionCircle.x - collisionCircle.radius, collisionCircle.y - collisionCircle.radius, collisionCircle.radius*2, collisionCircle.radius*2);
             batch.setColor(Color.YELLOW);
-            for (Rectangle tile : tiles) {
-                assets.debugNinePatch.draw(batch, tile.x, tile.y, tile.width, tile.height);
-            }
+            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
             batch.setColor(Color.WHITE);
         }
 
@@ -215,5 +237,35 @@ public class GameEntity {
 //                    collisionCircle.radius * 2f, collisionCircle.radius * 2f);
 //            batch.setColor(Color.WHITE);
 //        }
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    @Override
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    @Override
+    public Vector2 getAcceleration() {
+        return acceleration;
+    }
+
+    @Override
+    public Shape2D getCollisionBounds() {
+        return collisionCircle;
+    }
+
+    @Override
+    public boolean isGrounded() {
+        return grounded;
+    }
+
+    @Override
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 }

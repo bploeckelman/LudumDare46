@@ -10,7 +10,7 @@ import lando.systems.ld46.utils.Utils;
 
 public class PhysicsSystem {
 
-    static final float GRAVITY = -300;
+    static final float GRAVITY = -600;
 
     private GameScreen screen;
     private Vector2 normal;
@@ -33,6 +33,50 @@ public class PhysicsSystem {
 
     public void update(float dt) {
         //update particles
+        updateParticles(dt);
+        updateGameEntities(dt);
+    }
+
+    private void updateGameEntities(float dt) {
+        Array<PhysicsComponent> entities = screen.physicsEntities;
+        for (PhysicsComponent obj : entities) {
+            Vector2 accel = obj.getAcceleration();
+            Vector2 vel = obj.getVelocity();
+            Vector2 pos = obj.getPosition();
+            Circle bounds = (Circle) obj.getCollisionBounds();
+
+            vel.scl((float)Math.pow(.4f, dt));
+
+            vel.x += accel.x * dt;
+            vel.y += (accel.y + GRAVITY) * dt;
+
+            float nextX = bounds.x + vel.x * dt;
+            float nextY = bounds.y + vel.y * dt;
+            tempStart1.set(bounds.x, bounds.y);
+            tempEnd1.set(nextX, nextY);
+            frameEndPos.set(tempEnd1);
+
+            for (Segment2D segment : screen.level.collisionSegments) {
+                float t = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2);
+                if (t != Float.MAX_VALUE && nearest1.dst(nearest2) < bounds.radius + 2f){
+                    tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
+                    normal.set(segment.end).sub(segment.start).nor().rotate90(1);
+                    frameEndPos.set(nearest1);
+                    float backupDist = (bounds.radius + 2.1f) - nearest1.dst(nearest2);
+                    float x = frameEndPos.x - backupDist * (normal.x);
+                    float y = frameEndPos.y - backupDist * (normal.y);
+                    frameEndPos.set(x, y);
+                    if (nearest2.y < bounds.y){
+                        vel.y = 0;
+                        obj.setGrounded(true);
+                    }
+                }
+            }
+            pos.set(frameEndPos);
+        }
+    }
+
+    private void updateParticles(float dt){
         Array<PhysicsComponent> particles = screen.particles.getPhysicalParticles();
         for(PhysicsComponent obj : particles){
             Vector2 accel = obj.getAcceleration();
@@ -40,9 +84,11 @@ public class PhysicsSystem {
             Vector2 pos = obj.getPosition();
             Circle bounds = (Circle) obj.getCollisionBounds();
 
+            vel.scl((float)Math.pow(.4f, dt));
+
             vel.x += accel.x * dt;
             vel.y += (accel.y + GRAVITY) * dt;
-            vel.scl((float)Math.pow(.8f, dt));
+
 
             float nextX = pos.x + vel.x * dt;
             float nextY = pos.y + vel.y * dt;
@@ -51,7 +97,6 @@ public class PhysicsSystem {
             frameEndPos.set(tempEnd1);
 
             for (Segment2D segment : screen.level.collisionSegments) {
-
                 float t = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2);
                 if (t != Float.MAX_VALUE && nearest1.dst(nearest2) < bounds.radius + 2f){
                     tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
@@ -71,15 +116,9 @@ public class PhysicsSystem {
                     vel.set(Utils.reflectVector(incomingVector.set(vel), normal));
                 }
             }
-
             pos.set(frameEndPos);
-
-
         }
-
-
     }
-
 
 
 

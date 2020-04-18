@@ -9,4 +9,6 @@ public interface PhysicsComponent {
     Vector2 getVelocity();
     Vector2 getAcceleration();
     Shape2D getCollisionBounds();
+    boolean isGrounded();
+    void setGrounded(boolean grounded);
 }

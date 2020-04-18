@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
+import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
 import lando.systems.ld46.ui.typinglabel.TypingLabel;
 import lando.systems.ld46.world.Level;
@@ -33,13 +35,18 @@ public class GameScreen extends BaseScreen {
     private TypingLabel textLabel;
     public ZombieMech zombieMech;
     PhysicsSystem physicsSystem;
+    public Array<PhysicsComponent> physicsEntities;
 
     public GameScreen(Game game) {
         super(game);
         this.physicsSystem = new PhysicsSystem(this);
+        this.physicsEntities = new Array<>();
         this.level = new Level(LevelDescriptor.test, this);
         this.player = new Player(this, level.playerSpawn);
+        physicsEntities.add(player);
         this.zombieMech = new ZombieMech(this, 400, 300);
+        physicsEntities.add(zombieMech);
+
         touchPos = new Vector3();
         textLabel = new TypingLabel(game.assets.riseFont16, "{JUMP=.2}{RAINBOW}hamster must die{ENDRAINBOW}{ENDJUMP}", 200f, 50f);
     }
@@ -85,11 +92,12 @@ public class GameScreen extends BaseScreen {
             game.audio.playSound(Audio.Sounds.sample_sound, true);
         }
         particles.update(dt);
-        physicsSystem.update(dt);
+
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);
         textLabel.update(dt);
+        physicsSystem.update(dt);
     }
 
 }

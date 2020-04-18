@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.physics.PhysicsComponent;
+import lando.systems.ld46.utils.Utils;
 
 public class Particles implements Disposable {
 
@@ -103,20 +104,23 @@ public class Particles implements Disposable {
         }
     }
 
+    private Color testColor = new Color();
     public void makePhysicsParticles(float x, float y) {
         TextureRegion keyframe = assets.whiteCircle;
 
         int numParticles = 200;
         for (int i = 0; i < numParticles; ++i) {
+            Utils.hsvToRgb(MathUtils.random(1f), 1f, .9f, testColor);
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
                     .startPos(x, y)
                     .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 1000f))
-                    .startSize(10f, 10f)
-                    .endSize(0f, 0f)
+                    .startSize(5f)
+                    .endSize(.1f)
                     .startAlpha(1f)
                     .endAlpha(0f)
                     .timeToLive(3f)
+                    .startColor(testColor)
                     .makePhysics()
                     .interpolation(Interpolation.fastSlow)
                     .init());

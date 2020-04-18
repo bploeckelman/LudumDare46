@@ -172,6 +172,16 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
     }
 
     @Override
+    public boolean isGrounded() {
+        return false;
+    }
+
+    @Override
+    public void setGrounded(boolean grounded) {
+
+    }
+
+    @Override
     public void reset() {
         this.path = null;
         this.interpolation = Interpolation.linear;

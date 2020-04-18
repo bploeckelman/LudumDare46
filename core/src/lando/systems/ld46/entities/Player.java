@@ -13,7 +13,7 @@ public class Player extends MoveEntity {
 
     private JumpState jumpState;
 
-    private final float jumpVelocity = 200f;
+    private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
     private final float horizontalSpeedMinThreshold = 5f;
 
@@ -29,7 +29,7 @@ public class Player extends MoveEntity {
         float playerHeight = keyframe.getRegionHeight() * 2;
         this.collisionBounds.set(x, y, playerWidth, playerHeight);
         this.imageBounds.set(this.collisionBounds);
-        this.position.set(x, y);
+        this.setPosition(x, y);
         this.jumpState = JumpState.none;
     }
 
