@@ -23,7 +23,7 @@ public class Exit {
     public void update() {}
 
     public void render(SpriteBatch batch) {
-        batch.setColor(Color.BLUE);
+        batch.setColor(0f, 0f, 1f, 0.5f);
         batch.draw(texture, pos.x, pos.y, size, size);
         batch.setColor(Color.WHITE);
     }

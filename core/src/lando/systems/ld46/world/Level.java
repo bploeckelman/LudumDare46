@@ -43,12 +43,12 @@ public class Level {
     public Array<SpawnEnemy> enemySpawns;
     public Exit exit;
 
-    public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
-    private Rectangle tempRect = new Rectangle();
+    private Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
     private Array<Rectangle> tileRects = new Array<>();
+    private Rectangle tempRect = new Rectangle();
 
     public Level(LevelDescriptor levelDescriptor, GameScreen screen) {
-        Gdx.app.log("Level", "Loading level: '" + levelDescriptor.toString() + "'");
+        Gdx.app.log("Level", "Loading: " + levelDescriptor.toString());
 
         this.assets = screen.game.assets;
         this.screen = screen;
