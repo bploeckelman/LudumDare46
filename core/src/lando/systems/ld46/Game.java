@@ -1,6 +1,8 @@
 package lando.systems.ld46;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -16,7 +18,6 @@ import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.accessors.*;
 import lando.systems.ld46.screens.BaseScreen;
 import lando.systems.ld46.screens.LaunchScreen;
-import lando.systems.ld46.screens.TitleScreen;
 
 public class Game extends ApplicationAdapter {
 
