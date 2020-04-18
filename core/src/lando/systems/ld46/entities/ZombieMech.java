@@ -8,9 +8,10 @@ public class ZombieMech extends GameEntity {
 
     public ZombieMech(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.mechAnimation);
-        this.collisionBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight() * 2);
-        this.imageBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight() * 2);
-        this.setPosition(x, y);
+
+        this.collisionBounds.set(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
+        this.imageBounds.set(collisionBounds);
+        setPosition(x, y);
     }
 
     public void move(Direction direction, float speed) {
