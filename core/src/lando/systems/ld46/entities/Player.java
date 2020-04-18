@@ -64,7 +64,7 @@ public class Player extends GameEntity {
         }
         // Vertical ------------------------------------------
 
-        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W);
+        boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         if (jumpPressed) {
             jump();
         }
