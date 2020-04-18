@@ -8,6 +8,8 @@
 	<!-- Add classes to reflection cache here as needed: -->
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.particles.Particle" />
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.Audio" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.ui.typinglabel.TypingGlyph" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.ui.typinglabel.effects" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.math.Rectangle" />
 
 	<inherits name='Game' />
