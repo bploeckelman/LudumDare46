@@ -4,9 +4,10 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
     <inherits name='aurelienribon.tweenengine' />
 
-	<!-- Add classes to reflection cache here as needed:
-	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.FOO.BAR.BAZ" />
-	-->
+	<!-- Add classes to reflection cache here as needed: -->
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.particles.Particle" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.Audio" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.math.Rectangle" />
 
 	<inherits name='Game' />
 	<entry-point class='lando.systems.ld46.client.HtmlLauncher' />

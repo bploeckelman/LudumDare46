@@ -2,7 +2,6 @@ package lando.systems.ld46.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -43,7 +42,8 @@ public class Level {
     public Array<SpawnEnemy> enemySpawns;
     public Exit exit;
 
-    private Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
+    public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
+
     private Array<Rectangle> tileRects = new Array<>();
     private Rectangle tempRect = new Rectangle();
 
@@ -54,11 +54,7 @@ public class Level {
         this.screen = screen;
 
         // Load map
-        this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName, new TmxMapLoader.Parameters() {{
-            generateMipMaps = true;
-            textureMinFilter = Texture.TextureFilter.MipMap;
-            textureMagFilter = Texture.TextureFilter.MipMap;
-        }});
+        this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName);
         this.renderer = new OrthoCachedTiledMapRenderer(map);
         ((OrthoCachedTiledMapRenderer) renderer).setBlending(true);
 

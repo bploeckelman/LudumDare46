@@ -6,9 +6,10 @@
 	<inherits name='lando.systems.ld46.GdxDefinition' />
 	<inherits name='aurelienribon.tweenengine' />
 
-	<!-- Add classes to reflection cache here as needed:
-	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.FOO.BAR.BAZ" />
-	-->
+	<!-- Add classes to reflection cache here as needed: -->
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.particles.Particle" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.Audio" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.math.Rectangle" />
 
 	<collapse-all-properties />
     
