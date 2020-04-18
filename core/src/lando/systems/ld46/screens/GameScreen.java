@@ -10,14 +10,14 @@ import lando.systems.ld46.entities.ZombieMech;
 public class GameScreen extends BaseScreen {
 
     public Player player;
-    public Level testLevel;
+    public Level level;
 
     public ZombieMech zombieMech;
 
     public GameScreen(Game game) {
         super(game);
 
-        this.testLevel = new Level(LevelDescriptor.test, this);
+        this.level = new Level(LevelDescriptor.test, this);
         this.player = new Player(this, 300, 300);
         this.zombieMech = new ZombieMech(this, 400, 300);
     }
@@ -26,21 +26,21 @@ public class GameScreen extends BaseScreen {
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(worldCamera.combined);
         {
-            testLevel.render(Level.LayerType.background, worldCamera);
-            testLevel.render(Level.LayerType.collision, worldCamera);
+            level.render(Level.LayerType.background, worldCamera);
+            level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
             {
                 player.render(batch);
                 zombieMech.render(batch);
             }
             batch.end();
-            testLevel.render(Level.LayerType.foreground, worldCamera);
+            level.render(Level.LayerType.foreground, worldCamera);
         }
     }
 
     @Override
     public void update(float dt) {
-        testLevel.update(dt);
+        level.update(dt);
         player.update(dt);
         zombieMech.update(dt);
     }

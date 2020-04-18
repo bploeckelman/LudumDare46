@@ -36,7 +36,7 @@ public class GameEntity {
     public boolean grounded;
 
     private float stateTime;
-    private float gravity = 0;
+    private float gravity = -3;
     private float maxHorizontalVelocity = 2000f;
     private float maxVerticalVelocity = 1200f;
     private Array<Rectangle> tiles = new Array<>();
@@ -97,60 +97,60 @@ public class GameEntity {
         // multiply by dt so we know how far we go in this frame
         velocity.scl(dt);
 
-//        // perform collision detection & response, on each axis, separately
-//        // if entity is moving right, check tiles to the right
-//        // of it's right bounding box edge, otherwise check the ones to the left
-//        Rectangle entityRect = screen.level.rectPool.obtain();
-//        entityRect.set(collisionBounds);
-//
-//        int startX, startY, endX, endY;
-//        if (velocity.x > 0) startX = endX = (int) (entityRect.x + velocity.x + entityRect.width);
-//        else                startX = endX = (int) (entityRect.x + velocity.x);
-//        startY = (int) (entityRect.y);
-//        endY   = (int) (entityRect.y + entityRect.height);
-//        entityRect.x += velocity.x;
-//        screen.level.getTiles(startX, startY, endX, endY, tiles);
-//        for (Rectangle tile : tiles) {
-//            if (entityRect.overlaps(tile)) {
-//                velocity.x = 0f;
-//                break;
-//            }
-//        }
-//
-//        // TODO: check for object tile interactions (horizontal)
+        // perform collision detection & response, on each axis, separately
+        // if entity is moving right, check tiles to the right
+        // of it's right bounding box edge, otherwise check the ones to the left
+        Rectangle entityRect = screen.level.rectPool.obtain();
+        entityRect.set(collisionBounds);
 
-//        // if the entity is moving upwards, check the tiles to the top
-//        // of it's top bounding box edge, otherwise check the ones to the bottom
-//        grounded = false;
-//        boolean yVelocityNeedsToBeCleared = false;
-//        if (velocity.y > 0) startY = endY = (int) (entityRect.y + velocity.y + entityRect.height);
-//        else                startY = endY = (int) (entityRect.y + velocity.y);
-//        startX = (int) (entityRect.x);
-//        endX   = (int) (entityRect.x + entityRect.width);
-//        entityRect.y += velocity.y;
-//        screen.level.getTiles(startX, startY, endX, endY, tiles);
-//        for (Rectangle tile : tiles) {
-//            if (entityRect.overlaps(tile)) {
-//                // actually reset the entity y-position here
-//                // so its just below / above the collided tile (removes bouncing)
-//                if (velocity.y > 0f) {
-//                    collisionBounds.y = tile.y - collisionBounds.height;
-//                } else {
-//                    collisionBounds.y = tile.y + tile.height;
-//                    grounded = true;
-//                }
-//            }
-//            yVelocityNeedsToBeCleared = true;
-//            break;
-//        }
-//
-//        // TODO: check for object tile interactions (vertical)
-//
-//        if (yVelocityNeedsToBeCleared) {
-//            velocity.y = 0f;
-//        }
-//
-//        screen.level.rectPool.free(entityRect);
+        int startX, startY, endX, endY;
+        if (velocity.x > 0) startX = endX = (int) (entityRect.x + velocity.x + entityRect.width);
+        else                startX = endX = (int) (entityRect.x + velocity.x);
+        startY = (int) (entityRect.y);
+        endY   = (int) (entityRect.y + entityRect.height);
+        entityRect.x += velocity.x;
+        screen.level.getTiles(startX, startY, endX, endY, tiles);
+        for (Rectangle tile : tiles) {
+            if (entityRect.overlaps(tile)) {
+                velocity.x = 0f;
+                break;
+            }
+        }
+
+        // TODO: check for object tile interactions (horizontal)
+
+        // if the entity is moving upwards, check the tiles to the top
+        // of it's top bounding box edge, otherwise check the ones to the bottom
+        grounded = false;
+        boolean yVelocityNeedsToBeCleared = false;
+        if (velocity.y > 0) startY = endY = (int) (entityRect.y + velocity.y + entityRect.height);
+        else                startY = endY = (int) (entityRect.y + velocity.y);
+        startX = (int) (entityRect.x);
+        endX   = (int) (entityRect.x + entityRect.width);
+        entityRect.y += velocity.y;
+        screen.level.getTiles(startX, startY, endX, endY, tiles);
+        for (Rectangle tile : tiles) {
+            if (entityRect.overlaps(tile)) {
+                // actually reset the entity y-position here
+                // so its just below / above the collided tile (removes bouncing)
+                if (velocity.y > 0f) {
+                    collisionBounds.y = tile.y - collisionBounds.height;
+                } else {
+                    collisionBounds.y = tile.y + tile.height;
+                    grounded = true;
+                }
+            }
+            yVelocityNeedsToBeCleared = true;
+            break;
+        }
+
+        // TODO: check for object tile interactions (vertical)
+
+        if (yVelocityNeedsToBeCleared) {
+            velocity.y = 0f;
+        }
+
+        screen.level.rectPool.free(entityRect);
 
         collisionBounds.x += velocity.x;
         collisionBounds.y += velocity.y;
