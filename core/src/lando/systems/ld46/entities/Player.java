@@ -25,8 +25,10 @@ public class Player extends MoveEntity {
 
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
-        this.collisionBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight());
-        this.imageBounds.set(x, y, keyframe.getRegionWidth(), keyframe.getRegionHeight());
+        float playerWidth = keyframe.getRegionWidth() * 2;
+        float playerHeight = keyframe.getRegionHeight() * 2;
+        this.collisionBounds.set(x, y, playerWidth, playerHeight);
+        this.imageBounds.set(this.collisionBounds);
         this.position.set(x, y);
         this.jumpState = JumpState.none;
     }
