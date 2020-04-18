@@ -1,5 +1,6 @@
 package lando.systems.ld46.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -44,7 +45,9 @@ public class TitleScreen extends BaseScreen {
     public void render(SpriteBatch batch) {
         batch.begin();
         batch.setProjectionMatrix(shaker.getCombinedMatrix());
-
+        batch.setColor(Color.BLUE);
+        batch.draw(assets.whitePixel, 0,0, worldCamera.viewportWidth, worldCamera.viewportHeight);
+        batch.setColor(Color.WHITE);
         batch.draw(assets.debugTexture, placeholder.x, placeholder.y, size, size);
 
         batch.end();
