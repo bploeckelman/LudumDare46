@@ -42,6 +42,7 @@ public class PhysicsSystem {
 
             vel.x += accel.x * dt;
             vel.y += (accel.y + GRAVITY) * dt;
+            vel.scl((float)Math.pow(.8f, dt));
 
             float nextX = pos.x + vel.x * dt;
             float nextY = pos.y + vel.y * dt;

@@ -3,8 +3,10 @@ package lando.systems.ld46.world;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -200,27 +202,57 @@ public class Level {
 
     private void buildCollisionBounds() {
         collisionSegments = new Array<>();
+        Pixmap pixmap = null;
         TiledMapTileLayer collisionLayer = layers.get(LayerType.collision).tileLayer;
         float tileWidth = collisionLayer.getTileWidth();
         // Build Edges
         for (int x = 0; x < collisionLayer.getWidth(); x++) {
             for (int y =0; y < collisionLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = collisionLayer.getCell(x, y);
+                if (cell == null) continue;
                 TiledMapTileLayer.Cell cellRight = collisionLayer.getCell(x +1, y);
                 TiledMapTileLayer.Cell cellLeft = collisionLayer.getCell(x -1, y);
                 TiledMapTileLayer.Cell cellTop = collisionLayer.getCell(x, y +1);
                 TiledMapTileLayer.Cell cellBottom = collisionLayer.getCell(x, y -1);
+                Segment2D topSegment = null;
+                Segment2D leftSegment = null;
+                Segment2D bottomSegment = null;
+                Segment2D rightSegment = null;
                 if (cell != null && cellRight == null) {
-                    collisionSegments.add(new Segment2D((x+1) * tileWidth, y * tileWidth, (x+1) * tileWidth, (y+1) * tileWidth));
+                    rightSegment = new Segment2D((x+1) * tileWidth, y * tileWidth, (x+1) * tileWidth, (y+1) * tileWidth);
                 }
                 if (cell != null && cellLeft == null) {
-                    collisionSegments.add(new Segment2D((x) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y) * tileWidth));
+                    leftSegment = new Segment2D((x) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y) * tileWidth);
                 }
                 if (cell != null && cellTop == null) {
-                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y+1) * tileWidth));
+                    topSegment = new Segment2D((x+1) * tileWidth, (y+1) * tileWidth, (x) * tileWidth, (y+1) * tileWidth);
                 }
                 if (cell != null && cellBottom == null) {
-                    collisionSegments.add(new Segment2D((x) * tileWidth, (y) * tileWidth, (x+1) * tileWidth, (y) * tileWidth));
+                    bottomSegment = new Segment2D((x) * tileWidth, (y) * tileWidth, (x+1) * tileWidth, (y) * tileWidth);
+                }
+                if (pixmap == null) {
+                    Texture texture = cell.getTile().getTextureRegion().getTexture();
+                    if (!texture.getTextureData().isPrepared()) {
+                        texture.getTextureData().prepare();
+                    }
+                    pixmap = texture.getTextureData().consumePixmap();
+                }
+                TextureRegion region = cell.getTile().getTextureRegion();
+                int valueUL = pixmap.getPixel(region.getRegionX() + 3, region.getRegionY() + region.getRegionHeight() - 3);
+                int valueUR = pixmap.getPixel(region.getRegionX() +region.getRegionWidth() - 3, region.getRegionY() + region.getRegionHeight() - 3);
+                if ((valueUL & 0x000000ff) == 0) {
+                    if (bottomSegment != null) collisionSegments.add(bottomSegment);
+                    if (rightSegment != null) collisionSegments.add(rightSegment);
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y+1) * tileWidth, (x)* tileWidth, (y) * tileWidth));
+                } else if ((valueUR & 0x000000ff) == 0){
+                    if (bottomSegment != null) collisionSegments.add(bottomSegment);
+                    if (leftSegment != null) collisionSegments.add(leftSegment);
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y) * tileWidth, (x)* tileWidth, (y+1) * tileWidth));
+                } else {
+                    if (topSegment != null) collisionSegments.add(topSegment);
+                    if (rightSegment != null) collisionSegments.add(rightSegment);
+                    if (leftSegment != null) collisionSegments.add(leftSegment);
+                    if (bottomSegment != null) collisionSegments.add(bottomSegment);
                 }
             }
         }

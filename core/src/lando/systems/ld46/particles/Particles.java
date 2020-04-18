@@ -90,7 +90,7 @@ public class Particles implements Disposable {
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
                     .startPos(x, y)
-                    .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 100f))
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(300f, 40000f))
                     .startSize(10f, 10f)
                     .endSize(0f, 0f)
                     .startAlpha(1f)
@@ -106,12 +106,12 @@ public class Particles implements Disposable {
     public void makePhysicsParticles(float x, float y) {
         TextureRegion keyframe = assets.whiteCircle;
 
-        int numParticles = 100;
+        int numParticles = 200;
         for (int i = 0; i < numParticles; ++i) {
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
                     .startPos(x, y)
-                    .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 100f))
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 1000f))
                     .startSize(10f, 10f)
                     .endSize(0f, 0f)
                     .startAlpha(1f)
