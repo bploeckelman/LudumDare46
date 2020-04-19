@@ -94,12 +94,14 @@ public class MoveEntity extends GameEntity {
         if (jumpTime == -1) return;
 
         jumpTime += dt;
+        if (jumpAnimation != null) {
+            keyframe = jumpAnimation.getKeyFrame(jumpTime);
+        }
+
         if (state == State.jumping && (jumpAnimation == null || jumpTime > jumpAnimation.getAnimationDuration())) {
             playSound(jumpSound);
             velocity.y = jumpVelocity;
             state = State.jump;
-        } else if (jumpAnimation != null) {
-            keyframe = jumpAnimation.getKeyFrame(jumpTime);
         }
     }
 
