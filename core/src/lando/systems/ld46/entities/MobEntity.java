@@ -16,7 +16,7 @@ public class MobEntity extends EnemyEntity {
     private float fromX, toX;
     private float lerpTime = 0;
 
-    public MobEntity(Mob boss, float x, float y) {
+    public MobEntity(Mob boss) {
         super(boss.screen, MobEntity.getAnimation(boss.screen.assets));
 
         this.boss = boss;
@@ -25,9 +25,11 @@ public class MobEntity extends EnemyEntity {
         direction = MathUtils.randomBoolean() ? Direction.left : Direction.right;
 
         nextMoveTime = MathUtils.random(2f, 5f);
-        toX = x;
 
-        initEntity(x, y, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
+        // prevent first update until physics engine has had a pass
+        grounded = false;
+
+        initEntity(0, 0, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
     }
 
     private void setBehavior() {
@@ -41,6 +43,17 @@ public class MobEntity extends EnemyEntity {
         fromX = position.x;
         toX = position.x + (distX * MathUtils.random(0.2f, 0.5f));
         lerpTime = 0;
+    }
+
+    @Override
+    public void setGrounded(boolean groundValue) {
+        if (grounded != groundValue) {
+            super.setGrounded(groundValue);
+
+            if (grounded) {
+                setBehavior();
+            }
+        }
     }
 
     @Override
@@ -58,8 +71,6 @@ public class MobEntity extends EnemyEntity {
             lerpTime += dt;
             float pos = (lerpTime < 1) ? MathUtils.lerp(fromX, toX, lerpTime) : toX;
             setPosition(pos, position.y);
-
         }
     }
-
 }

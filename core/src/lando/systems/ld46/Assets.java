@@ -61,8 +61,12 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> mechJumpAnimation;
     public Animation<TextureRegion> mechFallAnimation;
 
+    // enemies!!
     public Animation<TextureRegion> mobPitchforkAnimation;
     public Animation<TextureRegion> mobTorchAnimation;
+
+    public Animation<TextureRegion> batAnimation;
+    public Animation<TextureRegion> snakeAnimation;
 
     public Array<ShaderProgram> randomTransitions;
     public ShaderProgram blindsShader;
@@ -161,6 +165,9 @@ public class Assets implements Disposable {
 
         mobPitchforkAnimation = new Animation<>(0.1f, atlas.findRegions("pitchfork-idle"), Animation.PlayMode.LOOP);
         mobTorchAnimation = new Animation<>(0.3f, atlas.findRegions("torch-idle"), Animation.PlayMode.LOOP);
+
+        batAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
+        snakeAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");

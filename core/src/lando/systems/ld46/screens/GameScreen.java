@@ -12,13 +12,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
-import lando.systems.ld46.entities.EnemyEntity;
-import lando.systems.ld46.entities.Mob;
+import lando.systems.ld46.entities.*;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
-import lando.systems.ld46.entities.Player;
-import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
@@ -148,8 +145,14 @@ public class GameScreen extends BaseScreen {
 
     private void handleTempCommands() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            Mob mob = new Mob(this, 600, 120);
-            enemies.add(mob);
+            EnemyFactory.AddEnemy(this, 600 + MathUtils.random(-50f, 50f), 120);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            // kill em all, let the engine sort it out
+            for (EnemyEntity e : enemies) {
+                e.takeDamage(e.hitPoints);
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             particles.makePhysicsParticles(touchPos.x, touchPos.y);
