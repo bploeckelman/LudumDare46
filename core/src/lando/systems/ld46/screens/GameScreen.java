@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
+import lando.systems.ld46.entities.EnemyEntity;
 import lando.systems.ld46.entities.Mob;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
@@ -49,7 +50,7 @@ public class GameScreen extends BaseScreen {
     PhysicsSystem physicsSystem;
     public Array<PhysicsComponent> physicsEntities;
 
-    Mob mob;
+    public Array<EnemyEntity> enemies;
 
     public GameScreen(Game game) {
         super(game);
@@ -63,9 +64,7 @@ public class GameScreen extends BaseScreen {
         this.touchPos = new Vector3();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
 
-        // temp shit
-        mob = new Mob(this, 800, 400);
-        physicsEntities.add(mob);
+        this.enemies = new Array<>();
 
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
         float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
@@ -73,6 +72,10 @@ public class GameScreen extends BaseScreen {
         TextureRegionParallaxLayer columnLayer = new TextureRegionParallaxLayer(assets.columnsBackground, levelHeight, new Vector2(.4f, .9f), ParallaxUtils.WH.height);
         // TODO: fix optional padding on parallax layers
         this.background = new ParallaxBackground(sunsetLayer, columnLayer);
+    }
+
+    public void addEnemy() {
+
     }
 
     @Override
@@ -89,7 +92,10 @@ public class GameScreen extends BaseScreen {
             level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
             {
-                mob.render(batch);
+                for (EnemyEntity enemy : enemies) {
+                    enemy.render(batch);
+                }
+
                 player.render(batch);
                 zombieMech.render(batch);
                 particles.draw(batch, Particles.Layer.foreground);
@@ -121,6 +127,9 @@ public class GameScreen extends BaseScreen {
         if (Gdx.app.getType() == Application.ApplicationType.Desktop && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+
+        handleTempCommands();
+
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         worldCamera.unproject(touchPos);
         particles.update(dt);
@@ -128,9 +137,20 @@ public class GameScreen extends BaseScreen {
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);
+
+        for (EnemyEntity enemy : enemies) {
+            enemy.update(dt);
+        }
+
         physicsSystem.update(dt);
-        mob.update(dt);
         handleCameraConstraints();
+    }
+
+    private void handleTempCommands() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            Mob mob = new Mob(this, 250, 300);
+            enemies.add(mob);
+        }
     }
 
     private void updateCamera() {
