@@ -262,8 +262,7 @@ public class PhysicsSystem {
         if (Intersector.overlapConvexPolygons(rectVerts, velVerts, transVector)) {
             rectPoly.setVertices(rectVerts);
             velPoly.setVertices(velVerts);
-            collision.distance = transVector;
-            collision.segment = segment;
+            collision.init(segment, transVector);
             collision.rect = rect;
             collision.polygon = new Polygon();
             collision.t = transVector.depth / v.len();

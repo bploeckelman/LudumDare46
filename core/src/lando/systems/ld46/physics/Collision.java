@@ -12,6 +12,7 @@ public class Collision implements Comparable {
     public Rectangle rect;
     public Vector2 velocity;
     public float t;
+    public float dotProduct;
 
     public Collision() {}
 
@@ -19,6 +20,12 @@ public class Collision implements Comparable {
         this.segment = segment;
         this.distance = dist;
         this.polygon = polygon;
+    }
+
+    public void init(Segment2D segment, Intersector.MinimumTranslationVector dist){
+        this.segment = segment;
+        this.distance = dist;
+        this.dotProduct = Math.abs(this.distance.normal.dot(this.segment.normal));
     }
 
 
@@ -29,7 +36,7 @@ public class Collision implements Comparable {
             return 1;
         } else if (other.distance.depth > this.distance.depth) {
             return -1;
-        } else if (Math.abs(other.distance.normal.dot(other.segment.normal)) < Math.abs(this.distance.normal.dot(this.segment.normal))) {
+        } else if (other.dotProduct > this.dotProduct) {
             return 1;
         } else {
             return -1;
