@@ -9,6 +9,8 @@ public class Mob extends EnemyEntity {
 
     private Array<MobEntity> mobEntities;
 
+    public float maxDistance;
+
     public Mob(GameScreen screen, float x, float y) {
         super(screen, screen.assets.whitePixel);
 
@@ -16,11 +18,15 @@ public class Mob extends EnemyEntity {
 
         mobEntities = new Array<>(count);
 
+        float totalWidth = 0;
         while (count-- > 0) {
-            MobEntity entity = new MobEntity(screen, x, y);
+            MobEntity entity = new MobEntity(this, x, y);
+            totalWidth += entity.collisionBounds.width;
             mobEntities.add(entity);
             screen.physicsEntities.add(entity);
         }
+
+        maxDistance = totalWidth/2;
 
         initEntity(x, y, 1, 1);
     }

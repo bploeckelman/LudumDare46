@@ -148,7 +148,7 @@ public class GameScreen extends BaseScreen {
 
     private void handleTempCommands() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            Mob mob = new Mob(this, 250, 300);
+            Mob mob = new Mob(this, 1100, 350);
             enemies.add(mob);
         }
     }

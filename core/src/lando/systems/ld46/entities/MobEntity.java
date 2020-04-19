@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld46.Assets;
-import lando.systems.ld46.screens.GameScreen;
 
 public class MobEntity extends EnemyEntity {
 
@@ -12,12 +11,51 @@ public class MobEntity extends EnemyEntity {
         return MathUtils.randomBoolean() ? assets.mobPitchforkAnimation : assets.mobTorchAnimation;
     }
 
-    public MobEntity(GameScreen screen, float x, float y) {
-        super(screen, MobEntity.getAnimation(screen.assets));
+    private float nextMoveTime;
+    private Mob boss;
+    private float fromX, toX;
+    private float lerpTime = 0;
+
+    public MobEntity(Mob boss, float x, float y) {
+        super(boss.screen, MobEntity.getAnimation(boss.screen.assets));
+
+        this.boss = boss;
 
         stateTime = MathUtils.random();
         direction = MathUtils.randomBoolean() ? Direction.left : Direction.right;
 
+        nextMoveTime = MathUtils.random(2f, 5f);
+        toX = x;
+
         initEntity(x, y, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
     }
+
+    private void setBehavior() {
+        nextMoveTime = MathUtils.random(2f, 5f);
+
+        float direction = (position.x < boss.position.x) ? boss.maxDistance : -boss.maxDistance;
+        fromX = position.x;
+        toX = position.x + direction * MathUtils.random(0.2f, 0.5f);
+        lerpTime = 0;
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+
+        if (!isGrounded()) return;
+
+        if (position.x == toX) {
+            nextMoveTime -= dt;
+            if (nextMoveTime < 0) {
+                setBehavior();
+            }
+        } else {
+            lerpTime += dt;
+            float pos = (lerpTime < 1) ? MathUtils.lerp(fromX, toX, lerpTime) : toX;
+            setPosition(pos, position.y);
+
+        }
+    }
+
 }
