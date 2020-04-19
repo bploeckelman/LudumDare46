@@ -139,7 +139,7 @@ public class MoveEntity extends GameEntity {
         Rectangle r = getPunchRect();
         if (hasHit(r)) {
             playSound(punchHitSound);
-            bleed(r.x + r.width / 2, r.y + r.height / 2);
+            bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
         }
     }
 
@@ -168,6 +168,10 @@ public class MoveEntity extends GameEntity {
 
     public void bleed(float x, float y) {
         screen.particles.makeBloodParticles(x, y);
+    }
+
+    public void bleed(Direction direction, float x, float y) {
+        screen.particles.makeBloodParticles(direction, x, y);
     }
 
     private boolean canPunch() {

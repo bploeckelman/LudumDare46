@@ -1,5 +1,6 @@
 package lando.systems.ld46.particles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
+import lando.systems.ld46.entities.GameEntity;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.utils.Utils;
 
@@ -136,6 +138,27 @@ public class Particles implements Disposable {
                     .keyframe(keyframe)
                     .startPos(x, y)
                     .velocityDirection(MathUtils.random(200f), MathUtils.random(30f, 50f))
+                    .startSize(5f)
+                    .endSize(1f)
+                    .startAlpha(1f)
+                    .endAlpha(1f)
+                    .timeToLive(7f)
+                    .startColor(Color.RED)
+                    .makePhysicsWithCustomBounceScale(.4f)
+                    .init());
+        }
+    }
+
+    public void makeBloodParticles(GameEntity.Direction direction, float x, float y) {
+        TextureRegion keyframe = assets.whiteCircle;
+
+        int numParticles = 50;
+        for (int i = 0; i < numParticles; ++i) {
+            float xVelocity = direction == GameEntity.Direction.left ?  MathUtils.random(75f, 285f) : MathUtils.random(-105f, 105f);
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(keyframe)
+                    .startPos(x, y)
+                    .velocityDirection(xVelocity, MathUtils.random(10f, 90f))
                     .startSize(5f)
                     .endSize(1f)
                     .startAlpha(1f)

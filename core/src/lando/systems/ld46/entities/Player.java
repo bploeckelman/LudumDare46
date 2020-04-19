@@ -69,7 +69,6 @@ public class Player extends MoveEntity {
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             if (inMech()) {
                 jumpOut();
-                this.screen.zombieMech.explode();
             } else {
                 ZombieMech mech = this.screen.zombieMech;
                 if (collisionBounds.overlaps(mech.collisionBounds)) {
@@ -132,6 +131,7 @@ public class Player extends MoveEntity {
     public void jumpOut() {
         if (inMech()) {
             setPosition(mech.position.x, mech.position.y + 20);
+            mech.explode();
             mech = null;
         }
     }
