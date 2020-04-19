@@ -46,6 +46,7 @@ public class Assets implements Disposable {
     public TextureRegion zombieRippedHead;
     public TextureRegion zombieRippedTorso;
     public TextureRegion iconHeart;
+    public TextureRegion smokeTex;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -146,6 +147,7 @@ public class Assets implements Disposable {
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
         zombieRippedTorso = atlas.findRegion("zombie-ripped-torso");
         iconHeart = atlas.findRegion("icon-heart");
+        smokeTex = atlas.findRegion("smoke");
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);

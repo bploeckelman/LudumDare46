@@ -169,8 +169,7 @@ public class Level {
             if (wall.dead) {
                 removeCollisionRectangle(wall.bounds);
                 gameScreen.particles.spawnPunchWallExplosion(wall.punchedDir,
-                        wall.bounds.x + wall.bounds.width / 2f,
-                        wall.bounds.y + wall.bounds.height / 2f);
+                        wall.bounds);
                 punchWalls.removeIndex(i);
             }
         }

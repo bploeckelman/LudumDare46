@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
@@ -142,25 +143,42 @@ public class Particles implements Disposable {
     /**
      * @param punchDirection negative for a punch towards the left, positive for a punch towards the right
      */
-    public void spawnPunchWallExplosion(GameEntity.Direction punchDirection, float x, float y) {
-        TextureRegion keyframe = assets.whitePixel;
+    public void spawnPunchWallExplosion(GameEntity.Direction punchDirection, Rectangle rect) {
+        TextureRegion keyframe = assets.whiteCircle;
 
-        int numParticles = 300;
+        int numParticles = 500;
         for (int i = 0; i < numParticles; ++i) {
             float velAngle = (punchDirection == right)
                            ? MathUtils.random(-45f, 45f)   // 90 degree cone facing right
                            : MathUtils.random(135f, 225f); // 90 degree cone facing left
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
-                    .startPos(x, y)
+                    .startPos(MathUtils.random(rect.x, rect.x + rect.width), MathUtils.random(rect.y, rect.y + rect.height))
                     .velocityDirection(velAngle, MathUtils.random(300f, 600f))
-                    .startSize(MathUtils.random(4f, 6f))
+                    .startSize(MathUtils.random(2f, 4f))
                     .endSize(0.1f)
                     .startAlpha(1f)
                     .endAlpha(0.25f)
                     .timeToLive(2.5f)
                     .startColor(punchWallExplosionColors[MathUtils.random(0, punchWallExplosionColors.length - 1)])
                     .makePhysicsWithCustomBounceScale(1.25f)
+                    .init());
+        }
+
+        for (int i = 0; i < 100; i++){
+            float g = MathUtils.random(.7f) + .3f;
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.smokeTex)
+                    .startPos(MathUtils.random(rect.x, rect.x + rect.width), MathUtils.random(rect.y, rect.y + rect.height))
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(10f))
+                    .startSize(MathUtils.random(20f, 40f))
+                    .endSize(0.1f)
+                    .startAlpha(1f)
+                    .endAlpha(0f)
+                    .startRotation(MathUtils.random(40))
+                    .endRotation(MathUtils.random(-40, 80))
+                    .timeToLive(MathUtils.random(1f, 3f))
+                    .startColor(g, g, g, 1)
                     .init());
         }
     }
