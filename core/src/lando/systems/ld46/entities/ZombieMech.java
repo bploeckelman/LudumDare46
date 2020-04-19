@@ -39,6 +39,16 @@ public class ZombieMech extends MoveEntity {
         return punchRect;
     }
 
+    @Override
+    protected void handleDamage() {
+        Rectangle r = getPunchRect();
+        if (hasHit(r)) {
+            // TODO: check for punches against punchWalls in the level... and maybe other stuff here?
+            playSound(punchHitSound);
+            bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
+        }
+    }
+
     public void explode() {
         screen.particles.makeExplodingZombieParticles(position.x, position.y);
     }

@@ -1,13 +1,9 @@
 package lando.systems.ld46.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld46.Audio;
-import lando.systems.ld46.Config;
 import lando.systems.ld46.screens.GameScreen;
 
 public class MoveEntity extends GameEntity {
@@ -27,8 +23,8 @@ public class MoveEntity extends GameEntity {
 
     private float punchTime = -1;
     private Animation<TextureRegion> punchAnimation;
-    private Audio.Sounds punchSwingSound = Audio.Sounds.none;
-    private Audio.Sounds punchHitSound = Audio.Sounds.none;
+    protected Audio.Sounds punchSwingSound = Audio.Sounds.none;
+    protected Audio.Sounds punchHitSound = Audio.Sounds.none;
     protected Rectangle punchRect = new Rectangle();
     private int punchFrameIndex[];
     private float punchDamage = 0f;
@@ -135,7 +131,7 @@ public class MoveEntity extends GameEntity {
         return false;
     }
 
-    private void handleDamage() {
+    protected void handleDamage() {
         Rectangle r = getPunchRect();
         if (hasHit(r)) {
             playSound(punchHitSound);
@@ -147,7 +143,7 @@ public class MoveEntity extends GameEntity {
         return null;
     }
 
-    private boolean hasHit(Rectangle hitRect) {
+    protected boolean hasHit(Rectangle hitRect) {
         // check rect
         return hitRect != null;
     }
