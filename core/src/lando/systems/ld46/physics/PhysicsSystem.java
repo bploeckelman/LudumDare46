@@ -67,6 +67,15 @@ public class PhysicsSystem {
         return false;
     }
 
+    public boolean isPositionAboveGround(Segment2D segment) {
+        for (Segment2D colSegment : screen.level.collisionSegments) {
+            if (intersectSegments(segment.start, segment.end, colSegment.start, colSegment.end, collisionResult)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void updateGameEntities(float dt) {
         Array<PhysicsComponent> entities = screen.physicsEntities;
         for (PhysicsComponent obj : entities) {

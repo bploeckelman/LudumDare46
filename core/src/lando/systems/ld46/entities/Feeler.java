@@ -31,7 +31,7 @@ public class Feeler {
         segment.setStart(owner.position.x + offset, owner.collisionBounds.y + 20);
         segment.setEnd(owner.position.x + offset, owner.collisionBounds.y + 20 - length);
 
-        isSafe = owner.screen.physicsSystem.isPositionAboveGround(segment.start, length);
+        isSafe = owner.screen.physicsSystem.isPositionAboveGround(segment);
     }
 
     public void render(SpriteBatch batch){
