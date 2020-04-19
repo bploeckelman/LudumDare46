@@ -36,9 +36,9 @@ public class MoveEntity extends GameEntity {
         }
 
         // Apply horizontal drag
-        if (grounded) {
-            velocity.x *= 0.85f;
-        }
+//        if (grounded) {
+//            velocity.x *= 0.85f;
+//        }
 
         // Clamp minimum horizontal velocity to zero
         if (Math.abs(velocity.x) < horizontalSpeedMinThreshold) {

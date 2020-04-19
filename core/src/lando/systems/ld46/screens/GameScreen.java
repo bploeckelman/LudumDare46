@@ -50,7 +50,7 @@ public class GameScreen extends BaseScreen {
         this.level = assets.levels.get(LevelDescriptor.test);
         this.player = new Player(this, level.playerSpawn);
         physicsEntities.add(player);
-        this.zombieMech = new ZombieMech(this, 400, 300);
+        this.zombieMech = new ZombieMech(this, 400, 500);
         physicsEntities.add(zombieMech);
         this.touchPos = new Vector3();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
@@ -74,7 +74,7 @@ public class GameScreen extends BaseScreen {
             if (Config.debug) {
                 batch.begin();
                 {
-                    level.renderDebug(batch);
+//                    level.renderDebug(batch);
                 }
                 batch.end();
             }

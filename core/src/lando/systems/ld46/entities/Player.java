@@ -19,6 +19,7 @@ public class Player extends MoveEntity {
     private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
 
+
     private Animation<TextureRegion> punchAnimation;
     private float punchTime = -1;
 
@@ -47,7 +48,7 @@ public class Player extends MoveEntity {
 
         // Horizontal ----------------------------------------
 
-        if (grounded) {
+
             // Check for and apply horizontal movement
             boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
                     || Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -60,6 +61,7 @@ public class Player extends MoveEntity {
                 move(Direction.right);
             }
 
+        if (grounded) {
             jumpState = JumpState.none;
         }
 

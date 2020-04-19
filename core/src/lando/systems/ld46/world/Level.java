@@ -230,8 +230,8 @@ public class Level {
                     pixmap = texture.getTextureData().consumePixmap();
                 }
                 TextureRegion region = cell.getTile().getTextureRegion();
-                int valueUL = pixmap.getPixel(region.getRegionX() + 3, region.getRegionY() + region.getRegionHeight() - 3);
-                int valueUR = pixmap.getPixel(region.getRegionX() +region.getRegionWidth() - 3, region.getRegionY() + region.getRegionHeight() - 3);
+                int valueUL = pixmap.getPixel(region.getRegionX() + 2, region.getRegionY() +  2);
+                int valueUR = pixmap.getPixel(region.getRegionX() + region.getRegionWidth() - 2, region.getRegionY() + 2);
                 if ((valueUL & 0x000000ff) == 0) {
                     if (bottomSegment != null) collisionSegments.add(bottomSegment);
                     if (rightSegment != null) collisionSegments.add(rightSegment);
@@ -270,7 +270,6 @@ public class Level {
                 }
             }
         }
-        int i = 0;
     }
 
     public void getTiles(float startX, float startY, float endX, float endY, Array<Rectangle> tiles) {

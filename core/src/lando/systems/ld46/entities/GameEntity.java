@@ -39,7 +39,7 @@ public class GameEntity implements PhysicsComponent {
 
     private float stateTime;
     private float gravity = -3;
-    private float maxHorizontalVelocity = 2000f;
+    private float maxHorizontalVelocity = 200f;
     private float maxVerticalVelocity = 1200f;
     private Array<Rectangle> tiles = new Array<>();
 
@@ -77,8 +77,6 @@ public class GameEntity implements PhysicsComponent {
     }
 
     public void update(float dt) {
-        updatePosition(dt);
-
         stateTime += dt;
         if (animation != null) {
             float frameTime = state != State.jumping ? stateTime: 0;
@@ -106,85 +104,6 @@ public class GameEntity implements PhysicsComponent {
         collisionCircle.setRadius(collisionBounds.width / 2f);
     }
 
-    public void updatePosition(float dt) {
-
-//        // apply gravity if we are falling
-//        velocity.add(0f, gravity);
-//
-//        // clamp velocity to maximum, horizontal only
-//        velocity.x = Math.min(maxHorizontalVelocity, Math.max(-maxHorizontalVelocity, velocity.x));
-//
-//
-//
-//        if (!grounded) {
-//            state = State.jumping;
-//        }
-//
-//        // multiply by dt so we know how far we go in this frame
-//        velocity.scl(dt);
-//
-//        // perform collision detection & response, on each axis, separately
-//        // if entity is moving right, check tiles to the right
-//        // of it's right bounding box edge, otherwise check the ones to the left
-//        Rectangle entityRect = screen.level.rectPool.obtain();
-//        entityRect.set(collisionBounds);
-//
-//        int startX, startY, endX, endY;
-//        if (velocity.x > 0) startX = endX = (int) (entityRect.x + velocity.x + entityRect.width);
-//        else                startX = endX = (int) (entityRect.x + velocity.x);
-//        startY = (int) (entityRect.y);
-//        endY   = (int) (entityRect.y + entityRect.height);
-//        entityRect.x += velocity.x;
-//        screen.level.getTiles(startX, startY, endX, endY, tiles);
-//        for (Rectangle tile : tiles) {
-//            if (entityRect.overlaps(tile)) {
-//                velocity.x = 0f;
-//                break;
-//            }
-//        }
-//
-//        // TODO: check for object tile interactions (horizontal)
-//
-//        // if the entity is moving upwards, check the tiles to the top
-//        // of it's top bounding box edge, otherwise check the ones to the bottom
-//        grounded = false;
-//        boolean yVelocityNeedsToBeCleared = false;
-//        if (velocity.y > 0) startY = endY = (int) (entityRect.y + velocity.y + entityRect.height);
-//        else                startY = endY = (int) (entityRect.y + velocity.y);
-//        startX = (int) (entityRect.x);
-//        endX   = (int) (entityRect.x + entityRect.width);
-//        entityRect.y += velocity.y;
-//        screen.level.getTiles(startX, startY, endX, endY, tiles);
-//        for (Rectangle tile : tiles) {
-//            if (entityRect.overlaps(tile)) {
-//                // actually reset the entity y-position here
-//                // so its just below / above the collided tile (removes bouncing)
-//                if (velocity.y > 0f) {
-//                    collisionBounds.y = tile.y - collisionBounds.height;
-//                } else {
-//                    collisionBounds.y = tile.y + tile.height;
-//                    grounded = true;
-//                }
-//            }
-//            yVelocityNeedsToBeCleared = true;
-//            break;
-//        }
-//
-//        // TODO: check for object tile interactions (vertical)
-//
-//        if (yVelocityNeedsToBeCleared) {
-//            velocity.y = 0f;
-//        }
-//
-//        screen.level.rectPool.free(entityRect);
-//
-//        collisionBounds.x += velocity.x;
-//        collisionBounds.y += velocity.y;
-//        velocity.scl(1f / dt);
-//
-//        setPosition(collisionBounds.x, collisionBounds.y);
-    }
-
     public void centerOn(GameEntity entity) {
         float x = entity.collisionBounds.x + (entity.collisionBounds.width - collisionBounds.width)/2;
         float y = entity.collisionBounds.y + (entity.collisionBounds.height - collisionBounds.height)/2;
@@ -203,16 +122,7 @@ public class GameEntity implements PhysicsComponent {
 
         if (Config.debug) {
 //            batch.setColor(Color.RED);
-//            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
-//            batch.setColor(Color.WHITE);
-//
-//            batch.setColor(Color.YELLOW);
-//            for (Rectangle tile : tiles) {
-//                assets.debugNinePatch.draw(batch, tile.x, tile.y, tile.width, tile.height);
-//            }
-//            batch.setColor(Color.WHITE);
-            batch.setColor(Color.RED);
-            batch.draw(assets.ringTexture, collisionCircle.x - collisionCircle.radius, collisionCircle.y - collisionCircle.radius, collisionCircle.radius*2, collisionCircle.radius*2);
+//            batch.draw(assets.ringTexture, collisionCircle.x - collisionCircle.radius, collisionCircle.y - collisionCircle.radius, collisionCircle.radius*2, collisionCircle.radius*2);
             batch.setColor(Color.YELLOW);
             assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
             batch.setColor(Color.WHITE);
@@ -261,7 +171,7 @@ public class GameEntity implements PhysicsComponent {
 
     @Override
     public Shape2D getCollisionBounds() {
-        return collisionCircle;
+        return collisionBounds;
     }
 
     @Override
