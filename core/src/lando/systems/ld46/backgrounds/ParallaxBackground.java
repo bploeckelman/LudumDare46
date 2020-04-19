@@ -63,30 +63,34 @@ public class ParallaxBackground {
             worldCamera.update();
             batch.setProjectionMatrix(worldCamera.combined);
 
+            float halfZoomedWidth  = worldCamera.viewportWidth  * worldCamera.zoom * 0.5f;
+            float halfZoomedHeight = worldCamera.viewportHeight * worldCamera.zoom * 0.5f;
+
             // T_T
             float currentX = (layer.tileModeX == ParallaxLayer.TileMode.single) ? 0
-                           : ((int) ((worldCamera.position.x - worldCamera.viewportWidth * 0.5f * worldCamera.zoom) / layer.getWidth())) * layer.getWidth() - (Math.abs((1 - layer.parallaxRatio.x) % 1) * worldCamera.viewportWidth * 0.5f);
+                           : ((int) ((worldCamera.position.x - halfZoomedWidth) / layer.getWidth())) * layer.getWidth() - (Math.abs((1 - layer.parallaxRatio.x) % 1) * worldCamera.viewportWidth * 0.5f);
             do {
                 // T_T
                 float currentY = (layer.tileModeY == ParallaxLayer.TileMode.single) ? 0
-                               : ((int) ((worldCamera.position.y - worldCamera.viewportHeight * 0.5f * worldCamera.zoom) / layer.getHeight())) * layer.getHeight() - (((1 - layer.parallaxRatio.y) % 1) * worldCamera.viewportHeight * 0.5f);
+                               : ((int) ((worldCamera.position.y - halfZoomedHeight) / layer.getHeight())) * layer.getHeight() - (((1 - layer.parallaxRatio.y) % 1) * worldCamera.viewportHeight * 0.5f);
                 do {
-                    if (!((worldCamera.position.x - worldCamera.viewportWidth  * worldCamera.zoom * 0.5f > currentX + layer.getWidth())
-                       || (worldCamera.position.x + worldCamera.viewportWidth  * worldCamera.zoom * 0.5f < currentX)
-                       || (worldCamera.position.y - worldCamera.viewportHeight * worldCamera.zoom * 0.5f > currentY + layer.getHeight())
-                       || (worldCamera.position.y + worldCamera.viewportHeight * worldCamera.zoom * 0.5f < currentY))) {
+                    if (!((worldCamera.position.x - halfZoomedWidth  > currentX + layer.getWidth())
+                       || (worldCamera.position.x + halfZoomedWidth  < currentX)
+                       || (worldCamera.position.y - halfZoomedHeight > currentY + layer.getHeight())
+                       || (worldCamera.position.y + halfZoomedHeight < currentY))) {
                         layer.render(batch, currentX, currentY);
                     }
                     currentY += layer.getHeight();
                     if (layer.tileModeY == ParallaxLayer.TileMode.single) {
                         break;
                     }
-                } while (currentY < worldCamera.position.y + worldCamera.viewportHeight * worldCamera.zoom * 0.5f);
+                } while (currentY < worldCamera.position.y + halfZoomedHeight);
+
                 currentX += layer.getWidth();
                 if (layer.tileModeX == ParallaxLayer.TileMode.single) {
                     break;
                 }
-            } while (currentX < worldCamera.position.x + worldCamera.viewportWidth * worldCamera.zoom * 0.5f);
+            } while (currentX < worldCamera.position.x + halfZoomedWidth);
         }
 
         // restore the old world camera props
