@@ -4,13 +4,11 @@ import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Player;
@@ -88,11 +86,7 @@ public class GameScreen extends BaseScreen {
         batch.setProjectionMatrix(hudCamera.combined);
         batch.begin();
         {
-            batch.setColor(Color.WHITE);
-            assets.pixelFont16.draw(batch, "" + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
-            batch.setColor(Color.YELLOW);
-            assets.pixelFont16.draw(batch, "wc: " + worldCamera.position.toString(), 10f, hudCamera.viewportHeight - 40f);
-            batch.setColor(Color.WHITE);
+            assets.pixelFont16.draw(batch, " fps: " + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
         }
         batch.end();
     }
