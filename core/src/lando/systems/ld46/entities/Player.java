@@ -101,6 +101,15 @@ public class Player extends MoveEntity {
     }
 
     @Override
+    public void punch() {
+        if (inMech()) {
+            mech.punch();
+        } else {
+            super.punch();
+        }
+    }
+
+    @Override
     public void changeDirection() {
         // noop so it doesn't flip rapidly when pushing against a wall.
     }
