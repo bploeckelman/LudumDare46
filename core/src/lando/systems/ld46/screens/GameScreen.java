@@ -47,7 +47,7 @@ public class GameScreen extends BaseScreen {
         super(game);
         this.physicsSystem = new PhysicsSystem(this);
         this.physicsEntities = new Array<>();
-        this.level = new Level(LevelDescriptor.test, this);
+        this.level = assets.levels.get(LevelDescriptor.test);
         this.player = new Player(this, level.playerSpawn);
         physicsEntities.add(player);
         this.zombieMech = new ZombieMech(this, 400, 300);
@@ -64,8 +64,6 @@ public class GameScreen extends BaseScreen {
             level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
             {
-                level.renderObjectsDebug(batch);
-
                 player.render(batch);
                 zombieMech.render(batch);
                 particles.draw(batch, Particles.Layer.foreground);
@@ -75,7 +73,9 @@ public class GameScreen extends BaseScreen {
 
             if (Config.debug) {
                 batch.begin();
-                level.renderDebug(batch);
+                {
+                    level.renderDebug(batch);
+                }
                 batch.end();
             }
         }

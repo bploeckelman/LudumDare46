@@ -14,12 +14,10 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
-import lando.systems.ld46.Config;
+import lando.systems.ld46.Game;
 import lando.systems.ld46.physics.Segment2D;
-import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
 public class Level {
@@ -38,7 +36,7 @@ public class Level {
     }
 
     private Assets assets;
-    private GameScreen screen;
+    private Game game;
 
     public String name;
     public TiledMap map;
@@ -56,11 +54,11 @@ public class Level {
     private Array<Rectangle> tileRects = new Array<>();
     private Rectangle tempRect = new Rectangle();
 
-    public Level(LevelDescriptor levelDescriptor, GameScreen screen) {
+    public Level(LevelDescriptor levelDescriptor, Game game) {
         Gdx.app.log("Level", "Loading: " + levelDescriptor.toString());
 
-        this.assets = screen.game.assets;
-        this.screen = screen;
+        this.assets = game.assets;
+        this.game = game;
 
         // Load map
         this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName);
@@ -157,7 +155,6 @@ public class Level {
         }
 
         // Validate that we have required entities
-
         if (playerSpawn == null) {
             throw new GdxRuntimeException("Map missing required object: 'spawn-player'");
         }
@@ -165,9 +162,7 @@ public class Level {
             throw new GdxRuntimeException("Map missing required object: 'exit'");
         }
 
-
         buildCollisionBounds();
-
     }
 
     public void update(float dt) {
@@ -182,22 +177,19 @@ public class Level {
         renderer.render(layer.index);
     }
 
-
-    public void renderObjectsDebug(SpriteBatch batch) {
-        exit.render(batch);
-        enemySpawns.forEach(spawn -> spawn.render(batch));
-        playerSpawn.render(batch);
-    }
-
     public void renderDebug(SpriteBatch batch) {
         float width = 3;
         float hue = 0;
         for (Segment2D segment : collisionSegments){
             hue += .17;
             batch.setColor(Utils.hsvToRgb(hue, 1f, 1f, null));
-            batch.draw(screen.assets.whitePixel, segment.start.x, segment.start.y - width/2f, 0, width/2f, segment.delta.len(), width, 1, 1, segment.getRotation());
+            batch.draw(assets.whitePixel, segment.start.x, segment.start.y - width/2f, 0, width/2f, segment.delta.len(), width, 1, 1, segment.getRotation());
         }
         batch.setColor(Color.WHITE);
+
+        exit.render(batch);
+        enemySpawns.forEach(spawn -> spawn.render(batch));
+        playerSpawn.render(batch);
     }
 
     private void buildCollisionBounds() {

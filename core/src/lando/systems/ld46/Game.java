@@ -68,6 +68,7 @@ public class Game extends ApplicationAdapter {
 
 		if (assets == null) {
 			assets = new Assets();
+			assets.preloadLevels();
 		}
 
 		if (audio == null) {
