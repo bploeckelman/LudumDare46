@@ -12,6 +12,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.Audio" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.math.Rectangle" />
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.ui.typinglabel.TypingGlyph" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.physics.Collision" />
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld46.ui.typinglabel.effects" />
 
 	<collapse-all-properties />

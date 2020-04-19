@@ -1,19 +1,18 @@
 package lando.systems.ld46.physics;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectFloatMap;
-import com.badlogic.gdx.utils.ObjectMap;
-import lando.systems.ld46.entities.Player;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
-import javax.swing.plaf.SeparatorUI;
-import java.util.Collections;
-import java.util.Comparator;
+
 
 public class PhysicsSystem {
+
+    private final Pool<Collision> collisionPool = Pools.get(Collision.class, 100);
 
     static final float GRAVITY = -800;
 
@@ -83,17 +82,6 @@ public class PhysicsSystem {
 //            if (Math.abs(vel.y) < 4) vel.y = 0;
             float dtLeft = dt;
             moveVector.set(vel.x, vel.y);
-//
-//            boolean groundThisFrame = false;
-//            for (Segment2D segment : screen.level.collisionSegments){
-//                for (int x = 0; x < bounds.width; x+= 16) {
-//                    tempStart1.set(bounds.x + x, bounds.y);
-//                    if (testGround(tempStart1, segment)) groundThisFrame = true;
-//                }
-//                tempStart1.set(bounds.x + bounds.width, bounds.y);
-//                if (testGround(tempStart1, segment)) groundThisFrame = true;
-//            }
-
 
             boolean hadCollision = true;
             int i = 0;
@@ -150,9 +138,10 @@ public class PhysicsSystem {
 
     private void checkCollisions(PhysicsComponent obj){
         Rectangle bounds = (Rectangle) obj.getCollisionBounds();
+        collisionPool.freeAll(collisions);
         collisions.clear();
         for (Segment2D segment : screen.level.collisionSegments) {
-            Collision c = new Collision();
+            Collision c = collisionPool.obtain();
             try {
                 if (sweepRectSegment(bounds, segment, moveVector, c)) {
                     collisions.add(c);

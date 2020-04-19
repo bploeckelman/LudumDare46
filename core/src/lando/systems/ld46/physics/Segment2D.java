@@ -9,6 +9,10 @@ public class Segment2D {
     public Vector2 normal;
 
 
+    public Segment2D() {
+        this(new Vector2(0,0), new Vector2(1,0));
+    }
+
     public Segment2D(Vector2 start, Vector2 end){
         this(start.x, start.y, end.x, end.y);
     }
@@ -16,6 +20,13 @@ public class Segment2D {
     public Segment2D(float x1, float y1, float x2, float y2){
         this.start = new Vector2(x1, y1);
         this.end = new Vector2(x2, y2);
+        this.delta = new Vector2(end).sub(start);
+        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+    }
+
+    public void fromSegment(Segment2D other){
+        this.start.set(other.start);
+        this.end.set(other.end);
         this.delta = new Vector2(end).sub(start);
         this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }

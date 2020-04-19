@@ -4,8 +4,9 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
 
-public class Collision implements Comparable {
+public class Collision implements Comparable, Pool.Poolable {
     public Intersector.MinimumTranslationVector distance;
     public Polygon polygon;
     public Segment2D segment;
@@ -14,7 +15,12 @@ public class Collision implements Comparable {
     public float t;
     public float dotProduct;
 
-    public Collision() {}
+    public Collision() {
+        polygon = new Polygon();
+        segment = new Segment2D();
+        rect = new Rectangle();
+        velocity = new Vector2();
+    }
 
     public Collision(Segment2D segment, Intersector.MinimumTranslationVector dist, Polygon polygon) {
         this.segment = segment;
@@ -42,5 +48,10 @@ public class Collision implements Comparable {
             return -1;
         }
 //        return (int)(Math.abs(other.distance.normal.dot(other.segment.normal)) - Math.abs(this.distance.normal.dot(this.segment.normal)));
+    }
+
+    @Override
+    public void reset() {
+
     }
 }
