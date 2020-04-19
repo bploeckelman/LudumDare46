@@ -12,10 +12,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
-import lando.systems.ld46.entities.*;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
+import lando.systems.ld46.entities.*;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
@@ -95,6 +95,9 @@ public class GameScreen extends BaseScreen {
 
                 player.render(batch);
                 zombieMech.render(batch);
+
+                level.renderObjects(batch);
+
                 particles.draw(batch, Particles.Layer.foreground);
             }
             batch.end();
@@ -153,6 +156,13 @@ public class GameScreen extends BaseScreen {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             particles.makePhysicsParticles(touchPos.x, touchPos.y);
+        }
+        // ---- TEST ---- //
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            level.punchWalls.forEach(wall -> wall.punch(GameEntity.Direction.left));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            level.punchWalls.forEach(wall -> wall.punch(GameEntity.Direction.right));
         }
     }
 

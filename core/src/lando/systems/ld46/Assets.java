@@ -40,6 +40,7 @@ public class Assets implements Disposable {
     public TextureRegion debugTexture;
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
+    public TextureRegion punchWall1x4;
     public TextureRegion ringTexture;
     public TextureRegion sunsetBackground;
     public TextureRegion columnsBackground;
@@ -142,6 +143,7 @@ public class Assets implements Disposable {
         debugTexture = atlas.findRegion("badlogic");
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+        punchWall1x4 = atlas.findRegion("punch-wall-1x4");
         ringTexture = atlas.findRegion("ring");
         sunsetBackground = atlas.findRegion("background-sunset");
         columnsBackground = atlas.findRegion("background-columns");

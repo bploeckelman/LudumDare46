@@ -1,6 +1,5 @@
 package lando.systems.ld46.particles;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +11,8 @@ import lando.systems.ld46.Assets;
 import lando.systems.ld46.entities.GameEntity;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.utils.Utils;
+
+import static lando.systems.ld46.entities.GameEntity.Direction.right;
 
 public class Particles implements Disposable {
 
@@ -125,6 +126,41 @@ public class Particles implements Disposable {
                     .startColor(testColor)
                     .makePhysics()
                     .interpolation(Interpolation.fastSlow)
+                    .init());
+        }
+    }
+
+    private static final Color[] punchWallExplosionColors = new Color[] {
+              new Color(Color.YELLOW)
+            , new Color(Color.GOLD)
+            , new Color(Color.GOLDENROD)
+            , new Color(Color.ORANGE)
+            , new Color(Color.BROWN)
+            , new Color(Color.TAN)
+    };
+
+    /**
+     * @param punchDirection negative for a punch towards the left, positive for a punch towards the right
+     */
+    public void spawnPunchWallExplosion(GameEntity.Direction punchDirection, float x, float y) {
+        TextureRegion keyframe = assets.whitePixel;
+
+        int numParticles = 300;
+        for (int i = 0; i < numParticles; ++i) {
+            float velAngle = (punchDirection == right)
+                           ? MathUtils.random(-45f, 45f)   // 90 degree cone facing right
+                           : MathUtils.random(135f, 225f); // 90 degree cone facing left
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(keyframe)
+                    .startPos(x, y)
+                    .velocityDirection(velAngle, MathUtils.random(300f, 600f))
+                    .startSize(MathUtils.random(4f, 6f))
+                    .endSize(0.1f)
+                    .startAlpha(1f)
+                    .endAlpha(0.25f)
+                    .timeToLive(2.5f)
+                    .startColor(punchWallExplosionColors[MathUtils.random(0, punchWallExplosionColors.length - 1)])
+                    .makePhysicsWithCustomBounceScale(1.25f)
                     .init());
         }
     }

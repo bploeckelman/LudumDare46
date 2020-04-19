@@ -144,9 +144,7 @@ public class Level {
             else if ("punch-wall".equalsIgnoreCase(type)) {
                 float x = props.get("x", Float.class);
                 float y = props.get("y", Float.class);
-                float w = 0;
-                float h = 0;
-                punchWalls.add(new PunchWall(x, y, w, h, assets));
+                punchWalls.add(new PunchWall(x, y, assets));
             }
         }
 
@@ -159,6 +157,7 @@ public class Level {
         }
 
         buildCollisionBounds();
+        punchWalls.forEach(wall -> addCollisionRectangle(wall.bounds));
     }
 
     public void update(float dt) {
@@ -168,11 +167,23 @@ public class Level {
                 spawn.update(screen, dt);
             }
         }
+
+        // remove punch walls that have been marked for deletion and spawn a particle effect for each removed wall
+        for (int i = punchWalls.size - 1; i >= 0; --i) {
+            PunchWall wall = punchWalls.get(i);
+            if (wall.dead) {
+                removeCollisionRectangle(wall.bounds);
+                game.getScreen().particles.spawnPunchWallExplosion(wall.punchedDir,
+                        wall.bounds.x + wall.bounds.width / 2f,
+                        wall.bounds.y + wall.bounds.height / 2f);
+                punchWalls.removeIndex(i);
+            }
+        }
     }
 
     private GameScreen getGameScreen() {
         BaseScreen screen = game.getScreen();
-        return (screen instanceof GameScreen) ? (GameScreen)screen : null;
+        return (screen instanceof GameScreen) ? (GameScreen) screen : null;
     }
 
     public void render(LayerType layerType, OrthographicCamera camera) {
@@ -181,6 +192,12 @@ public class Level {
 
         renderer.setView(camera);
         renderer.render(layer.index);
+    }
+
+    public void renderObjects(SpriteBatch batch) {
+        for (PunchWall punchWall : punchWalls) {
+            punchWall.render(batch);
+        }
     }
 
     public void renderDebug(SpriteBatch batch) {
