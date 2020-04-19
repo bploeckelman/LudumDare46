@@ -107,6 +107,10 @@ public class GameEntity implements PhysicsComponent {
         collisionCircle.setRadius(collisionBounds.width / 2f);
     }
 
+    public void updateBounds(){
+        collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
+    }
+
     public void centerOn(GameEntity entity) {
         float x = entity.collisionBounds.x + (entity.collisionBounds.width - collisionBounds.width)/2;
         float y = entity.collisionBounds.y + (entity.collisionBounds.height - collisionBounds.height)/2;
@@ -183,6 +187,7 @@ public class GameEntity implements PhysicsComponent {
 
     @Override
     public Shape2D getCollisionBounds() {
+        updateBounds();
         return collisionBounds;
     }
 

@@ -250,7 +250,7 @@ public class Level {
                 } else if ((valueLL & 0x000000ff) == 0){
                     if (topSegment != null) collisionSegments.add(topSegment);
                     if (rightSegment != null) collisionSegments.add(rightSegment);
-                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y) * tileWidth, (x)* tileWidth, (y+1) * tileWidth));
+                    collisionSegments.add(new Segment2D((x) * tileWidth, (y+1) * tileWidth, (x+1)* tileWidth, (y) * tileWidth));
                 } else if ((valueLR & 0x000000ff) == 0){
                     if (topSegment != null) collisionSegments.add(topSegment);
                     if (leftSegment != null) collisionSegments.add(leftSegment);

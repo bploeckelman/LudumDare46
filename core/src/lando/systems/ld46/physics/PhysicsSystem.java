@@ -103,29 +103,37 @@ public class PhysicsSystem {
             }
 
             collisions.sort();
-            boolean hadCollision = false;
+            boolean hadCollision = true;
             int i = 0;
-            for(Collision c : collisions){
-
-                hadCollision = true;
-               if (c.distance.normal.dot(c.segment.normal) == 0) continue;
-               if (c.segment.normal.dot(moveVector) > 0) continue;
+            while (hadCollision && i < 100){
+                if (moveVector.len2() < .01) break;
+                hadCollision = false;
                 i++;
-                if (sweepRectSegment(bounds, c.segment, moveVector, c)){
-                    bounds.x -= (c.distance.depth * c.distance.normal.x);
-                    bounds.y -= (c.distance.depth * c.distance.normal.y);
-                    tempStart1.set(c.segment.end).sub(c.segment.start);
-                    float dot = tempEnd1.set(moveVector).dot(tempStart1);
-                    moveVector.set(tempStart1.scl(dot/ tempStart1.len2()));
+                for(Collision c : collisions) {
+                    if (c.distance.normal.dot(c.segment.normal) == 0) continue;
+                    if (c.segment.normal.dot(moveVector) > 0) continue;
 
+                    bounds = (Rectangle) obj.getCollisionBounds();
+                    if (sweepRectSegment(bounds, c.segment, moveVector, c)) {
+                        float s = Math.signum(c.distance.normal.dot(c.segment.normal));
+                        pos.add(moveVector);
+                        pos.add((c.distance.depth+.01f) * c.distance.normal.x * s, (c.distance.depth+.01f) * c.distance.normal.y * s);
+                        tempStart1.set(c.segment.end).sub(c.segment.start);
+                        float dot = tempEnd1.set(moveVector).dot(tempStart1);
+                        moveVector.set(tempStart1.scl(dot / tempStart1.len2()));
+                        moveVector.scl(MathUtils.clamp(1f - c.t, 0, 1f));
+                        hadCollision = true;
+                    }
                 }
+                if (hadCollision) checkCollisions(obj);
 //                handleCollision(c.startPos, c.segment, moveVector, tempEnd2);
             }
 
             obj.setGrounded(groundThisFrame);
-
+            if (moveVector.len2() < .01f) moveVector.set(0,0);
             pos.add(moveVector);
-            vel.set(moveVector.scl(1/dt));
+            float origLength = vel.len();
+            vel.set(moveVector).nor().scl(origLength);
 
             // Fuck this!!!!1! just push the god damn player out of the fucking ground
 //            for(Segment2D segment : screen.level.collisionSegments) {
@@ -150,6 +158,17 @@ public class PhysicsSystem {
 //                    pos.add(segment.normal.x * 2f, segment.normal.y * 2f);
 //                }
 //            }
+        }
+    }
+
+    private void checkCollisions(PhysicsComponent obj){
+        Rectangle bounds = (Rectangle) obj.getCollisionBounds();
+        collisions.clear();
+        for (Segment2D segment : screen.level.collisionSegments) {
+            Collision c = new Collision();
+            if (sweepRectSegment(bounds, segment, moveVector, c)) {
+                collisions.add(c);
+            }
         }
     }
 
@@ -255,6 +274,7 @@ public class PhysicsSystem {
             collision.segment = segment;
             collision.rect = rect;
             collision.polygon = new Polygon();
+            collision.t = transVector.depth / v.len();
             if (Intersector.intersectPolygons(rectPoly, velPoly, overlapPoly)) {
                 collision.polygon = overlapPoly;
             } else {
@@ -271,55 +291,11 @@ public class PhysicsSystem {
 
         }
         return false;
-
-//        Segment2D seg = rectSegs.get(0);
-//        seg.setStart(rect.x, rect.y);
-//        seg.setEnd(rect.x, rect.y + rect.height);
-//        seg = rectSegs.get(1);
-//        seg.setStart(rect.x, rect.y + rect.height);
-//        seg.setEnd(rect.x + rect.width, rect.y + rect.height);
-//        seg = rectSegs.get(2);
-//        seg.setStart(rect.x + rect.width, rect.y + rect.height);
-//        seg.setEnd(rect.x + rect.width, rect.y);
-//        seg = rectSegs.get(3);
-//        seg.setStart(rect.x + rect.width, rect.y);
-//        seg.setEnd(rect.x, rect.y);
-//
-//        seg = velSegs.get(0);
-//        seg.setStart(segment.start.x, segment.start.y);
-//        seg.setEnd(segment.start.x + v.x, segment.start.y + v.y);
-//        seg = velSegs.get(1);
-//        seg.setStart(segment.start.x + v.x, segment.start.y + v.y);
-//        seg.setEnd(segment.end.x + v.x, segment.end.y + v.y);
-//        seg = velSegs.get(2);
-//        seg.setStart(segment.end.x + v.x, segment.end.y + v.y);
-//        seg.setEnd(segment.end.x, segment.end.y);
-//        seg = velSegs.get(3);
-//        seg.setStart(segment.end);
-//        seg.setEnd(segment.start);
-//
-//
-//
-//        touchPoints.clear();
-//        for (int i = 0; i < 4; i++){
-//            Segment2D rectSeg = rectSegs.get(i);
-//            for (int j = 0; j < 4; j++) {
-//                Segment2D velSeg = velSegs.get(j);
-//                if (intersectSegments(rectSeg.start, rectSeg.end, velSeg.start, velSeg.end, intersectionPoint)) {
-//                    touchPoints.add(new Vector2(intersectionPoint));
-//                }
-//            }
-//        }
-//
-//        if (touchPoints.size <= 3) return false;
-//        Intersector
-//        int x = 0;
-//        return true;
     }
 
     private boolean testGround(Vector2 startPos, Segment2D segment){
-        tempStart1.set(startPos.x, startPos.y);
-        tempEnd1.set(startPos.x, startPos.y - 5);
+        tempStart1.set(startPos.x, startPos.y + 2);
+        tempEnd1.set(startPos.x, startPos.y - 8);
 //        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
         if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
             return true;

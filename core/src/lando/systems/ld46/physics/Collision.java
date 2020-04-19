@@ -10,6 +10,7 @@ public class Collision implements Comparable {
     public Polygon polygon;
     public Segment2D segment;
     public Rectangle rect;
+    public float t;
 
     public Collision() {}
 
@@ -23,8 +24,15 @@ public class Collision implements Comparable {
     @Override
     public int compareTo(Object o) {
         Collision other = (Collision)o;
-        if (Math.abs(other.distance.normal.dot(other.segment.normal)) < Math.abs(this.distance.normal.dot(this.segment.normal))) return 1;
-        else return -1;
+        if (other.t < this.t) {
+            return 1;
+        } else if (other.t > this.t) {
+            return -1;
+        } else if (Math.abs(other.distance.normal.dot(other.segment.normal)) < Math.abs(this.distance.normal.dot(this.segment.normal))) {
+            return 1;
+        } else {
+            return -1;
+        }
 //        return (int)(Math.abs(other.distance.normal.dot(other.segment.normal)) - Math.abs(this.distance.normal.dot(this.segment.normal)));
     }
 }
