@@ -48,6 +48,7 @@ public class Level {
     public MapLayer objectsLayer;
     public SpawnPlayer playerSpawn;
     public Array<SpawnEnemy> enemySpawns;
+    public Array<PunchWall> punchWalls;
     public Exit exit;
 
     public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
@@ -106,6 +107,7 @@ public class Level {
         // Load map objects
         playerSpawn = null;
         enemySpawns = new Array<>();
+        punchWalls = new Array<>();
         exit = null;
 
         MapObjects objects = objectsLayer.getObjects();
@@ -156,7 +158,13 @@ public class Level {
                 float y = props.get("y", Float.class);
                 exit = new Exit(x, y, assets);
             }
-
+            else if ("punch-wall".equalsIgnoreCase(type)) {
+                float x = props.get("x", Float.class);
+                float y = props.get("y", Float.class);
+                float w = 0;
+                float h = 0;
+                punchWalls.add(new PunchWall(x, y, w, h, assets));
+            }
         }
 
         // Validate that we have required entities

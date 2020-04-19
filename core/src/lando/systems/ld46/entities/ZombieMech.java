@@ -9,7 +9,7 @@ public class ZombieMech extends MoveEntity {
     public float moveModifier = 0.5f;
 
     public ZombieMech(GameScreen screen, float x, float y) {
-        super(screen, screen.game.assets.mechAnimation, screen.game.assets.mechAnimation);
+        super(screen, screen.game.assets.mechAnimation, screen.game.assets.mechMoveAnimation);
 
         setJump(screen.game.assets.mechJumpAnimation, Audio.Sounds.zombie_jump, 350f);
         setPunch(screen.game.assets.mechAttackAnimation, Audio.Sounds.zombie_punch, Audio.Sounds.zombie_punch_land, new int[]{2},100f);
