@@ -26,7 +26,6 @@ public class GameScreen extends BaseScreen {
     public Level level;
 
     private Vector3 touchPos;
-    private TypingLabel textLabel;
 
     private static final float MAX_ZOOM = 2f;
     private static final float MIN_ZOOM = 0.1f;
@@ -55,7 +54,6 @@ public class GameScreen extends BaseScreen {
         physicsEntities.add(zombieMech);
         this.touchPos = new Vector3();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
-        this.textLabel = new TypingLabel(game.assets.riseFont16, "{JUMP=.2}{RAINBOW}hamster must die{ENDRAINBOW}{ENDJUMP}", 200f, 50f);
     }
 
     @Override
@@ -86,7 +84,6 @@ public class GameScreen extends BaseScreen {
         batch.begin();
         {
             assets.pixelFont16.draw(batch, " fps: " + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
-            textLabel.render(batch);
         }
         batch.end();
     }
@@ -110,7 +107,6 @@ public class GameScreen extends BaseScreen {
         level.update(dt);
         player.update(dt);
         zombieMech.update(dt);
-        textLabel.update(dt);
         physicsSystem.update(dt);
 
         handleCameraConstraints();
