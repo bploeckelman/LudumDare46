@@ -135,7 +135,7 @@ public class PhysicsSystem {
             if (moveVector.len2() < .01f) moveVector.set(0,0);
             pos.add(moveVector);
             float origLength = vel.len();
-//            vel.set(moveVector).nor().scl(origLength);
+            vel.set(moveVector).nor().scl(origLength);
         }
     }
 
