@@ -151,6 +151,9 @@ public class GameScreen extends BaseScreen {
             Mob mob = new Mob(this, 600, 120);
             enemies.add(mob);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            particles.makePhysicsParticles(touchPos.x, touchPos.y);
+        }
     }
 
     private void updateCamera() {

@@ -17,7 +17,6 @@ public class Collision implements Comparable, Pool.Poolable {
 
     public Collision() {
         polygon = new Polygon();
-        segment = new Segment2D();
         rect = new Rectangle();
         velocity = new Vector2();
     }

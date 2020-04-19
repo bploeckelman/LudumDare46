@@ -145,9 +145,11 @@ public class PhysicsSystem {
             try {
                 if (sweepRectSegment(bounds, segment, moveVector, c)) {
                     collisions.add(c);
+                } else {
+                    collisionPool.free(c);
                 }
             } catch (Exception e){
-
+                // Had a polygon error here once, so if they go one frame inside so be it.
             }
         }
         collisions.sort();
@@ -252,12 +254,15 @@ public class PhysicsSystem {
             rectPoly.setVertices(rectVerts);
             velPoly.setVertices(velVerts);
             collision.init(segment, transVector);
-            collision.rect = rect;
-            collision.polygon = new Polygon();
+            collision.rect.set(rect);
             collision.t = transVector.depth / v.len();
-            collision.velocity = new Vector2(v);
+            collision.velocity.set(v);
             if (Intersector.intersectPolygons(rectPoly, velPoly, overlapPoly)) {
-                collision.polygon = overlapPoly;
+                collision.polygon.setVertices(overlapPoly.getVertices());
+                collision.polygon.setOrigin(overlapPoly.getOriginX(), overlapPoly.getOriginY());
+                collision.polygon.setPosition(overlapPoly.getX(), overlapPoly.getY());
+                collision.polygon.setRotation(overlapPoly.getRotation());
+                collision.polygon.setScale(overlapPoly.getScaleX(), overlapPoly.getScaleY());
             } else {
                 velVerts[0] = 0;
                 velVerts[1] = 0;

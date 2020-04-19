@@ -145,26 +145,29 @@ public class Particles implements Disposable {
                     .timeToLive(7f)
                     .startColor(Color.RED)
                     .makePhysicsWithCustomBounceScale(.4f)
+                    .interpolation(Interpolation.fastSlow)
                     .init());
         }
     }
 
+    Color bloodColor = new Color();
     public void makeBloodParticles(GameEntity.Direction direction, float x, float y) {
         TextureRegion keyframe = assets.whiteCircle;
 
-        int numParticles = 50;
+        int numParticles = 200;
         for (int i = 0; i < numParticles; ++i) {
+            Utils.hsvToRgb(MathUtils.random(.99f, 1.01f), 1f, MathUtils.random(.1f, 1f), bloodColor);
             float xVelocity = direction == GameEntity.Direction.left ?  MathUtils.random(75f, 285f) : MathUtils.random(-105f, 105f);
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
                     .startPos(x, y)
-                    .velocityDirection(xVelocity, MathUtils.random(10f, 90f))
-                    .startSize(5f)
+                    .velocityDirection(xVelocity, MathUtils.random(10f, 300f))
+                    .startSize(MathUtils.random(1f, 3f))
                     .endSize(1f)
                     .startAlpha(1f)
                     .endAlpha(1f)
                     .timeToLive(7f)
-                    .startColor(Color.RED)
+                    .startColor(bloodColor)
                     .makePhysicsWithCustomBounceScale(.4f)
                     .init());
         }
