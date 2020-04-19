@@ -12,6 +12,9 @@ public class MoveEntity extends GameEntity {
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> moveAnimation;
 
+    private float fallTime = 0;
+    private Animation<TextureRegion> fallAnimation;
+
     private float jumpTime = -1;
     private Animation<TextureRegion> jumpAnimation;
     private Audio.Sounds jumpSound = Audio.Sounds.none;
@@ -37,6 +40,10 @@ public class MoveEntity extends GameEntity {
         this.jumpVelocity = jumpVelocity;
     }
 
+    public void setFall(Animation<TextureRegion> fallAnimation) {
+        this.fallAnimation = fallAnimation;
+    }
+
     public void setPunch(Animation<TextureRegion> punchAnimation, Audio.Sounds punchSound, float punchDamage) {
         this.punchAnimation = punchAnimation;
         this.punchSound = punchSound;
@@ -46,6 +53,11 @@ public class MoveEntity extends GameEntity {
     @Override
     public void update(float dt) {
         super.update(dt);
+
+        if (velocity.y < 0) {
+            state = State.falling;
+            jumpTime = -1;
+        }
         
         if (lastState != state) {
             if (state == State.standing) {
@@ -53,26 +65,34 @@ public class MoveEntity extends GameEntity {
             } else if (state == State.walking) {
                 setAnimation(moveAnimation);
             }
+
+            fallTime = 0;
             lastState = state;
         }
 
+        updateFall(dt);
         updateJump(dt);
         updatePunch(dt);
+    }
+
+    private void updateFall(float dt) {
+        if (state == State.falling && fallAnimation != null) {
+            fallTime += dt;
+            keyframe = fallAnimation.getKeyFrame(fallTime);
+        } else {
+            fallTime = 0;
+        }
     }
 
     private void updateJump(float dt) {
         if (jumpTime != -1) {
             jumpTime += dt;
-            if (state == State.jumping && jumpTime > jumpAnimation.getAnimationDuration()) {
+            if (state == State.jumping && (jumpAnimation == null || jumpTime > jumpAnimation.getAnimationDuration())) {
                 playSound(jumpSound);
                 velocity.y = jumpVelocity;
                 state = State.jump;
-            } else {
+            } else if (jumpAnimation != null) {
                 keyframe = jumpAnimation.getKeyFrame(jumpTime);
-                if (velocity.y < 0) {
-                    state = State.falling;
-                    jumpTime = -1;
-                }
             }
         }
     }
@@ -89,7 +109,7 @@ public class MoveEntity extends GameEntity {
     }
 
     public void jump() {
-        if (jumpTime == -1 && grounded && jumpAnimation != null) {
+        if (jumpTime == -1 && grounded) {
             jumpTime = 0;
             state = State.jumping;
         }

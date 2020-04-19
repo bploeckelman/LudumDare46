@@ -23,6 +23,7 @@ public class Player extends MoveEntity {
 
         setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 450f);
         setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, 10);
+        setFall(screen.game.assets.playerFallAnimation);
 
         initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
     }
