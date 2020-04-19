@@ -122,12 +122,11 @@ public class MoveEntity extends GameEntity {
         }
     }
 
-<<<<<<< Updated upstream
     public void bleed() {
         screen.particles.makeBloodParticles(position.x, position.y);
-=======
+    }
+
     private boolean canPunch() {
         return !(state == State.jumping || state == State.falling);
->>>>>>> Stashed changes
     }
 }
