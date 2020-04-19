@@ -60,7 +60,7 @@ public class Player extends MoveEntity {
             jump();
         }
 
-        boolean punchPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
+        boolean punchPressed = Gdx.input.justTouched();
         if (punchPressed) {
             punch();
             bleed();

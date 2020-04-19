@@ -116,13 +116,18 @@ public class MoveEntity extends GameEntity {
     }
 
     public void punch() {
-        if (punchTime == -1 && state != State.jumping && punchAnimation != null) {
+        if (punchTime == -1 && canPunch() && punchAnimation != null) {
             playSound(punchSound);
             punchTime = 0;
         }
     }
 
+<<<<<<< Updated upstream
     public void bleed() {
         screen.particles.makeBloodParticles(position.x, position.y);
+=======
+    private boolean canPunch() {
+        return !(state == State.jumping || state == State.falling);
+>>>>>>> Stashed changes
     }
 }
