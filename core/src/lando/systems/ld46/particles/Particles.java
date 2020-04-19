@@ -159,7 +159,7 @@ public class Particles implements Disposable {
                     .endAlpha(1f)
                     .timeToLive(30f)
                     .startRotation(0f)
-                    .endRotation(2400f)
+                    .endRotation(MathUtils.random(2200f, 3200f))
                     .makePhysicsWithCustomBounceScale(.4f)
                     .interpolation(new Interpolation.ExpOut(2, 50))
                     .init());
@@ -174,7 +174,7 @@ public class Particles implements Disposable {
                 .endAlpha(1f)
                 .timeToLive(30f)
                 .startRotation(0f)
-                .endRotation(2400f)
+                .endRotation(MathUtils.random(2200f, 3200f))
                 .makePhysicsWithCustomBounceScale(.4f)
                 .interpolation(new Interpolation.ExpOut(2, 50))
                 .init());
@@ -189,7 +189,7 @@ public class Particles implements Disposable {
                     .endAlpha(1f)
                     .timeToLive(30f)
                     .startRotation(0f)
-                    .endRotation(2400f)
+                    .endRotation(MathUtils.random(2200f, 3200f))
                     .makePhysicsWithCustomBounceScale(.4f)
                     .interpolation(new Interpolation.ExpOut(2, 50))
                     .init());
@@ -204,7 +204,7 @@ public class Particles implements Disposable {
                 .endAlpha(1f)
                 .timeToLive(30f)
                 .startRotation(0f)
-                .endRotation(2400f)
+                .endRotation(MathUtils.random(2200f, 3200f))
                 .makePhysicsWithCustomBounceScale(.4f)
                 .interpolation(new Interpolation.ExpOut(2, 50))
                 .init());
