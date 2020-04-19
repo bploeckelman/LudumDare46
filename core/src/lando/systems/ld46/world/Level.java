@@ -233,12 +233,22 @@ public class Level {
                 TextureRegion region = cell.getTile().getTextureRegion();
                 int valueUL = pixmap.getPixel(region.getRegionX() + 2, region.getRegionY() +  2);
                 int valueUR = pixmap.getPixel(region.getRegionX() + region.getRegionWidth() - 2, region.getRegionY() + 2);
+                int valueLL = pixmap.getPixel(region.getRegionX() + 2, region.getRegionY() + region.getRegionHeight() - 2);
+                int valueLR = pixmap.getPixel(region.getRegionX() + region.getRegionWidth() - 2, region.getRegionY() + region.getRegionHeight() - 2);
                 if ((valueUL & 0x000000ff) == 0) {
                     if (bottomSegment != null) collisionSegments.add(bottomSegment);
                     if (rightSegment != null) collisionSegments.add(rightSegment);
                     collisionSegments.add(new Segment2D((x+1) * tileWidth, (y+1) * tileWidth, (x)* tileWidth, (y) * tileWidth));
                 } else if ((valueUR & 0x000000ff) == 0){
                     if (bottomSegment != null) collisionSegments.add(bottomSegment);
+                    if (leftSegment != null) collisionSegments.add(leftSegment);
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y) * tileWidth, (x)* tileWidth, (y+1) * tileWidth));
+                } else if ((valueLL & 0x000000ff) == 0){
+                    if (topSegment != null) collisionSegments.add(topSegment);
+                    if (rightSegment != null) collisionSegments.add(rightSegment);
+                    collisionSegments.add(new Segment2D((x+1) * tileWidth, (y) * tileWidth, (x)* tileWidth, (y+1) * tileWidth));
+                } else if ((valueLR & 0x000000ff) == 0){
+                    if (topSegment != null) collisionSegments.add(topSegment);
                     if (leftSegment != null) collisionSegments.add(leftSegment);
                     collisionSegments.add(new Segment2D((x+1) * tileWidth, (y) * tileWidth, (x)* tileWidth, (y+1) * tileWidth));
                 } else {
