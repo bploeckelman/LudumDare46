@@ -18,7 +18,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Game;
+import lando.systems.ld46.entities.EnemyType;
 import lando.systems.ld46.physics.Segment2D;
+import lando.systems.ld46.screens.BaseScreen;
+import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
 public class Level {
@@ -127,30 +130,10 @@ public class Level {
             else if ("spawn-enemy".equalsIgnoreCase(type)) {
                 float x = props.get("x", Float.class);
                 float y = props.get("y", Float.class);
-                SpawnEnemy spawn = new SpawnEnemy(x, y, assets);
-                // TODO: figure out what type of enemy and its direction and whatever and spawn it
-//            else if ("spawnEnemy".equalsIgnoreCase(type)) {
-//                float x = props.get("x", Float.class);
-//                float y = props.get("y", Float.class);
-//
-//                String directionProp = props.get("direction", "left", String.class).toLowerCase();
-//                GameEntity.Direction direction = GameEntity.Direction.left;
-//                if ("left".equals(directionProp)) direction = GameEntity.Direction.left;
-//                else if ("right".equals(directionProp)) direction = GameEntity.Direction.right;
-//                else Gdx.app.log("Map", "Unknown direction for spawnEnemy: '" + directionProp + "'");
-//
-//                String name = object.getName().toLowerCase();
-//                EnemySpawner.EnemyType enemyType = null;
-//                if      ("chicken" .equals(name)) enemyType = EnemySpawner.EnemyType.chicken;
-//                else if ("bunny"   .equals(name)) enemyType = EnemySpawner.EnemyType.bunny;
-//                else Gdx.app.log("Map", "Unknown enemy type for spawnEnemy entity: '" + name + "'");
-//
-//                if (enemyType != null) {
-//                    EnemySpawner spawner = new EnemySpawner(x, y, enemyType, direction);
-//                    enemySpawners.add(spawner);
-//                    spawner.spawnEnemy(screen);
-//                }
-//            }
+                EnemyType enemyType = EnemyType.valueOf((String)props.get("enemy-type"));
+                int maxSpawn = 4; //props.get("max-spawn", Integer.class);
+                float spawnRate = 5; // props.get("spawn-rate", Float.class);
+                SpawnEnemy spawn = new SpawnEnemy(game, enemyType, x, y, maxSpawn, spawnRate);
                 enemySpawns.add(spawn);
             }
             else if ("exit".equalsIgnoreCase(type)) {
@@ -179,7 +162,17 @@ public class Level {
     }
 
     public void update(float dt) {
-        // TODO
+        GameScreen screen = getGameScreen();
+        if (screen != null) {
+            for (SpawnEnemy spawn : enemySpawns) {
+                spawn.update(screen, dt);
+            }
+        }
+    }
+
+    private GameScreen getGameScreen() {
+        BaseScreen screen = game.getScreen();
+        return (screen instanceof GameScreen) ? (GameScreen)screen : null;
     }
 
     public void render(LayerType layerType, OrthographicCamera camera) {

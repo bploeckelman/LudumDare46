@@ -21,6 +21,7 @@ import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
+import lando.systems.ld46.world.SpawnEnemy;
 
 public class GameScreen extends BaseScreen {
 
@@ -69,10 +70,9 @@ public class GameScreen extends BaseScreen {
         TextureRegionParallaxLayer columnLayer = new TextureRegionParallaxLayer(assets.columnsBackground, levelHeight, new Vector2(.4f, .9f), ParallaxUtils.WH.height);
         // TODO: fix optional padding on parallax layers
         this.background = new ParallaxBackground(sunsetLayer, columnLayer);
-    }
 
-    public void addEnemy() {
-
+        // TEMP until current map has a spawner
+        this.level.enemySpawns.add(new SpawnEnemy(game, EnemyType.snake, 600, 200, 4, 3f));
     }
 
     @Override
@@ -132,6 +132,7 @@ public class GameScreen extends BaseScreen {
         particles.update(dt);
 
         level.update(dt);
+
         player.update(dt);
         zombieMech.update(dt);
 
@@ -144,10 +145,6 @@ public class GameScreen extends BaseScreen {
     }
 
     private void handleTempCommands() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            EnemyFactory.AddEnemy(this, 600 + MathUtils.random(-50f, 50f), 120);
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             // kill em all, let the engine sort it out
             for (EnemyEntity e : enemies) {
