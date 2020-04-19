@@ -133,11 +133,16 @@ public class Player extends MoveEntity {
     }
 
     private void jump() {
-        jump(inMech() ? 0.5f : 1f);
+        if (inMech()) {
+            mech.jump(1f);
+        } else {
+            jump(1f);
+        }
     }
 
     private void jump(float velocityMultiplier) {
         if (grounded) {
+            playSound(Audio.Sounds.doc_jump);
             velocity.y = jumpVelocity * velocityMultiplier;
             velocity.x /= 2;
             jumpState = JumpState.jumping;

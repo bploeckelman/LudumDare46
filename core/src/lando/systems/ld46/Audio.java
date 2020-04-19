@@ -20,7 +20,7 @@ public class Audio implements Disposable {
     public static final boolean shutUpYourTunes = false;
 
     public enum Sounds {
-        sample_sound, doc_punch
+        sample_sound, doc_punch, doc_jump, zombie_punch, zombie_jump
     }
 
     public enum Musics {
