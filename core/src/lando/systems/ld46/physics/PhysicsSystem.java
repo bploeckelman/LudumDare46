@@ -1,15 +1,15 @@
 package lando.systems.ld46.physics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectFloatMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 public class PhysicsSystem {
 
@@ -30,6 +30,7 @@ public class PhysicsSystem {
     Vector2 collisionResult = new Vector2();
     Vector2 moveVector = new Vector2();
     Vector2 oldPos = new Vector2();
+    Array<Vector2> projPoints = new Array<>();
 
     Array<Collision> collisions = new Array<>();
 
@@ -38,6 +39,9 @@ public class PhysicsSystem {
     public PhysicsSystem(GameScreen screen) {
         this.screen = screen;
         this.normal = new Vector2();
+        for (int i = 0; i < 4; i++){
+            projPoints.add(new Vector2());
+        }
     }
 
     public void update(float dt) {
@@ -59,29 +63,35 @@ public class PhysicsSystem {
             vel.x += accel.x * dt;
             float gravity = obj.isGrounded() ? 0 : GRAVITY;
             vel.y += (accel.y + gravity) * dt;
+            if (Math.abs(vel.y) < 4) vel.y = 0;
             moveVector.set(vel.x * dt, vel.y * dt);
 
             boolean groundThisFrame = false;
             collisions.clear();
             for (Segment2D segment : screen.level.collisionSegments){
-                for (int x = 0; x < bounds.width; x += 16){
-                    tempStart1.set(bounds.x + x, bounds.y);
-                    testCollision(tempStart1, segment, moveVector);
-                    tempStart1.set(bounds.x + x, bounds.y + bounds.height);
-                    testCollision(tempStart1, segment, moveVector);
+//                for (int x = 0; x < bounds.width; x += 16){
+//                    tempStart1.set(bounds.x + x, bounds.y);
+//                    testCollision(tempStart1, segment, moveVector);
+//                    tempStart1.set(bounds.x + x, bounds.y + bounds.height);
+//                    testCollision(tempStart1, segment, moveVector);
+//                }
+//                for (int y = 0; y < bounds.height; y+= 16) {
+//                    tempStart1.set(bounds.x, bounds.y + y);
+//                    testCollision(tempStart1, segment, moveVector);
+//                    tempStart1.set(bounds.x + bounds.width, bounds.y + y);
+//                    testCollision(tempStart1, segment, moveVector);
+//                }
+//                tempStart1.set(bounds.x, bounds.y + bounds.height);
+//                testCollision(tempStart1, segment, moveVector);
+//                tempStart1.set(bounds.x + bounds.width, bounds.y);
+//                testCollision(tempStart1, segment, moveVector);
+//                tempStart1.set(bounds.x + bounds.width, bounds.y + bounds.height);
+//                testCollision(tempStart1, segment, moveVector);
+
+                Collision c = new Collision();
+                if (sweepRectSegment(bounds, segment, moveVector, c)){
+                    collisions.add(c);
                 }
-                for (int y = 0; y < bounds.height; y+= 16) {
-                    tempStart1.set(bounds.x, bounds.y + y);
-                    testCollision(tempStart1, segment, moveVector);
-                    tempStart1.set(bounds.x + bounds.width, bounds.y + y);
-                    testCollision(tempStart1, segment, moveVector);
-                }
-                tempStart1.set(bounds.x, bounds.y + bounds.height);
-                testCollision(tempStart1, segment, moveVector);
-                tempStart1.set(bounds.x + bounds.width, bounds.y);
-                testCollision(tempStart1, segment, moveVector);
-                tempStart1.set(bounds.x + bounds.width, bounds.y + bounds.height);
-                testCollision(tempStart1, segment, moveVector);
 
                 for (int x = 0; x < bounds.width; x+= 16) {
                     tempStart1.set(bounds.x + x, bounds.y);
@@ -93,8 +103,23 @@ public class PhysicsSystem {
             }
 
             collisions.sort();
+            boolean hadCollision = false;
+            int i = 0;
             for(Collision c : collisions){
-                handleCollision(c.startPos, c.segment, moveVector, tempEnd2);
+
+                hadCollision = true;
+               if (c.distance.normal.dot(c.segment.normal) == 0) continue;
+               if (c.segment.normal.dot(moveVector) > 0) continue;
+                i++;
+                if (sweepRectSegment(bounds, c.segment, moveVector, c)){
+                    bounds.x -= (c.distance.depth * c.distance.normal.x);
+                    bounds.y -= (c.distance.depth * c.distance.normal.y);
+                    tempStart1.set(c.segment.end).sub(c.segment.start);
+                    float dot = tempEnd1.set(moveVector).dot(tempStart1);
+                    moveVector.set(tempStart1.scl(dot/ tempStart1.len2()));
+
+                }
+//                handleCollision(c.startPos, c.segment, moveVector, tempEnd2);
             }
 
             obj.setGrounded(groundThisFrame);
@@ -103,28 +128,28 @@ public class PhysicsSystem {
             vel.set(moveVector.scl(1/dt));
 
             // Fuck this!!!!1! just push the god damn player out of the fucking ground
-            for(Segment2D segment : screen.level.collisionSegments) {
-                //bottom
-                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y), segment.start, segment.end, collisionResult)) {
-                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
-                }
-                //top
-                if (intersectSegments(tempStart1.set(bounds.x, bounds.y + bounds.height), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
-                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
-                }
-                //left
-                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
-                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
-                }
-                //right
-                if (intersectSegments(tempStart1.set(bounds.x + bounds.width, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
-                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
-                }
-
-                if (bounds.contains(segment.start) && bounds.contains(segment.end)){
-                    pos.add(segment.normal.x * 2f, segment.normal.y * 2f);
-                }
-            }
+//            for(Segment2D segment : screen.level.collisionSegments) {
+//                //bottom
+//                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y), segment.start, segment.end, collisionResult)) {
+//                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+//                }
+//                //top
+//                if (intersectSegments(tempStart1.set(bounds.x, bounds.y + bounds.height), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+//                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+//                }
+//                //left
+//                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+//                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+//                }
+//                //right
+//                if (intersectSegments(tempStart1.set(bounds.x + bounds.width, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+//                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+//                }
+//
+//                if (bounds.contains(segment.start) && bounds.contains(segment.end)){
+//                    pos.add(segment.normal.x * 2f, segment.normal.y * 2f);
+//                }
+//            }
         }
     }
 
@@ -173,14 +198,14 @@ public class PhysicsSystem {
         }
     }
 
-    private void testCollision(Vector2 startPos, Segment2D segment, Vector2 movement) {
-        tempStart1.set(startPos.x, startPos.y);
-        tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
-//        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
-        if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
-            collisions.add(new Collision(tempStart1, segment, Math.min(collisionResult.dst2(segment.start), collisionResult.dst2(segment.end))));
-        }
-    }
+//    private void testCollision(Vector2 startPos, Segment2D segment, Vector2 movement) {
+//        tempStart1.set(startPos.x, startPos.y);
+//        tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
+////        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
+//        if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
+//            collisions.add(new Collision(tempStart1, segment, Math.min(collisionResult.dst2(segment.start), collisionResult.dst2(segment.end))));
+//        }
+//    }
 
     private void handleCollision(Vector2 startPos, Segment2D segment, Vector2 movement, Vector2 end) {
         tempStart1.set(startPos.x, startPos.y);
@@ -193,6 +218,105 @@ public class PhysicsSystem {
         }
     }
 
+    Array<Vector2> touchPoints = new Array<>();
+    Vector2 intersectionPoint = new Vector2();
+    float[] rectVerts = new float[8];
+    float[] velVerts = new float[8];
+    Polygon rectPoly = new Polygon();
+    Polygon velPoly = new Polygon();
+    Polygon overlapPoly = new Polygon();
+    Intersector.MinimumTranslationVector transVector = new Intersector.MinimumTranslationVector();
+    private boolean sweepRectSegment(Rectangle rect, Segment2D segment, Vector2 v, Collision collision) {
+        rectVerts[0] = rect.x; rectVerts[1] = rect.y;
+        rectVerts[2] = rect.x; rectVerts[3] = rect.y + rect.height;
+        rectVerts[4] = rect.x + rect.width; rectVerts[5] = rect.y + rect.height;
+        rectVerts[6] = rect.x + rect.width; rectVerts[7] = rect.y;
+
+
+        projPoints.get(0).set(segment.start);
+        projPoints.get(1).set(segment.start.x - v.x, segment.start.y - v.y);
+        projPoints.get(2).set(segment.end);
+        projPoints.get(3).set(segment.end.x - v.x, segment.end.y - v.y);
+
+        Vector2 center = findCentroid(projPoints);
+        projPoints.sort((a, b) -> {
+            double a1 = (Math.toDegrees(Math.atan2(a.x - center.x, a.y - center.y)) + 360) % 360;
+            double a2 = (Math.toDegrees(Math.atan2(b.x - center.x, b.y - center.y)) + 360) % 360;
+            return (int) (a1 - a2);
+        });
+        for (int i = 0; i < 4; i ++){
+            velVerts[i*2] = projPoints.get(i).x;
+            velVerts[i*2 +1] = projPoints.get(i).y;
+        }
+        if (Intersector.overlapConvexPolygons(rectVerts, velVerts, transVector)) {
+            rectPoly.setVertices(rectVerts);
+            velPoly.setVertices(velVerts);
+            collision.distance = transVector;
+            collision.segment = segment;
+            collision.rect = rect;
+            collision.polygon = new Polygon();
+            if (Intersector.intersectPolygons(rectPoly, velPoly, overlapPoly)) {
+                collision.polygon = overlapPoly;
+            } else {
+                velVerts[0] = 0;
+                velVerts[1] = 0;
+                velVerts[2] = transVector.depth;
+                velVerts[3] = 0;
+                velVerts[4] = transVector.depth;
+                velVerts[5] = transVector.depth;
+
+                collision.polygon.setVertices(velVerts);
+            }
+            return true;
+
+        }
+        return false;
+
+//        Segment2D seg = rectSegs.get(0);
+//        seg.setStart(rect.x, rect.y);
+//        seg.setEnd(rect.x, rect.y + rect.height);
+//        seg = rectSegs.get(1);
+//        seg.setStart(rect.x, rect.y + rect.height);
+//        seg.setEnd(rect.x + rect.width, rect.y + rect.height);
+//        seg = rectSegs.get(2);
+//        seg.setStart(rect.x + rect.width, rect.y + rect.height);
+//        seg.setEnd(rect.x + rect.width, rect.y);
+//        seg = rectSegs.get(3);
+//        seg.setStart(rect.x + rect.width, rect.y);
+//        seg.setEnd(rect.x, rect.y);
+//
+//        seg = velSegs.get(0);
+//        seg.setStart(segment.start.x, segment.start.y);
+//        seg.setEnd(segment.start.x + v.x, segment.start.y + v.y);
+//        seg = velSegs.get(1);
+//        seg.setStart(segment.start.x + v.x, segment.start.y + v.y);
+//        seg.setEnd(segment.end.x + v.x, segment.end.y + v.y);
+//        seg = velSegs.get(2);
+//        seg.setStart(segment.end.x + v.x, segment.end.y + v.y);
+//        seg.setEnd(segment.end.x, segment.end.y);
+//        seg = velSegs.get(3);
+//        seg.setStart(segment.end);
+//        seg.setEnd(segment.start);
+//
+//
+//
+//        touchPoints.clear();
+//        for (int i = 0; i < 4; i++){
+//            Segment2D rectSeg = rectSegs.get(i);
+//            for (int j = 0; j < 4; j++) {
+//                Segment2D velSeg = velSegs.get(j);
+//                if (intersectSegments(rectSeg.start, rectSeg.end, velSeg.start, velSeg.end, intersectionPoint)) {
+//                    touchPoints.add(new Vector2(intersectionPoint));
+//                }
+//            }
+//        }
+//
+//        if (touchPoints.size <= 3) return false;
+//        Intersector
+//        int x = 0;
+//        return true;
+    }
+
     private boolean testGround(Vector2 startPos, Segment2D segment){
         tempStart1.set(startPos.x, startPos.y);
         tempEnd1.set(startPos.x, startPos.y - 5);
@@ -203,6 +327,16 @@ public class PhysicsSystem {
         return false;
     }
 
+    private Vector2 findCentroid(Array<Vector2> points) {
+        float x = 0;
+        float y = 0;
+        for (Vector2 v : points) {
+            x += v.x;
+            y += v.y;
+        }
+        tempStart1.set(x / points.size, y / points.size);
+        return tempStart1;
+    }
 //    private void testDownRay(Vector2 start, )
 
     Vector2 d1 = new Vector2();

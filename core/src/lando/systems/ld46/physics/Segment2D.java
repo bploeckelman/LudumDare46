@@ -25,13 +25,20 @@ public class Segment2D {
     }
 
     public void setEnd(Vector2 newEnd) {
-        end.set(newEnd);
+        this.setEnd(newEnd.x, newEnd.y);
+    }
+    public void setEnd(float x, float y) {
+        end.set(x, y);
         this.delta = new Vector2(end).sub(start);
         this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }
 
     public void setStart(Vector2 newStart) {
-        start.set(newStart);
+        this.setStart(newStart.x, newStart.y);
+    }
+
+    public void setStart(float x, float y) {
+        start.set(x, y);
         this.delta = new Vector2(end).sub(start);
         this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }

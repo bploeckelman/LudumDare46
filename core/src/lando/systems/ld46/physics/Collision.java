@@ -1,21 +1,30 @@
 package lando.systems.ld46.physics;
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Collision implements Comparable {
-    public float distance;
+    public Intersector.MinimumTranslationVector distance;
+    public Polygon polygon;
     public Segment2D segment;
-    public Vector2 startPos;
+    public Rectangle rect;
 
-    public Collision(Vector2 startPos, Segment2D segment, float dist) {
-        this.startPos = new Vector2(startPos);
+    public Collision() {}
+
+    public Collision(Segment2D segment, Intersector.MinimumTranslationVector dist, Polygon polygon) {
         this.segment = segment;
         this.distance = dist;
+        this.polygon = polygon;
     }
+
 
     @Override
     public int compareTo(Object o) {
         Collision other = (Collision)o;
-        return (int)(other.distance - this.distance);
+        if (Math.abs(other.distance.normal.dot(other.segment.normal)) < Math.abs(this.distance.normal.dot(this.segment.normal))) return 1;
+        else return -1;
+//        return (int)(Math.abs(other.distance.normal.dot(other.segment.normal)) - Math.abs(this.distance.normal.dot(this.segment.normal)));
     }
 }
