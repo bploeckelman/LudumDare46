@@ -1,6 +1,5 @@
 package lando.systems.ld46.entities;
 
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,8 +13,6 @@ import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
 
 public class GameEntity implements PhysicsComponent {
-
-
 
     public enum Direction {right, left}
     public enum State { standing, walking, jumping }

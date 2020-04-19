@@ -12,13 +12,8 @@ import lando.systems.ld46.world.SpawnPlayer;
 
 public class Player extends MoveEntity {
 
-    enum JumpState { none, jumping }
-
-    private JumpState jumpState = JumpState.none;
-
     private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
-
 
     private Animation<TextureRegion> punchAnimation;
     private float punchTime = -1;
@@ -51,10 +46,6 @@ public class Player extends MoveEntity {
             move(Direction.left);
         } else if (moveRightPressed) {
             move(Direction.right);
-        }
-
-        if (grounded) {
-            jumpState = JumpState.none;
         }
 
         updatePunch(dt);
@@ -126,7 +117,6 @@ public class Player extends MoveEntity {
         if (grounded) {
             playSound(Audio.Sounds.doc_jump);
             velocity.y = jumpVelocity * velocityMultiplier;
-            jumpState = JumpState.jumping;
             grounded = false;
         }
     }
