@@ -205,6 +205,24 @@ public class Level {
         collisionSegments.add(new Segment2D(new Vector2(rect.x, rect.y + rect.height), new Vector2(rect.x, rect.y)));
     }
 
+    public void removeCollisionRectangle(Rectangle rect) {
+        Segment2D bottom = new Segment2D(new Vector2(rect.x, rect.y), new Vector2(rect.x + rect.width, rect.y));
+        Segment2D right = new Segment2D(new Vector2(rect.x+rect.width, rect.y), new Vector2(rect.x + rect.width, rect.y + rect.height));
+        Segment2D top = new Segment2D(new Vector2(rect.x + rect.width, rect.y + rect.height), new Vector2(rect.x, rect.y + rect.height));
+        Segment2D left = new Segment2D(new Vector2(rect.x, rect.y + rect.height), new Vector2(rect.x, rect.y));
+
+        removeSegment(bottom);
+        removeSegment(right);
+        removeSegment(top);
+        removeSegment(left);
+    }
+
+    private void removeSegment(Segment2D segment){
+        if (!collisionSegments.removeValue(segment, false)){
+            Gdx.app.log("Collision", "need to write this to handle consolidated physics.");
+        }
+    }
+
     private void buildCollisionBounds() {
         collisionSegments = new Array<>();
         Pixmap pixmap = null;
