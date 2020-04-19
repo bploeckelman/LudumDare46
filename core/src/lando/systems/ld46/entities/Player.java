@@ -41,28 +41,23 @@ public class Player extends MoveEntity {
     public void update(float dt) {
         super.update(dt);
 
-        // Horizontal ----------------------------------------
+        // Check for and apply horizontal movement
+        boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
+                || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
+                || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-
-            // Check for and apply horizontal movement
-            boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
-                    || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-            boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
-                    || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-
-            if (moveLeftPressed) {
-                move(Direction.left);
-            } else if (moveRightPressed) {
-                move(Direction.right);
-            }
+        if (moveLeftPressed) {
+            move(Direction.left);
+        } else if (moveRightPressed) {
+            move(Direction.right);
+        }
 
         if (grounded) {
             jumpState = JumpState.none;
         }
 
         updatePunch(dt);
-
-        // Vertical ------------------------------------------
 
         boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         if (jumpPressed) {

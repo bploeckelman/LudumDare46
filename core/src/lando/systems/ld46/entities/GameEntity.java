@@ -100,11 +100,6 @@ public class GameEntity implements PhysicsComponent {
             state = State.walking;
         }
 
-        if (animation != null) {
-            float frameTime = state == State.walking ? stateTime: 0;
-            keyframe = animation.getKeyFrame(frameTime);
-        }
-
         collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
         collisionCircle.setPosition(position.x, position.y);
         collisionCircle.setRadius(collisionBounds.width / 2f);
