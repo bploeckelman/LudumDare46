@@ -1,5 +1,6 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -35,14 +36,9 @@ public class MobEntity extends EnemyEntity {
     private void setBehavior() {
         nextMoveTime = MathUtils.random(2f, 5f);
 
-        direction = (position.x < boss.position.x) ? Direction.right : Direction.left;
 
-        float distX = (direction == Direction.right) ? boss.maxDistance : -boss.maxDistance;
+        toX = boss.position.x + MathUtils.random(-boss.maxDistance, boss.maxDistance) * MathUtils.random(1f, 2f);
 
-        // vector math may my brain shrivel, so I reverted to lerps - help me obi wan
-        fromX = position.x;
-        toX = position.x + (distX * MathUtils.random(0.2f, 0.5f));
-        lerpTime = 0;
     }
 
     @Override
@@ -61,16 +57,28 @@ public class MobEntity extends EnemyEntity {
         super.update(dt);
 
         if (!isGrounded()) return;
+        if (toX > position.x + 5) {
+            if (screen.physicsSystem.isPositionAboveGround(position.x + 20, collisionBounds.y +30, 50)) {
+                velocity.x += 15;
+            } else {
+                toX = position.x;
+            }
+        } else if (toX < position.x - 5) {
+            if (screen.physicsSystem.isPositionAboveGround(position.x - 20, collisionBounds.y + 30, 90)) {
+                velocity.x -= 15;
+            } else {
+                toX = position.x;
+            }
+        } else {
+            toX = position.x;
+        }
+
 
         if (position.x == toX) {
             nextMoveTime -= dt;
             if (nextMoveTime < 0) {
                 setBehavior();
             }
-        } else {
-            lerpTime += dt;
-            float pos = (lerpTime < 1) ? MathUtils.lerp(fromX, toX, lerpTime) : toX;
-            setPosition(pos, position.y);
         }
     }
 }

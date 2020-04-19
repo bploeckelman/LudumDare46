@@ -45,7 +45,7 @@ public class GameScreen extends BaseScreen {
     private ParallaxBackground background;
 
     public ZombieMech zombieMech;
-    PhysicsSystem physicsSystem;
+    public PhysicsSystem physicsSystem;
     public Array<PhysicsComponent> physicsEntities;
 
     public Array<EnemyEntity> enemies;

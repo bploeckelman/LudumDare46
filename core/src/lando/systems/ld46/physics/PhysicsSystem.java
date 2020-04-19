@@ -54,9 +54,10 @@ public class PhysicsSystem {
     public boolean isPositionAboveGround(Vector2 pos) {
         return isPositionAboveGround(pos, 10);
     }
-    public boolean isPositionAboveGround(Vector2 pos, float distanceToCheck) {
-        tempStart1.set(pos.x, pos.y);
-        tempEnd1.set(pos.x, pos.y - distanceToCheck);
+    public boolean isPositionAboveGround(Vector2 pos, float distanceToCheck) { return isPositionAboveGround(pos.x, pos.y, distanceToCheck);}
+    public boolean isPositionAboveGround(float x, float y, float distanceToCheck) {
+        tempStart1.set(x, y);
+        tempEnd1.set(x, y - distanceToCheck);
 //        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
         for (Segment2D segment : screen.level.collisionSegments) {
             if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)) {

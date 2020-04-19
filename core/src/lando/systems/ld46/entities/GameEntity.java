@@ -18,7 +18,7 @@ public class GameEntity implements PhysicsComponent {
     public enum Direction {right, left}
     public enum State { standing, walking, jumping, jump, falling }
 
-    private Assets assets;
+    protected Assets assets;
 
     public GameScreen screen;
     protected TextureRegion keyframe;

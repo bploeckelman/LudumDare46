@@ -1,8 +1,11 @@
 package lando.systems.ld46.utils;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import lando.systems.ld46.Assets;
+import lando.systems.ld46.physics.Segment2D;
 
 public class Utils {
 
@@ -37,5 +40,12 @@ public class Utils {
                 incoming.y - 2f * normal.y * iDotN)
                 .nor().scl(initalSize);
         return incoming;
+    }
+
+    public static void drawSegment(Assets assets, Segment2D segment, float width, Color c) {
+        assets.batch.setColor(c);
+        assets.batch.draw(assets.whitePixel, segment.start.x, segment.start.y - width/2f, 0, width/2f, segment.delta.len(), width, 1, 1, segment.getRotation());
+        assets.batch.draw(assets.whitePixel, segment.start.x + segment.delta.x/2, segment.start.y + segment.delta.y/2, 0,0, 10, 1, 1, 1, segment.normal.angle());
+        assets.batch.setColor(Color.WHITE);
     }
 }
