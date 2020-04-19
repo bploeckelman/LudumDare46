@@ -47,6 +47,7 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
     public Animation<TextureRegion> playerAttackAnimation;
+    public Animation<TextureRegion> playerJumpAnimation;
 
     public Animation<TextureRegion> mechAnimation;
 
@@ -134,6 +135,7 @@ public class Assets implements Disposable {
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);
         playerAttackAnimation = new Animation<>(0.1f, atlas.findRegions("doc-punch"), Animation.PlayMode.NORMAL);
+        playerJumpAnimation = new Animation<>(0.1f, atlas.findRegions("doc-jump"), Animation.PlayMode.NORMAL);
 
         mechAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-idle"), Animation.PlayMode.LOOP);
 

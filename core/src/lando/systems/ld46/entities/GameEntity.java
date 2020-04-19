@@ -15,7 +15,7 @@ import lando.systems.ld46.screens.GameScreen;
 public class GameEntity implements PhysicsComponent {
 
     public enum Direction {right, left}
-    public enum State { standing, walking, jumping }
+    public enum State { standing, walking, jumping, jump, falling }
 
     private Assets assets;
 
@@ -77,6 +77,10 @@ public class GameEntity implements PhysicsComponent {
         float speed = direction == Direction.left ? -moveSpeed : moveSpeed;
         this.direction = direction;
         velocity.add(speed, 0);
+
+        if (state != State.jumping) {
+            state = State.walking;
+        }
     }
 
     public void update(float dt) {
@@ -89,12 +93,12 @@ public class GameEntity implements PhysicsComponent {
         // clamp velocity to maximum, horizontal only
         velocity.x = MathUtils.clamp(velocity.x, -maxHorizontalVelocity, maxHorizontalVelocity);
 
-        // stop if entity gets slow enough
-        if (Math.abs(velocity.x) < 10f) {
-            velocity.x = 0f;
-            state = State.standing;
-        } else {
-            state = State.walking;
+        if (state != State.jumping) {
+            // stop if entity gets slow enough
+            if (Math.abs(velocity.x) < 10f) {
+                velocity.x = 0f;
+                state = State.standing;
+            }
         }
 
         collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);

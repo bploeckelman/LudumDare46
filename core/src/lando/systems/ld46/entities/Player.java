@@ -3,20 +3,14 @@ package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
 public class Player extends MoveEntity {
 
-    private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
-
-    private Animation<TextureRegion> punchAnimation;
-    private float punchTime = -1;
 
     private ZombieMech mech = null;
 
@@ -27,28 +21,30 @@ public class Player extends MoveEntity {
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
 
-        initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
+        setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 450f);
+        setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, 10);
 
-        punchAnimation = screen.game.assets.playerAttackAnimation;
+        initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
 
-        // Check for and apply horizontal movement
-        boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
-                || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
-                || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        // this is the animation of starting to jump
+        if (state != State.jumping) {
+            // Check for and apply horizontal movement
+            boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
+                    || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+            boolean moveRightPressed = Gdx.input.isKeyPressed(Input.Keys.D)
+                    || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-        if (moveLeftPressed) {
-            move(Direction.left);
-        } else if (moveRightPressed) {
-            move(Direction.right);
+            if (moveLeftPressed) {
+                move(Direction.left);
+            } else if (moveRightPressed) {
+                move(Direction.right);
+            }
         }
-
-        updatePunch(dt);
 
         boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         if (jumpPressed) {
@@ -68,17 +64,6 @@ public class Player extends MoveEntity {
                 if (collisionBounds.overlaps(mech.collisionBounds)) {
                     jumpIn(this.screen.zombieMech);
                 }
-            }
-        }
-    }
-
-    private void updatePunch(float dt) {
-        if (punchTime != -1) {
-            punchTime += dt;
-            if (punchTime > punchAnimation.getAnimationDuration()) {
-                punchTime = -1;
-            } else {
-                keyframe = screen.assets.playerAttackAnimation.getKeyFrame(punchTime);
             }
         }
     }
@@ -105,26 +90,12 @@ public class Player extends MoveEntity {
         }
     }
 
-    private void jump() {
+    @Override
+    public void jump() {
         if (inMech()) {
-            mech.jump(1f);
+            mech.jump();
         } else {
-            jump(1f);
-        }
-    }
-
-    private void jump(float velocityMultiplier) {
-        if (grounded) {
-            playSound(Audio.Sounds.doc_jump);
-            velocity.y = jumpVelocity * velocityMultiplier;
-            grounded = false;
-        }
-    }
-
-    private void punch() {
-        if (punchTime == -1) {
-            playSound(Audio.Sounds.doc_punch);
-            punchTime = 0;
+            super.jump();
         }
     }
 

@@ -19,8 +19,9 @@ public class Audio implements Disposable {
     public static final boolean shutUpYourFace = false;
     public static final boolean shutUpYourTunes = false;
 
+    // none should not have a sound
     public enum Sounds {
-        sample_sound, doc_punch, doc_jump, zombie_punch, zombie_jump
+        none, sample_sound, doc_punch, doc_jump, zombie_punch, zombie_jump
     }
 
     public enum Musics {
