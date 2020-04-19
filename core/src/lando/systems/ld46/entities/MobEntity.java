@@ -33,9 +33,13 @@ public class MobEntity extends EnemyEntity {
     private void setBehavior() {
         nextMoveTime = MathUtils.random(2f, 5f);
 
-        float direction = (position.x < boss.position.x) ? boss.maxDistance : -boss.maxDistance;
+        direction = (position.x < boss.position.x) ? Direction.right : Direction.left;
+
+        float distX = (direction == Direction.right) ? boss.maxDistance : -boss.maxDistance;
+
+        // vector math may my brain shrivel, so I reverted to lerps - help me obi wan
         fromX = position.x;
-        toX = position.x + direction * MathUtils.random(0.2f, 0.5f);
+        toX = position.x + (distX * MathUtils.random(0.2f, 0.5f));
         lerpTime = 0;
     }
 
