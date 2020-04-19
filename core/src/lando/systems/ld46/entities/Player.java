@@ -4,6 +4,7 @@ package lando.systems.ld46.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
@@ -22,7 +23,7 @@ public class Player extends MoveEntity {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
 
         setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 450f);
-        setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, 10);
+        setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, Audio.Sounds.doc_punch_land, new int[]{2, 3},10);
         setFall(screen.game.assets.playerFallAnimation);
 
         initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
@@ -63,7 +64,6 @@ public class Player extends MoveEntity {
         boolean punchPressed = Gdx.input.justTouched();
         if (punchPressed) {
             punch();
-            bleed();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -134,5 +134,13 @@ public class Player extends MoveEntity {
             setPosition(mech.position.x, mech.position.y + 20);
             mech = null;
         }
+    }
+
+    Rectangle punchRect = new Rectangle(0, 0, 10, 10);
+    @Override
+    protected Rectangle getPunchRect() {
+        float x = (direction == Direction.left) ? collisionBounds.x - 15 : collisionBounds.x + collisionBounds.width + 5;
+        punchRect.setPosition(x, collisionBounds.y + collisionBounds.height - 20);
+        return punchRect;
     }
 }

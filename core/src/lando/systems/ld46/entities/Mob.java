@@ -13,6 +13,7 @@ public class Mob extends GameEntity {
     private Array<Animation<TextureRegion>> mobAnimations;
     private TextureRegion[] mobFrames;
     private float[] mobOffset;
+    private Direction[] directions;
     private Rectangle[] mobBounds;
 
     float mobTime = 0;
@@ -23,12 +24,14 @@ public class Mob extends GameEntity {
         int count = MathUtils.random(3, 7);
 
         mobAnimations = new Array<>(count);
-        float width = 0;
+
         float height = 0;
 
         mobFrames = new TextureRegion[count];
         mobOffset = new float[count];
+        directions = new Direction[count];
         mobBounds = new Rectangle[count];
+
 
         TextureRegion frame;
         float dx = 0;
@@ -41,12 +44,12 @@ public class Mob extends GameEntity {
             mobOffset[i] = MathUtils.random(0f, 2f);
             frame =  anim.getKeyFrame(0);
             mobFrames[i] = frame;
+            directions[i] = MathUtils.randomBoolean() ? Direction.left : Direction.right;
 
             float fw = frame.getRegionWidth() * 2f;
             float fh = frame.getRegionHeight() * 2f;
 
             mobBounds[i] = new Rectangle(dx, 0, fw, fh);
-            width += dx;
             height = Math.max(height, fh);
             dx += fw/2;
         }
@@ -68,14 +71,16 @@ public class Mob extends GameEntity {
 
     @Override
     public void render(SpriteBatch batch) {
+        // after there is a main mob person, move render to front
         super.render(batch);
 
         float x = collisionBounds.x;
         float y = collisionBounds.y;
 
         for (int i = 0; i < mobBounds.length; i++) {
+            float scaleX = (directions[i] == Direction.left) ? -1 : 1;
             batch.draw(mobFrames[i], x + mobBounds[i].x, y, mobBounds[i].width/2,
-                mobBounds[i].height/2, mobBounds[i].width, mobBounds[i].height, 1, 1, 0);
+                mobBounds[i].height/2, mobBounds[i].width, mobBounds[i].height, scaleX, 1, 0);
         }
     }
 }

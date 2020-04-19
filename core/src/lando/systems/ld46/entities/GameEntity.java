@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
-import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
 
@@ -36,8 +35,7 @@ public class GameEntity implements PhysicsComponent {
 
     public boolean grounded;
 
-    private float stateTime;
-    private float gravity = -3;
+    protected float stateTime;
     private float maxHorizontalVelocity = 200f;
     private float maxVerticalVelocity = 1200f;
     private Array<Rectangle> tiles = new Array<>();

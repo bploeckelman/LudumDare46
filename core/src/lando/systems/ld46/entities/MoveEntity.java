@@ -1,8 +1,13 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld46.Audio;
+import lando.systems.ld46.Config;
 import lando.systems.ld46.screens.GameScreen;
 
 public class MoveEntity extends GameEntity {
@@ -22,7 +27,10 @@ public class MoveEntity extends GameEntity {
 
     private float punchTime = -1;
     private Animation<TextureRegion> punchAnimation;
-    private Audio.Sounds punchSound = Audio.Sounds.none;
+    private Audio.Sounds punchSwingSound = Audio.Sounds.none;
+    private Audio.Sounds punchHitSound = Audio.Sounds.none;
+    protected Rectangle punchRect = new Rectangle();
+    private int punchFrameIndex[];
     private float punchDamage = 0f;
 
     protected MoveEntity(GameScreen screen, Animation<TextureRegion> idle, Animation<TextureRegion> move) {
@@ -44,9 +52,11 @@ public class MoveEntity extends GameEntity {
         this.fallAnimation = fallAnimation;
     }
 
-    public void setPunch(Animation<TextureRegion> punchAnimation, Audio.Sounds punchSound, float punchDamage) {
+    public void setPunch(Animation<TextureRegion> punchAnimation, Audio.Sounds punchSwingSound, Audio.Sounds punchHitSound, int[] punchFrameIndex, float punchDamage) {
         this.punchAnimation = punchAnimation;
-        this.punchSound = punchSound;
+        this.punchSwingSound = punchSwingSound;
+        this.punchHitSound = punchHitSound;
+        this.punchFrameIndex = punchFrameIndex;
         this.punchDamage = punchDamage;
     }
 
@@ -85,27 +95,61 @@ public class MoveEntity extends GameEntity {
     }
 
     private void updateJump(float dt) {
-        if (jumpTime != -1) {
-            jumpTime += dt;
-            if (state == State.jumping && (jumpAnimation == null || jumpTime > jumpAnimation.getAnimationDuration())) {
-                playSound(jumpSound);
-                velocity.y = jumpVelocity;
-                state = State.jump;
-            } else if (jumpAnimation != null) {
-                keyframe = jumpAnimation.getKeyFrame(jumpTime);
+        if (jumpTime == -1) return;
+
+        jumpTime += dt;
+        if (state == State.jumping && (jumpAnimation == null || jumpTime > jumpAnimation.getAnimationDuration())) {
+            playSound(jumpSound);
+            velocity.y = jumpVelocity;
+            state = State.jump;
+        } else if (jumpAnimation != null) {
+            keyframe = jumpAnimation.getKeyFrame(jumpTime);
+        }
+    }
+
+    private int lastPunchIndex = -1;
+
+    private void updatePunch(float dt) {
+        if (punchTime == -1) return;
+
+        punchTime += dt;
+        if (punchTime > punchAnimation.getAnimationDuration()) {
+            punchTime = -1;
+            lastPunchIndex = -1;
+        } else {
+            keyframe = punchAnimation.getKeyFrame(punchTime);
+            if (isPunch(punchTime)) {
+                handleDamage();
             }
         }
     }
 
-    private void updatePunch(float dt) {
-        if (punchTime != -1) {
-            punchTime += dt;
-            if (punchTime > punchAnimation.getAnimationDuration()) {
-                punchTime = -1;
-            } else {
-                keyframe = punchAnimation.getKeyFrame(punchTime);
+    private boolean isPunch(float time) {
+        int punchIndex = punchAnimation.getKeyFrameIndex(time);
+        for (int index : punchFrameIndex) {
+            if (index == punchIndex && index != lastPunchIndex) {
+                lastPunchIndex = index;
+                return true;
             }
         }
+        return false;
+    }
+
+    private void handleDamage() {
+        Rectangle r = getPunchRect();
+        if (hasHit(r)) {
+            playSound(punchHitSound);
+            bleed(r.x + r.width / 2, r.y + r.height / 2);
+        }
+    }
+
+    protected Rectangle getPunchRect() {
+        return null;
+    }
+
+    private boolean hasHit(Rectangle hitRect) {
+        // check rect
+        return hitRect != null;
     }
 
     public void jump() {
@@ -117,13 +161,13 @@ public class MoveEntity extends GameEntity {
 
     public void punch() {
         if (punchTime == -1 && canPunch() && punchAnimation != null) {
-            playSound(punchSound);
+            playSound(punchSwingSound);
             punchTime = 0;
         }
     }
 
-    public void bleed() {
-        screen.particles.makeBloodParticles(position.x, position.y);
+    public void bleed(float x, float y) {
+        screen.particles.makeBloodParticles(x, y);
     }
 
     private boolean canPunch() {
