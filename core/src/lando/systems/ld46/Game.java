@@ -26,7 +26,6 @@ public class Game extends ApplicationAdapter {
 	public Pool<Vector2> vector2Pool = Pools.get(Vector2.class);
 	public Pool<Color>   colorPool   = Pools.get(Color.class);
 
-//	public AudioManager audio;
 	public Assets assets;
 	public TweenManager tween;
 	public Audio audio;
@@ -68,7 +67,6 @@ public class Game extends ApplicationAdapter {
 
 		if (assets == null) {
 			assets = new Assets();
-			assets.preloadLevels();
 		}
 
 		if (audio == null) {

@@ -12,9 +12,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.ObjectMap;
-import lando.systems.ld46.world.Level;
-import lando.systems.ld46.world.LevelDescriptor;
 
 public class Assets implements Disposable {
 
@@ -93,8 +90,6 @@ public class Assets implements Disposable {
     public BitmapFont pixelFont16;
     public BitmapFont riseFont16;
 
-    public ObjectMap<LevelDescriptor, Level> levels;
-
     public Assets() {
         this(Loading.SYNC);
     }
@@ -108,7 +103,6 @@ public class Assets implements Disposable {
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();
         layout = new GlyphLayout();
-        levels = new ObjectMap<>();
 
         mgr = new AssetManager();
         mgr.load(atlasAsset);
@@ -197,12 +191,6 @@ public class Assets implements Disposable {
         riseFont16.getData().markupEnabled = true;
 
         return 1f;
-    }
-
-    public void preloadLevels() {
-        for (LevelDescriptor levelDescriptor : LevelDescriptor.values()) {
-            levels.put(levelDescriptor, new Level(levelDescriptor, Game.game));
-        }
     }
 
     private static ShaderProgram loadShader(String vertSourcePath, String fragSourcePath) {

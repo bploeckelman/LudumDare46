@@ -17,10 +17,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
-import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.EnemyType;
 import lando.systems.ld46.physics.Segment2D;
-import lando.systems.ld46.screens.BaseScreen;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
@@ -40,7 +38,7 @@ public class Level {
     }
 
     private Assets assets;
-    private Game game;
+    private GameScreen gameScreen;
 
     public String name;
     public TiledMap map;
@@ -59,11 +57,11 @@ public class Level {
     private Array<Rectangle> tileRects = new Array<>();
     private Rectangle tempRect = new Rectangle();
 
-    public Level(LevelDescriptor levelDescriptor, Game game) {
+    public Level(LevelDescriptor levelDescriptor, GameScreen gameScreen) {
         Gdx.app.log("Level", "Loading: " + levelDescriptor.toString());
 
-        this.assets = game.assets;
-        this.game = game;
+        this.assets = gameScreen.game.assets;
+        this.gameScreen = gameScreen;
 
         // Load map
         this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName, new TmxMapLoader.Parameters() {{
@@ -133,7 +131,7 @@ public class Level {
                 EnemyType enemyType = EnemyType.valueOf((String)props.get("enemy-type"));
                 int maxSpawn = 4; //props.get("max-spawn", Integer.class);
                 float spawnRate = 5; // props.get("spawn-rate", Float.class);
-                SpawnEnemy spawn = new SpawnEnemy(game, enemyType, x, y, maxSpawn, spawnRate);
+                SpawnEnemy spawn = new SpawnEnemy(gameScreen.game, enemyType, x, y, maxSpawn, spawnRate);
                 enemySpawns.add(spawn);
             }
             else if ("exit".equalsIgnoreCase(type)) {
@@ -161,11 +159,8 @@ public class Level {
     }
 
     public void update(float dt) {
-        GameScreen screen = getGameScreen();
-        if (screen != null) {
-            for (SpawnEnemy spawn : enemySpawns) {
-                spawn.update(screen, dt);
-            }
+        for (SpawnEnemy spawn : enemySpawns) {
+            spawn.update(gameScreen, dt);
         }
 
         // remove punch walls that have been marked for deletion and spawn a particle effect for each removed wall
@@ -173,17 +168,12 @@ public class Level {
             PunchWall wall = punchWalls.get(i);
             if (wall.dead) {
                 removeCollisionRectangle(wall.bounds);
-                game.getScreen().particles.spawnPunchWallExplosion(wall.punchedDir,
+                gameScreen.particles.spawnPunchWallExplosion(wall.punchedDir,
                         wall.bounds.x + wall.bounds.width / 2f,
                         wall.bounds.y + wall.bounds.height / 2f);
                 punchWalls.removeIndex(i);
             }
         }
-    }
-
-    private GameScreen getGameScreen() {
-        BaseScreen screen = game.getScreen();
-        return (screen instanceof GameScreen) ? (GameScreen) screen : null;
     }
 
     public void render(LayerType layerType, OrthographicCamera camera) {
