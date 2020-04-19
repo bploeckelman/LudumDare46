@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectFloatMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
@@ -26,6 +28,9 @@ public class PhysicsSystem {
     Vector2 nearestRight2 = new Vector2();
     Vector2 collisionResult = new Vector2();
     Vector2 moveVector = new Vector2();
+    Vector2 oldPos = new Vector2();
+
+    Array<Collision> collisions = new Array<>();
 
 
 
@@ -47,7 +52,7 @@ public class PhysicsSystem {
             Vector2 vel = obj.getVelocity();
             Vector2 pos = obj.getPosition();
             Rectangle bounds = (Rectangle) obj.getCollisionBounds();
-
+            oldPos.set(pos);
             vel.x *= (float)Math.pow(.01f, dt);
 
             vel.x += accel.x * dt;
@@ -56,13 +61,19 @@ public class PhysicsSystem {
             moveVector.set(vel.x * dt, vel.y * dt);
 
             boolean groundThisFrame = false;
-
+            collisions.clear();
             for (Segment2D segment : screen.level.collisionSegments){
                 for (int x = 0; x < bounds.width; x += 16){
-                    for (int y = 0; y < bounds.height; y+= 16){
-                        tempStart1.set(bounds.x + x, bounds.y + y);
-                        testCollision(tempStart1, segment, moveVector);
-                    }
+                    tempStart1.set(bounds.x + x, bounds.y);
+                    testCollision(tempStart1, segment, moveVector);
+                    tempStart1.set(bounds.x + x, bounds.y + bounds.height);
+                    testCollision(tempStart1, segment, moveVector);
+                }
+                for (int y = 0; y < bounds.height; y+= 16) {
+                    tempStart1.set(bounds.x, bounds.y + y);
+                    testCollision(tempStart1, segment, moveVector);
+                    tempStart1.set(bounds.x + bounds.width, bounds.y + y);
+                    testCollision(tempStart1, segment, moveVector);
                 }
                 tempStart1.set(bounds.x, bounds.y + bounds.height);
                 testCollision(tempStart1, segment, moveVector);
@@ -80,10 +91,39 @@ public class PhysicsSystem {
 
             }
 
+            collisions.sort();
+            for(Collision c : collisions){
+                handleCollision(c.startPos, c.segment, moveVector, tempEnd2);
+            }
+
             obj.setGrounded(groundThisFrame);
 
             pos.add(moveVector);
             vel.set(moveVector.scl(1/dt));
+
+            // Fuck this!!!!1! just push the god damn player out of the fucking ground
+            for(Segment2D segment : screen.level.collisionSegments) {
+                //bottom
+                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y), segment.start, segment.end, collisionResult)) {
+                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+                }
+                //top
+                if (intersectSegments(tempStart1.set(bounds.x, bounds.y + bounds.height), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+                }
+                //left
+                if (intersectSegments(tempStart1.set(bounds.x, bounds.y), tempEnd1.set(bounds.x, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+                }
+                //right
+                if (intersectSegments(tempStart1.set(bounds.x + bounds.width, bounds.y), tempEnd1.set(bounds.x + bounds.width, bounds.y + bounds.height), segment.start, segment.end, collisionResult)) {
+                    pos.add(segment.normal.x *2f, segment.normal.y * 2f);
+                }
+
+                if (bounds.contains(segment.start) && bounds.contains(segment.end)){
+                    pos.add(segment.normal.x * 2f, segment.normal.y * 2f);
+                }
+            }
         }
     }
 
@@ -132,6 +172,15 @@ public class PhysicsSystem {
     }
 
     private void testCollision(Vector2 startPos, Segment2D segment, Vector2 movement) {
+        tempStart1.set(startPos.x, startPos.y);
+        tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
+//        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
+        if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
+            collisions.add(new Collision(tempStart1, segment, Math.min(collisionResult.dst2(segment.start), collisionResult.dst2(segment.end))));
+        }
+    }
+
+    private void handleCollision(Vector2 startPos, Segment2D segment, Vector2 movement, Vector2 end) {
         tempStart1.set(startPos.x, startPos.y);
         tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
 //        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);

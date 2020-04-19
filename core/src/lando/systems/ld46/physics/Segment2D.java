@@ -17,7 +17,7 @@ public class Segment2D {
         this.start = new Vector2(x1, y1);
         this.end = new Vector2(x2, y2);
         this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(1);
+        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }
 
     public float getRotation(){
@@ -27,13 +27,13 @@ public class Segment2D {
     public void setEnd(Vector2 newEnd) {
         end.set(newEnd);
         this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(1);
+        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }
 
     public void setStart(Vector2 newStart) {
         start.set(newStart);
         this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(1);
+        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }
 
 }

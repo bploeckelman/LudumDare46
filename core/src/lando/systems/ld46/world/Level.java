@@ -184,6 +184,7 @@ public class Level {
             hue += .17;
             batch.setColor(Utils.hsvToRgb(hue, 1f, 1f, null));
             batch.draw(assets.whitePixel, segment.start.x, segment.start.y - width/2f, 0, width/2f, segment.delta.len(), width, 1, 1, segment.getRotation());
+            batch.draw(assets.whitePixel, segment.start.x + segment.delta.x/2, segment.start.y + segment.delta.y/2, 0,0, 10, 1, 1, 1, segment.normal.angle());
         }
         batch.setColor(Color.WHITE);
 

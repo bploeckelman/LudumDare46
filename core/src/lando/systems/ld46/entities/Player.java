@@ -27,7 +27,7 @@ public class Player extends MoveEntity {
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
 
-        initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
+        initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
 
         punchAnimation = screen.game.assets.playerAttackAnimation;
     }

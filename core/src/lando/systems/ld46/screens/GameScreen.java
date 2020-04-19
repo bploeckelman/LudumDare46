@@ -82,7 +82,7 @@ public class GameScreen extends BaseScreen {
             if (Config.debug) {
                 batch.begin();
                 {
-//                    level.renderDebug(batch);
+                    level.renderDebug(batch);
                 }
                 batch.end();
             }
