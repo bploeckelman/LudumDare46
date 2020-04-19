@@ -43,6 +43,10 @@ public class Assets implements Disposable {
     public TextureRegion ringTexture;
     public TextureRegion sunsetBackground;
     public TextureRegion columnsBackground;
+    public TextureRegion zombieRippedArm;
+    public TextureRegion zombieRippedLeg;
+    public TextureRegion zombieRippedHead;
+    public TextureRegion zombieRippedTorso;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -136,6 +140,10 @@ public class Assets implements Disposable {
         ringTexture = atlas.findRegion("ring");
         sunsetBackground = atlas.findRegion("background-sunset");
         columnsBackground = atlas.findRegion("background-columns");
+        zombieRippedArm = atlas.findRegion("zombie-ripped-arm");
+        zombieRippedHead = atlas.findRegion("zombie-ripped-head");
+        zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
+        zombieRippedTorso = atlas.findRegion("zombie-ripped-torso");
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);

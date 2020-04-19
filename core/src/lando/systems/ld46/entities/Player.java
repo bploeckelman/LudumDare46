@@ -69,6 +69,7 @@ public class Player extends MoveEntity {
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             if (inMech()) {
                 jumpOut();
+                this.screen.zombieMech.explode();
             } else {
                 ZombieMech mech = this.screen.zombieMech;
                 if (collisionBounds.overlaps(mech.collisionBounds)) {

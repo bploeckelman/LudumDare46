@@ -29,4 +29,8 @@ public class ZombieMech extends MoveEntity {
     public void move(Direction direction, float speed) {
         super.move(direction, speed * moveModifier);
     }
+
+    public void explode() {
+        screen.particles.makeExplodingZombieParticles(position.x, position.y);
+    }
 }
