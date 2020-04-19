@@ -71,7 +71,6 @@ public class GameScreen extends BaseScreen {
                 player.render(batch);
                 zombieMech.render(batch);
                 particles.draw(batch, Particles.Layer.foreground);
-                textLabel.render(batch);
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
@@ -87,6 +86,7 @@ public class GameScreen extends BaseScreen {
         batch.begin();
         {
             assets.pixelFont16.draw(batch, " fps: " + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
+            textLabel.render(batch);
         }
         batch.end();
     }
