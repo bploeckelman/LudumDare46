@@ -41,6 +41,8 @@ public class Assets implements Disposable {
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
     public TextureRegion ringTexture;
+    public TextureRegion sunsetBackground;
+    public TextureRegion columnsBackground;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -126,6 +128,8 @@ public class Assets implements Disposable {
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
         ringTexture = atlas.findRegion("ring");
+        sunsetBackground = atlas.findRegion("background-sunset");
+        columnsBackground = atlas.findRegion("background-columns");
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);

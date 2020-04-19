@@ -7,17 +7,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.Mob;
+import lando.systems.ld46.backgrounds.ParallaxBackground;
+import lando.systems.ld46.backgrounds.ParallaxUtils;
+import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
-import lando.systems.ld46.ui.typinglabel.TypingLabel;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 
@@ -40,6 +43,8 @@ public class GameScreen extends BaseScreen {
     private MutableFloat targetZoom = new MutableFloat(1.0f);
     private boolean cameraOverride = false;
 
+    private ParallaxBackground background;
+
     public ZombieMech zombieMech;
     PhysicsSystem physicsSystem;
     public Array<PhysicsComponent> physicsEntities;
@@ -61,12 +66,25 @@ public class GameScreen extends BaseScreen {
         // temp shit
         mob = new Mob(this, 800, 400);
         physicsEntities.add(mob);
+
+        TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
+        float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
+        TextureRegionParallaxLayer sunsetLayer = new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height);
+        TextureRegionParallaxLayer columnLayer = new TextureRegionParallaxLayer(assets.columnsBackground, levelHeight, new Vector2(.4f, .9f), ParallaxUtils.WH.height);
+        // TODO: fix optional padding on parallax layers
+        this.background = new ParallaxBackground(sunsetLayer, columnLayer);
     }
 
     @Override
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(worldCamera.combined);
         {
+            batch.begin();
+            {
+                background.render(worldCamera, batch);
+            }
+            batch.end();
+
             level.render(Level.LayerType.background, worldCamera);
             level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
