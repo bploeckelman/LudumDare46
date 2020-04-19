@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
@@ -31,15 +32,15 @@ public class GameScreen extends BaseScreen {
 
     private static final float MAX_ZOOM = 2f;
     private static final float MIN_ZOOM = 0.1f;
-    private static final float ZOOM_LERP = .02f;
-    private static final float PAN_LERP = 100.1f;
+    private static final float ZOOM_LERP = 0.02f;
+    private static final float PAN_LERP = 0.1f;
     private static final float CAM_HORZ_MARGIN = 100;
     private static final float CAM_VERT_MARGIN = 20;
     private static final float CAM_VERT_JUMP_MARGIN = 150;
 
     private Vector3 cameraTargetPos;
-    private MutableFloat targetZoom = new MutableFloat(0.5f);
-    private boolean cameraOverride = true;
+    private MutableFloat targetZoom = new MutableFloat(1.0f);
+    private boolean cameraOverride = false;
 
     public ZombieMech zombieMech;
     PhysicsSystem physicsSystem;
@@ -83,6 +84,17 @@ public class GameScreen extends BaseScreen {
                 batch.end();
             }
         }
+
+        batch.setProjectionMatrix(hudCamera.combined);
+        batch.begin();
+        {
+            batch.setColor(Color.WHITE);
+            assets.pixelFont16.draw(batch, "" + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
+            batch.setColor(Color.YELLOW);
+            assets.pixelFont16.draw(batch, "wc: " + worldCamera.position.toString(), 10f, hudCamera.viewportHeight - 40f);
+            batch.setColor(Color.WHITE);
+        }
+        batch.end();
     }
 
     @Override
@@ -108,12 +120,7 @@ public class GameScreen extends BaseScreen {
         physicsSystem.update(dt);
 
         handleCameraConstraints();
-//        playerCenter.set(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
-//        worldCamera.project(playerCenter);
-//        cameraTargetPos.set(playerCenter);
-//        updateCamera();
     }
-    Vector3 playerCenter = new Vector3();
 
     private void updateCamera() {
         if (cameraOverride) return;
