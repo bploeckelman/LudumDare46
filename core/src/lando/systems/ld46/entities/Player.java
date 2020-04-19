@@ -127,6 +127,7 @@ public class Player extends MoveEntity {
     private void move(Direction direction) {
         if (inMech()) {
             mech.move(direction, horizontalSpeed);
+            centerOn(mech);
         } else {
             move(direction, horizontalSpeed);
         }

@@ -188,6 +188,12 @@ public class GameEntity implements PhysicsComponent {
 //        setPosition(collisionBounds.x, collisionBounds.y);
     }
 
+    public void centerOn(GameEntity entity) {
+        float x = entity.collisionBounds.x + (entity.collisionBounds.width - collisionBounds.width)/2;
+        float y = entity.collisionBounds.y + (entity.collisionBounds.height - collisionBounds.height)/2;
+        setPosition(x, y);
+    }
+
     public void setPosition(float x, float y) {
         position.set(x, y);
         collisionBounds.setPosition(x - collisionBounds.width/2f, y - collisionBounds.height/2f);
