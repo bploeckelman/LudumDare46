@@ -6,6 +6,8 @@ import lando.systems.ld46.screens.GameScreen;
 
 public class MoveEntity extends GameEntity {
 
+    private final float horizontalSpeedMinThreshold = 5f;
+
     private State lastState;
 
     private Animation<TextureRegion> idleAnimation;
@@ -23,7 +25,7 @@ public class MoveEntity extends GameEntity {
     @Override
     public void update(float dt) {
         super.update(dt);
-
+        
         if (lastState != state) {
             if (state == State.standing) {
                 setAnimation(idleAnimation);
@@ -31,6 +33,16 @@ public class MoveEntity extends GameEntity {
                 setAnimation(moveAnimation);
             }
             lastState = state;
+        }
+
+        // Apply horizontal drag
+        if (grounded) {
+            velocity.x *= 0.85f;
+        }
+
+        // Clamp minimum horizontal velocity to zero
+        if (Math.abs(velocity.x) < horizontalSpeedMinThreshold) {
+            velocity.x = 0f;
         }
     }
 }

@@ -18,7 +18,6 @@ public class Player extends MoveEntity {
 
     private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
-    private final float horizontalSpeedMinThreshold = 5f;
 
     private Animation<TextureRegion> punchAnimation;
     private float punchTime = -1;
@@ -48,7 +47,7 @@ public class Player extends MoveEntity {
 
         // Horizontal ----------------------------------------
 
-        if (state != State.jumping) {
+        if (grounded) {
             // Check for and apply horizontal movement
             boolean moveLeftPressed = Gdx.input.isKeyPressed(Input.Keys.A)
                     || Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -61,17 +60,7 @@ public class Player extends MoveEntity {
                 move(Direction.right);
             }
 
-            // Apply horizontal drag
-            if (!grounded && !moveLeftPressed && !moveRightPressed) {
-                velocity.x = 0f;
-            } else {
-                velocity.x *= 0.85f;
-            }
-
-            // Clamp minimum horizontal velocity to zero
-            if (Math.abs(velocity.x) < horizontalSpeedMinThreshold) {
-                velocity.x = 0f;
-            }
+            jumpState = JumpState.none;
         }
 
         updatePunch(dt);
@@ -145,7 +134,6 @@ public class Player extends MoveEntity {
         if (grounded) {
             playSound(Audio.Sounds.doc_jump);
             velocity.y = jumpVelocity * velocityMultiplier;
-            velocity.x /= 2;
             jumpState = JumpState.jumping;
             grounded = false;
         }
