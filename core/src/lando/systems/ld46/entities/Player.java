@@ -55,6 +55,7 @@ public class Player extends MoveEntity {
         boolean punchPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
         if (punchPressed) {
             punch();
+            bleed();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {

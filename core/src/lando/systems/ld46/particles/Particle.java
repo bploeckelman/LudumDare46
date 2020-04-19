@@ -41,6 +41,7 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
     private float yTarget;
 
     private Vector2 velocity;
+    private float bounceScale;
 
     private Vector2 accel;
     private float accDamp;
@@ -161,6 +162,11 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
     }
 
     @Override
+    public float getBounceScale() {
+        return bounceScale;
+    }
+
+    @Override
     public Vector2 getAcceleration() {
         return accel;
     }
@@ -200,6 +206,7 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
         this.yTarget = 0f;
 
         this.velocity.set(0,0);
+        this.bounceScale = .8f;
 
         this.accel.set(0, 0);
         this.accDamp = 0f;
@@ -260,6 +267,8 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
 
         private float xVel = 0f;
         private float yVel = 0f;
+
+        private float bounceScale = .8f;
 
         private float xAcc = 0f;
         private float yAcc = 0f;
@@ -451,6 +460,13 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
 
         Initializer makePhysics() {
             this.isPhysics = true;
+            this.bounceScale = .8f;
+            return this;
+        }
+
+        Initializer makePhysicsWithCustomBounceScale(float customBounceScale) {
+            this.isPhysics = true;
+            this.bounceScale = customBounceScale;
             return this;
         }
 
@@ -484,6 +500,7 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
             }
 
             particle.velocity.set(xVel, yVel);
+            particle.bounceScale = bounceScale;
 
             particle.accel.set(xAcc, yAcc);
             particle.accDamp = accDamp;

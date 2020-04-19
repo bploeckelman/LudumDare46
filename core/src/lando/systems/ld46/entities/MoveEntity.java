@@ -121,4 +121,8 @@ public class MoveEntity extends GameEntity {
             punchTime = 0;
         }
     }
+
+    public void bleed() {
+        screen.particles.makeBloodParticles(position.x, position.y);
+    }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
+import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
 
@@ -27,6 +28,7 @@ public class GameEntity implements PhysicsComponent {
     public Direction direction = Direction.right;
     public Vector2 position = new Vector2();
     public Vector2 velocity = new Vector2();
+    public float bounceScale = 0.8f;
     public Vector2 acceleration = new Vector2();
     public Rectangle imageBounds = new Rectangle();
     public Rectangle collisionBounds = new Rectangle();
@@ -164,6 +166,11 @@ public class GameEntity implements PhysicsComponent {
     @Override
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    @Override
+    public float getBounceScale() {
+        return bounceScale;
     }
 
     @Override

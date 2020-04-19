@@ -1,5 +1,6 @@
 package lando.systems.ld46.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -133,6 +134,7 @@ public class PhysicsSystem {
             Vector2 accel = obj.getAcceleration();
             Vector2 vel = obj.getVelocity();
             Vector2 pos = obj.getPosition();
+            float scale = obj.getBounceScale();
             Circle bounds = (Circle) obj.getCollisionBounds();
 
             vel.scl((float)Math.pow(.4f, dt));
@@ -158,7 +160,7 @@ public class PhysicsSystem {
                     float y = frameEndPos.y - backupDist * (normal.y);
                     frameEndPos.set(x, y);
 
-                    vel.scl(.8f);
+                    vel.scl(scale);
                     if (nearest2.epsilonEquals(segment.start) || nearest2.epsilonEquals(segment.end)){
                         normal.set(nearest2).sub(frameEndPos).nor();
                     } else {
