@@ -61,7 +61,11 @@ public class Level {
         this.game = game;
 
         // Load map
-        this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName);
+        this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName, new TmxMapLoader.Parameters() {{
+            generateMipMaps = true;
+            textureMinFilter = Texture.TextureFilter.MipMap;
+            textureMagFilter = Texture.TextureFilter.MipMap;
+        }});
         this.renderer = new OrthoCachedTiledMapRenderer(map);
         ((OrthoCachedTiledMapRenderer) renderer).setBlending(true);
 
