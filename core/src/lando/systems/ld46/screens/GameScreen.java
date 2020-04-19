@@ -56,7 +56,7 @@ public class GameScreen extends BaseScreen {
         super(game);
         this.physicsSystem = new PhysicsSystem(this);
         this.physicsEntities = new Array<>();
-        this.level = assets.levels.get(LevelDescriptor.test);
+        this.level = assets.levels.get(LevelDescriptor.level1);
         this.player = new Player(this, level.playerSpawn);
         physicsEntities.add(player);
         this.zombieMech = new ZombieMech(this, 400, 500);
