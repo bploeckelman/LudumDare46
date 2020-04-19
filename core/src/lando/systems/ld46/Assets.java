@@ -140,8 +140,8 @@ public class Assets implements Disposable {
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);
         playerAttackAnimation = new Animation<>(0.1f, atlas.findRegions("doc-punch"), Animation.PlayMode.NORMAL);
-        playerJumpAnimation = new Animation<>(0.1f, atlas.findRegions("doc-jump"), Animation.PlayMode.NORMAL);
-        playerFallAnimation = new Animation<>(0.1f, atlas.findRegions("doc-fall"), Animation.PlayMode.NORMAL);
+        playerJumpAnimation = new Animation<>(0.04f, atlas.findRegions("doc-jump"), Animation.PlayMode.NORMAL);
+        playerFallAnimation = new Animation<>(0.08f, atlas.findRegions("doc-fall"), Animation.PlayMode.NORMAL);
 
         mechAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-idle"), Animation.PlayMode.LOOP);
         //mechMoveAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-run"), Animation.PlayMode.LOOP);
