@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="160" height="50" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#c0c0c0" nextlayerid="5" nextobjectid="5">
+<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="160" height="50" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#c0c0c0" nextlayerid="5" nextobjectid="6">
  <tileset firstgid="1" source="tileset-01.tsx"/>
  <layer id="1" name="background" width="160" height="50">
   <data encoding="base64">
@@ -12,9 +12,10 @@
   </data>
  </layer>
  <objectgroup id="4" name="objects">
-  <object id="1" type="spawn-player" gid="2" x="192" y="1440" width="32" height="32"/>
+  <object id="1" type="spawn-player" gid="2" x="288" y="1408" width="32" height="32"/>
   <object id="2" type="exit" gid="4" x="4928" y="416" width="32" height="32"/>
   <object id="4" type="punch-wall" gid="757" x="672" y="1536" width="32" height="160"/>
+  <object id="5" type="punch-wall" gid="757" x="128" y="1536" width="32" height="160"/>
  </objectgroup>
  <layer id="3" name="foreground" width="160" height="50">
   <data encoding="base64">

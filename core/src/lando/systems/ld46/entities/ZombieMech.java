@@ -43,7 +43,14 @@ public class ZombieMech extends MoveEntity {
     protected void handleDamage() {
         Rectangle r = getPunchRect();
         if (hasHit(r)) {
-            // TODO: check for punches against punchWalls in the level... and maybe other stuff here?
+            // check for punches against punchWalls in the level
+            screen.level.punchWalls.forEach(wall -> {
+                if (wall.bounds.contains(r)) {
+                    Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
+                    wall.punch(punchDir);
+                }
+            });
+
             playSound(punchHitSound);
             bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
         }

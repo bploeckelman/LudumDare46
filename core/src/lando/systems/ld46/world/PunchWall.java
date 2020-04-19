@@ -10,6 +10,7 @@ import lando.systems.ld46.entities.GameEntity;
 public class PunchWall {
 
     public Vector2 pos;
+    public Vector2 center;
     public TextureRegion texture;
     public Rectangle bounds;
     public boolean dead;
@@ -19,6 +20,7 @@ public class PunchWall {
         this.pos = new Vector2(x, y);
         this.texture = assets.punchWall1x4;
         this.bounds = new Rectangle(pos.x, pos.y, texture.getRegionWidth(), texture.getRegionHeight());
+        this.center = new Vector2(bounds.x + bounds.width / 2f, bounds.y + bounds.height / 2f);
         this.dead = false;
         this.punchedDir = null;
     }

@@ -157,13 +157,6 @@ public class GameScreen extends BaseScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             particles.makePhysicsParticles(touchPos.x, touchPos.y);
         }
-        // ---- TEST ---- //
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            level.punchWalls.forEach(wall -> wall.punch(GameEntity.Direction.left));
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-            level.punchWalls.forEach(wall -> wall.punch(GameEntity.Direction.right));
-        }
     }
 
     private void updateCamera() {
