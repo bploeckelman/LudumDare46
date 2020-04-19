@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectFloatMap;
 import com.badlogic.gdx.utils.ObjectMap;
+import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
@@ -14,7 +15,7 @@ import java.util.Comparator;
 
 public class PhysicsSystem {
 
-    static final float GRAVITY = -600;
+    static final float GRAVITY = -800;
 
     private GameScreen screen;
     private Vector2 normal;
@@ -74,13 +75,14 @@ public class PhysicsSystem {
             Vector2 pos = obj.getPosition();
             Rectangle bounds = (Rectangle) obj.getCollisionBounds();
             oldPos.set(pos);
-            vel.x *= (float)Math.pow(.01f, dt);
+            vel.x *= (float)Math.pow(.02f, dt);
 
             vel.x += accel.x * dt;
             float gravity = obj.isGrounded() ? 0 : GRAVITY;
             vel.y += (accel.y + gravity) * dt;
-            if (Math.abs(vel.y) < 4) vel.y = 0;
-            moveVector.set(vel.x * dt, vel.y * dt);
+//            if (Math.abs(vel.y) < 4) vel.y = 0;
+            float dtLeft = dt;
+            moveVector.set(vel.x, vel.y);
 //
 //            boolean groundThisFrame = false;
 //            for (Segment2D segment : screen.level.collisionSegments){
@@ -92,14 +94,16 @@ public class PhysicsSystem {
 //                if (testGround(tempStart1, segment)) groundThisFrame = true;
 //            }
 
-            checkCollisions(obj);
-            collisions.sort();
+
             boolean hadCollision = true;
             int i = 0;
-            while (hadCollision && i < 100){
+            while (hadCollision && i < 100 && dtLeft > 0){
                 if (moveVector.len2() < .01) break;
                 hadCollision = false;
                 i++;
+                moveVector.scl(dtLeft);
+                checkCollisions(obj);
+                float dtUsed = 0;
                 for(Collision c : collisions) {
                     if (c.distance.normal.dot(c.segment.normal) == 0) continue;
                     if (c.segment.normal.dot(moveVector) > 0) continue;
@@ -112,11 +116,15 @@ public class PhysicsSystem {
                         tempStart1.set(c.segment.end).sub(c.segment.start);
                         float dot = tempEnd1.set(moveVector).dot(tempStart1);
                         moveVector.set(tempStart1.scl(dot / tempStart1.len2()));
-                        moveVector.scl(MathUtils.clamp(1f - c.t, 0, 1f));
+
+                        dtUsed = dtLeft * MathUtils.clamp(1f - c.t, 0, 1f);
+//                        moveVector.scl(MathUtils.clamp(1f - c.t, 0, 1f));
                         hadCollision = true;
                         break;
                     }
                 }
+                moveVector.scl(1/dtLeft);
+                dtLeft -= dtUsed;
                 if (hadCollision) checkCollisions(obj);
 //                handleCollision(c.startPos, c.segment, moveVector, tempEnd2);
             }
@@ -132,10 +140,11 @@ public class PhysicsSystem {
             }
 
             obj.setGrounded(groundThisFrame);
-            if (moveVector.len2() < .01f) moveVector.set(0,0);
-            pos.add(moveVector);
+//            if (moveVector.len2() < .01f) moveVector.set(0,0);
+            pos.add(moveVector.x * dtLeft, moveVector.y * dtLeft);
             float origLength = vel.len();
-            vel.set(moveVector).nor().scl(origLength);
+//            vel.set(moveVector).nor().scl(origLength);
+            vel.set(moveVector);
         }
     }
 
