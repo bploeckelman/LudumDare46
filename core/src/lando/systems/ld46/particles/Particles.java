@@ -172,7 +172,7 @@ public class Particles implements Disposable {
                     .startPos(MathUtils.random(rect.x, rect.x + rect.width), MathUtils.random(rect.y, rect.y + rect.height))
                     .velocityDirection(MathUtils.random(360f), MathUtils.random(10f))
                     .startSize(MathUtils.random(20f, 40f))
-                    .endSize(0.1f)
+                    .endSize(MathUtils.random(.1f, 10f))
                     .startAlpha(1f)
                     .endAlpha(0f)
                     .startRotation(MathUtils.random(40))
