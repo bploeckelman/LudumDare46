@@ -1,8 +1,5 @@
 package lando.systems.ld46.entities;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
