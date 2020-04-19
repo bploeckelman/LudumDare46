@@ -43,4 +43,12 @@ public class Segment2D {
         this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Segment2D) {
+            Segment2D other = (Segment2D) obj;
+           return start.epsilonEquals(other.start) && end.epsilonEquals(other.end);
+        } else
+        return super.equals(obj);
+    }
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
 import lando.systems.ld46.Game;
@@ -197,6 +198,13 @@ public class Level {
         playerSpawn.render(batch);
     }
 
+    public void addCollisionRectangle(Rectangle rect) {
+        collisionSegments.add(new Segment2D(new Vector2(rect.x, rect.y), new Vector2(rect.x + rect.width, rect.y)));
+        collisionSegments.add(new Segment2D(new Vector2(rect.x+rect.width, rect.y), new Vector2(rect.x + rect.width, rect.y + rect.height)));
+        collisionSegments.add(new Segment2D(new Vector2(rect.x + rect.width, rect.y + rect.height), new Vector2(rect.x, rect.y + rect.height)));
+        collisionSegments.add(new Segment2D(new Vector2(rect.x, rect.y + rect.height), new Vector2(rect.x, rect.y)));
+    }
+
     private void buildCollisionBounds() {
         collisionSegments = new Array<>();
         Pixmap pixmap = null;
@@ -263,7 +271,10 @@ public class Level {
                 }
             }
         }
+        consolidateSegments();
+    }
 
+    private void consolidateSegments(){
         // consolidate segments
         boolean fixed = true;
         while (fixed){
