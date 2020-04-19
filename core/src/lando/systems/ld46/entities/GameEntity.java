@@ -11,6 +11,7 @@ import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.ui.HealthMeter;
 
 public class GameEntity implements PhysicsComponent {
 
@@ -40,6 +41,10 @@ public class GameEntity implements PhysicsComponent {
     private float maxVerticalVelocity = 1200f;
     private Array<Rectangle> tiles = new Array<>();
 
+    public float maxHealth = 100f;
+    public float currentHealth = 100f;
+    public HealthMeter healthMeter;
+
     GameEntity(GameScreen screen, Animation<TextureRegion> animation) {
         this(screen, animation.getKeyFrame(0f));
         this.animation = animation;
@@ -52,6 +57,7 @@ public class GameEntity implements PhysicsComponent {
         this.keyframe = keyframe;
         this.grounded = true;
         this.stateTime = 0f;
+        this.healthMeter = new HealthMeter(this);
     }
 
     protected void setAnimation(Animation<TextureRegion> animation) {
@@ -105,6 +111,7 @@ public class GameEntity implements PhysicsComponent {
         collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
         collisionCircle.setPosition(position.x, position.y);
         collisionCircle.setRadius(collisionBounds.width / 2f);
+        healthMeter.update(dt);
     }
 
     public void updateBounds(){
@@ -147,6 +154,7 @@ public class GameEntity implements PhysicsComponent {
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
+        healthMeter.render(batch);
 //        batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
 //                collisionBounds.width / 2, collisionBounds.height / 2,
 //                collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
@@ -203,5 +211,10 @@ public class GameEntity implements PhysicsComponent {
     
     public long playSound(Audio.Sounds sound) {
         return screen.game.audio.playSound(sound);
+    }
+
+
+    public float getHealthPercentage() {
+        return currentHealth / maxHealth;
     }
 }
