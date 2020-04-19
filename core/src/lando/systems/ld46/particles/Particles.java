@@ -148,19 +148,22 @@ public class Particles implements Disposable {
     }
 
     public void makeExplodingZombieParticles(float x, float y) {
-        activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
-                .keyframe(assets.zombieRippedArm)
-                .startPos(x, y)
-                .velocityDirection(MathUtils.random(100f), MathUtils.random(30f, 3500f))
-                .startSize(assets.zombieRippedArm.getRegionWidth(), assets.zombieRippedArm.getRegionHeight())
-                .startAlpha(1f)
-                .endAlpha(1f)
-                .timeToLive(30f)
-                .startRotation(0f)
-                .endRotation(2400f)
-                .makePhysicsWithCustomBounceScale(.4f)
-                .interpolation(new Interpolation.ExpOut(2, 50))
-                .init());
+
+        for (int i = 0; i < 2; ++i) {
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.zombieRippedArm)
+                    .startPos(x, y)
+                    .velocityDirection(MathUtils.random(100f), MathUtils.random(30f, 3500f))
+                    .startSize(assets.zombieRippedArm.getRegionWidth(), assets.zombieRippedArm.getRegionHeight())
+                    .startAlpha(1f)
+                    .endAlpha(1f)
+                    .timeToLive(30f)
+                    .startRotation(0f)
+                    .endRotation(2400f)
+                    .makePhysicsWithCustomBounceScale(.4f)
+                    .interpolation(new Interpolation.ExpOut(2, 50))
+                    .init());
+        }
 
         activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                 .keyframe(assets.zombieRippedHead)
@@ -176,19 +179,21 @@ public class Particles implements Disposable {
                 .interpolation(new Interpolation.ExpOut(2, 50))
                 .init());
 
-        activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
-                .keyframe(assets.zombieRippedLeg)
-                .startPos(x, y)
-                .velocityDirection(MathUtils.random(100f), MathUtils.random(30f, 3500f))
-                .startSize(assets.zombieRippedLeg.getRegionWidth(), assets.zombieRippedLeg.getRegionHeight())
-                .startAlpha(1f)
-                .endAlpha(1f)
-                .timeToLive(30f)
-                .startRotation(0f)
-                .endRotation(2400f)
-                .makePhysicsWithCustomBounceScale(.4f)
-                .interpolation(new Interpolation.ExpOut(2, 50))
-                .init());
+        for (int i = 0; i < 2; ++i) {
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.zombieRippedLeg)
+                    .startPos(x, y)
+                    .velocityDirection(MathUtils.random(100f), MathUtils.random(30f, 3500f))
+                    .startSize(assets.zombieRippedLeg.getRegionWidth(), assets.zombieRippedLeg.getRegionHeight())
+                    .startAlpha(1f)
+                    .endAlpha(1f)
+                    .timeToLive(30f)
+                    .startRotation(0f)
+                    .endRotation(2400f)
+                    .makePhysicsWithCustomBounceScale(.4f)
+                    .interpolation(new Interpolation.ExpOut(2, 50))
+                    .init());
+        }
 
         activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                 .keyframe(assets.zombieRippedTorso)
