@@ -11,9 +11,7 @@ public class ZombieMech extends MoveEntity {
     public ZombieMech(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.mechAnimation, screen.game.assets.mechAnimation);
 
-        this.collisionBounds.set(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
-        this.imageBounds.set(collisionBounds);
-        setPosition(x, y);
+        initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
     }
 
     @Override

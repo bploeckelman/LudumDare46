@@ -48,7 +48,7 @@ public class GameEntity implements PhysicsComponent {
         this.animation = animation;
     }
 
-    private GameEntity(GameScreen screen, TextureRegion keyframe) {
+    protected GameEntity(GameScreen screen, TextureRegion keyframe) {
         this.assets = screen.game.assets;
         this.screen = screen;
         this.animation = null;
@@ -60,6 +60,12 @@ public class GameEntity implements PhysicsComponent {
     protected void setAnimation(Animation<TextureRegion> animation) {
         this.animation = animation;
         stateTime = 0;
+    }
+
+    protected void initEntity(float x, float y, float width, float height) {
+        collisionBounds.set(x, y, width, height);
+        imageBounds.set(this.collisionBounds);
+        setPosition(x, y);
     }
 
     public void changeDirection() {

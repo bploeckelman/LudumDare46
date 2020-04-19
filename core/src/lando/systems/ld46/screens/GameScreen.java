@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
+import lando.systems.ld46.entities.Mob;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
@@ -43,6 +44,8 @@ public class GameScreen extends BaseScreen {
     PhysicsSystem physicsSystem;
     public Array<PhysicsComponent> physicsEntities;
 
+    Mob mob;
+
     public GameScreen(Game game) {
         super(game);
         this.physicsSystem = new PhysicsSystem(this);
@@ -54,6 +57,10 @@ public class GameScreen extends BaseScreen {
         physicsEntities.add(zombieMech);
         this.touchPos = new Vector3();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
+
+        // temp shit
+        mob = new Mob(this, 800, 400);
+        physicsEntities.add(mob);
     }
 
     @Override
@@ -64,6 +71,7 @@ public class GameScreen extends BaseScreen {
             level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
             {
+                mob.render(batch);
                 player.render(batch);
                 zombieMech.render(batch);
                 particles.draw(batch, Particles.Layer.foreground);
@@ -108,7 +116,7 @@ public class GameScreen extends BaseScreen {
         player.update(dt);
         zombieMech.update(dt);
         physicsSystem.update(dt);
-
+        mob.update(dt);
         handleCameraConstraints();
     }
 

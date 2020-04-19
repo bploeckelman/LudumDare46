@@ -14,7 +14,7 @@ public class Player extends MoveEntity {
 
     enum JumpState { none, jumping }
 
-    private JumpState jumpState;
+    private JumpState jumpState = JumpState.none;
 
     private final float jumpVelocity = 450f;
     private final float horizontalSpeed = 50f;
@@ -31,15 +31,10 @@ public class Player extends MoveEntity {
 
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
-        float playerWidth = keyframe.getRegionWidth() * 2;
-        float playerHeight = keyframe.getRegionHeight() * 2;
-        this.collisionBounds.set(x, y, playerWidth, playerHeight);
-        this.imageBounds.set(this.collisionBounds);
-        this.setPosition(x, y);
+
+        initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
 
         punchAnimation = screen.game.assets.playerAttackAnimation;
-
-        this.jumpState = JumpState.none;
     }
 
     @Override
