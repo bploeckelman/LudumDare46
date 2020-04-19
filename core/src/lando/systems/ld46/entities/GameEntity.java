@@ -103,6 +103,7 @@ public class GameEntity implements PhysicsComponent {
             }
         }
 
+        imageBounds.setPosition(position.x - imageBounds.width / 2f, position.y - collisionBounds.height / 2f);
         collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
         collisionCircle.setPosition(position.x, position.y);
         collisionCircle.setRadius(collisionBounds.width / 2f);
@@ -116,6 +117,7 @@ public class GameEntity implements PhysicsComponent {
 
     public void setPosition(float x, float y) {
         position.set(x, y);
+        imageBounds.setPosition(x - imageBounds.width / 2f, y - collisionBounds.height / 2f);
         collisionBounds.setPosition(x - collisionBounds.width/2f, y - collisionBounds.height/2f);
         collisionCircle.setPosition(x, y);
         collisionCircle.setRadius(collisionBounds.width / 2f);
@@ -140,9 +142,12 @@ public class GameEntity implements PhysicsComponent {
         }
 
         batch.setColor(Color.WHITE);
-        batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
-                collisionBounds.width / 2, collisionBounds.height / 2,
-                collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
+        batch.draw(keyframe, imageBounds.x, imageBounds.y,
+                imageBounds.width / 2, imageBounds.height / 2,
+                imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
+//        batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
+//                collisionBounds.width / 2, collisionBounds.height / 2,
+//                collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
 
 //        batch.draw(assets.whiteCircleOutline, collisionBounds.x, collisionBounds.y,
 //                   collisionBounds.width / 2, collisionBounds.height / 2,

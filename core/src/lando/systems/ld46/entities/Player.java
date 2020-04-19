@@ -29,6 +29,14 @@ public class Player extends MoveEntity {
     }
 
     @Override
+    protected void initEntity(float x, float y, float width, float height) {
+        imageBounds.set(x, y, width, height);
+        float paddingX = (1f / 2f) * width;
+        collisionBounds.set(x + paddingX / 2f, y, width - paddingX, height);
+        setPosition(x, y);
+    }
+
+    @Override
     public void update(float dt) {
         super.update(dt);
 

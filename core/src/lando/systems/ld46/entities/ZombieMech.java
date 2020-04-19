@@ -16,6 +16,14 @@ public class ZombieMech extends MoveEntity {
 
         initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
     }
+    @Override
+    protected void initEntity(float x, float y, float width, float height) {
+        imageBounds.set(x, y, width, height);
+        float paddingX = (1f / 2f) * width;
+        float paddingY = (1f / 5f) * height;
+        collisionBounds.set(x + paddingX / 2f, y + paddingY / 2f, width - paddingX, height - paddingY);
+        setPosition(x, y);
+    }
 
     @Override
     public void move(Direction direction, float speed) {
