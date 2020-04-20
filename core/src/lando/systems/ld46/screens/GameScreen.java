@@ -56,6 +56,7 @@ public class GameScreen extends BaseScreen {
     public Boss boss;
     public Array<EnemyEntity> enemies;
     public Array<DropEntity> drops;
+    public Array<GameEntity> randomShit;
 
     public BodyBag bodyBag;
     public float zombieMechBuildAnimTime;
@@ -77,6 +78,7 @@ public class GameScreen extends BaseScreen {
         this.zombieMech = null;
         this.enemies = new Array<>();
         this.drops = new Array<>();
+        this.randomShit = new Array<>();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
         this.worldCamera.position.set(cameraTargetPos);
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
@@ -114,6 +116,9 @@ public class GameScreen extends BaseScreen {
             level.render(Level.LayerType.collision, worldCamera);
             batch.begin();
             {
+                for (GameEntity entity : randomShit) {
+                    entity.render(batch);
+                }
                 for (EnemyEntity enemy : enemies) {
                     enemy.render(batch);
                 }
@@ -206,6 +211,11 @@ public class GameScreen extends BaseScreen {
         if (tutorials.shouldBlockInput()) return;
         if (boss != null) boss.update(dt);
         level.update(dt);
+
+        for (GameEntity entity : randomShit) {
+            entity.update(dt);
+        }
+
         player.update(dt);
         if (level.exit != null && level.nextLevel != null) {
             if (player.collisionBounds.overlaps(level.exit.bounds)
@@ -333,4 +343,12 @@ public class GameScreen extends BaseScreen {
         updateCamera();
     }
 
+    public void addMarker(GameEntity entity) {
+        GraveMarker marker = new GraveMarker(this);
+
+        float x = entity.position.x;
+        float y = entity.position.y + (entity.collisionBounds.height - marker.height)/2 + 1;
+        marker.setPosition(x, y);
+        randomShit.add(marker);
+    }
 }

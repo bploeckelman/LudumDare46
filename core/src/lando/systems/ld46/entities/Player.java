@@ -118,14 +118,18 @@ public class Player extends MoveEntity {
             }
         }
 
-        if (Config.debug) {
+        ///if (Config.debug) {
             // debug controls
 
             // send player to hell
             if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
                 setPosition(position.x, 0);
             }
-        }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+                takeDamage(100);
+            }
+        //}
 
         if (inMech()){
             centerOn(mech);
@@ -250,14 +254,19 @@ public class Player extends MoveEntity {
             super.takeDamage(damage);
             if (dead) {
                 deathTime = 0;
+                // make sure we turn this off
+                invulnerabilityTimer = 0;
+                placeMarker = true;
             }
         }
     }
 
+    private boolean placeMarker = false;
+
     private boolean updateDeath(float dt) {
         if (deathTime == -1 || !grounded) return false;
 
-        float deathAnimTime = 5.5f;
+        float deathAnimTime = 7f;
 
         Animation<TextureRegion> deathAnimation = screen.assets.playerDieAnimation;
         float duration = deathAnimation.getAnimationDuration();
@@ -265,8 +274,14 @@ public class Player extends MoveEntity {
         deathTime += dt;
 
         float frameTime = deathTime;
-        if (deathTime > deathAnimTime - duration) {
-            frameTime = deathAnimTime - deathTime;
+        // this is to cut off last couple frames on reverse
+        if (deathTime > deathAnimTime - (duration - 0.6f)) {
+            if (placeMarker) {
+                screen.addMarker(this);
+                placeMarker = true;
+            }
+            // won't be < 0, but just to make sure if values are changed
+            frameTime = Math.max(deathAnimTime - deathTime, 0);
         }
 
         keyframe = deathAnimation.getKeyFrame(frameTime);
@@ -276,7 +291,6 @@ public class Player extends MoveEntity {
             dead = false;
             deathTime = -1;
             invulnerabilityTimer = 4;
-            velocity.add(0, 100);
             screen.tutorials.showDeathMessage();
         }
 

@@ -58,6 +58,8 @@ public class GameEntity implements PhysicsComponent {
     protected Audio.Sounds hurtSound = Audio.Sounds.none;
     protected Audio.Sounds deathSound = Audio.Sounds.none;
 
+    public float height, width;
+
     GameEntity(GameScreen screen, Animation<TextureRegion> animation) {
         this(screen, animation.getKeyFrame(0f));
         this.animation = animation;
@@ -91,6 +93,8 @@ public class GameEntity implements PhysicsComponent {
         collisionBounds.set(x, y, width, height);
         imageBounds.set(this.collisionBounds);
         setPosition(x, y);
+        this.width = width;
+        this.height = height;
     }
 
     public void changeDirection() {
