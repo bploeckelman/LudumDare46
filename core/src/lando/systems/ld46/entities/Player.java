@@ -232,7 +232,7 @@ public class Player extends MoveEntity {
     private boolean updateDeath(float dt) {
         if (deathTime == -1 || !grounded) return false;
 
-        float deathAnimTime = 4;
+        float deathAnimTime = 5.5f;
 
         Animation<TextureRegion> deathAnimation = screen.assets.playerDieAnimation;
         float duration = deathAnimation.getAnimationDuration();
