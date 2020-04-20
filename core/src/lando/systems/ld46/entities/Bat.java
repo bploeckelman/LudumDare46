@@ -19,9 +19,12 @@ public class Bat extends EnemyEntity {
         super.update(dt);
 
         if (!dead) {
+            // flutter
+            velocity.add(0, MathUtils.random(600, 700) * dt);
+
             flyTimer += dt;
             if (flyTimer > 5) {
-                velocity.set(MathUtils.random(-200f, 200f), MathUtils.random(400f, 600f));
+                velocity.set(MathUtils.random(-200f, 200f), MathUtils.random(200f, 400f));
                 flyTimer = 0;
             }
         }

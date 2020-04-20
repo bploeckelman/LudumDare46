@@ -37,7 +37,7 @@ public class GameEntity implements PhysicsComponent {
     public boolean grounded;
 
     protected float stateTime;
-    private float maxHorizontalVelocity = 200f;
+    protected float maxHorizontalVelocity = 200f;
     private float maxVerticalVelocity = 1200f;
     private Array<Rectangle> tiles = new Array<>();
 

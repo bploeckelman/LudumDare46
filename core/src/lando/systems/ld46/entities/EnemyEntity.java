@@ -7,8 +7,6 @@ import lando.systems.ld46.screens.GameScreen;
 
 public class EnemyEntity extends GameEntity {
 
-    public float maxHealth = 10f;
-    public float hitPoints = 10f;
     public float removeTime = 2f;
     public Feeler leftFeeler;
     public Feeler rightFeeler;
@@ -21,6 +19,8 @@ public class EnemyEntity extends GameEntity {
 
         leftFeeler = new Feeler(this, assets, -collisionBounds.width/2, 100);
         rightFeeler = new Feeler(this, assets, collisionBounds.width/2, 100);
+
+        maxHorizontalVelocity = 1200;
     }
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation) {

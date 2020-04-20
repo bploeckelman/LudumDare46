@@ -1,5 +1,7 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
@@ -36,27 +38,28 @@ public class ZombieMech extends MoveEntity {
         return true;
     }
 
-    Rectangle punchRect = new Rectangle(0, 0, 10, 10);
     @Override
-    protected Rectangle getPunchRect() {
+    protected void updatePunchRect(Rectangle punchRect) {
         float x = (direction == Direction.left) ? collisionBounds.x - 25 : collisionBounds.x + collisionBounds.width + 15;
-        punchRect.setPosition(x, collisionBounds.y + collisionBounds.height - 40);
-        return punchRect;
+        punchRect.set(x, collisionBounds.y + collisionBounds.height - 45, 20, 20);
     }
 
     @Override
-    protected Rectangle handleDamage() {
-        Rectangle r = super.handleDamage();
-        // check for punches against punchWalls in the level
-        screen.level.punchWalls.forEach(wall -> {
-            if (wall.bounds.contains(r)) {
-                Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
-                wall.punch(punchDir);
-                playSound(punchHitSound);
-                bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
-            }
-        });
-        return r;
+    protected void updatePunch(float dt) {
+        super.updatePunch(dt);
+
+        // check walls
+        if (checkPunch) {
+            // check for punches against punchWalls in the level
+            screen.level.punchWalls.forEach(wall -> {
+                if (wall.bounds.contains(punchRect)) {
+                    Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
+                    wall.punch(punchDir);
+                    playSound(punchHitSound);
+                    bleed(direction, punchRect.x + punchRect.width / 2, punchRect.y + punchRect.height / 2);
+                }
+            });
+        }
     }
 
     public void explode() {
@@ -65,15 +68,24 @@ public class ZombieMech extends MoveEntity {
 
     @Override
     public void takeDamage(float damage) {
-        hitPoints -= damage;
-        if (hitPoints <= 0) {
-            dead = true;
-            explode();
+        if (!dead) {
+            super.takeDamage(damage);
+            if (dead) {
+                explode();
+            }
         }
     }
 
     public void resetMech() {
         hitPoints = 100f;
         dead = false;
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+        batch.setColor(Color.RED);
+        batch.draw(screen.assets.whitePixel, punchRect.x, punchRect.y, punchRect.width, punchRect.height);
+        batch.setColor(Color.WHITE);
     }
 }

@@ -29,6 +29,8 @@ public class MoveEntity extends GameEntity {
     private int punchFrameIndex[];
     private float punchDamage = 0f;
 
+    private float invlunerabilityTimer = 0;
+
     protected MoveEntity(GameScreen screen, Animation<TextureRegion> idle, Animation<TextureRegion> move) {
         super(screen, idle);
 
@@ -79,6 +81,13 @@ public class MoveEntity extends GameEntity {
         updateFall(dt);
         updateJump(dt);
         updatePunch(dt);
+
+        if (invlunerabilityTimer > 0) {
+            invlunerabilityTimer -= dt;
+        }
+
+        // checks both sides
+        updateDamage();
     }
 
     private void updateFall(float dt) {
@@ -106,8 +115,10 @@ public class MoveEntity extends GameEntity {
     }
 
     private int lastPunchIndex = -1;
+    protected boolean checkPunch = false;
 
-    private void updatePunch(float dt) {
+    protected void updatePunch(float dt) {
+        checkPunch = false;
         if (punchTime == -1) return;
 
         punchTime += dt;
@@ -116,13 +127,14 @@ public class MoveEntity extends GameEntity {
             lastPunchIndex = -1;
         } else {
             keyframe = punchAnimation.getKeyFrame(punchTime);
-            if (isPunch(punchTime)) {
-                handleDamage();
+            if (isPunchFrame(punchTime)) {
+                checkPunch = true;
+                updatePunchRect(punchRect);
             }
         }
     }
 
-    private boolean isPunch(float time) {
+    private boolean isPunchFrame(float time) {
         int punchIndex = punchAnimation.getKeyFrameIndex(time);
         for (int index : punchFrameIndex) {
             if (index == punchIndex && index != lastPunchIndex) {
@@ -133,29 +145,45 @@ public class MoveEntity extends GameEntity {
         return false;
     }
 
-    protected Rectangle handleDamage() {
-        Rectangle r = getPunchRect();
-        EnemyEntity enemy = getHitEnemy(r);
-        if (enemy != null) {
-            playSound(punchHitSound);
-            bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
-            enemy.takeDamage(punchDamage);
-        }
-        return r;
-    }
+    // override to find punch location
+    protected void updatePunchRect(Rectangle punchRect) { }
 
-    protected Rectangle getPunchRect() {
-        return punchRect;
-    }
+    protected void updateDamage() {
 
-    protected EnemyEntity getHitEnemy(Rectangle hitRect) {
-        for (int i = 0; i < screen.enemies.size; i++) {
-            EnemyEntity en = screen.enemies.get(i);
-            if (!en.dead && hitRect.overlaps(en.collisionBounds)) {
-                return en;
+        boolean damageTaken = false;
+
+        // go through every enemy checking for damage (giving or taking)
+        for (EnemyEntity enemy : screen.enemies) {
+            if (enemy.dead) {
+                continue;
+            }
+
+            if (checkPunch && punchRect.overlaps(enemy.collisionBounds)) {
+                damageEnemy(enemy, direction, punchDamage);
+                // only damage one enemy
+                checkPunch = false;
+            }
+
+            // don't take damage for a smidge
+            if (invlunerabilityTimer > 0) { continue; }
+
+            if (collisionBounds.overlaps(enemy.collisionBounds)) {
+                // assign damage to enemies
+                // bounce back
+                takeDamage(10);
+                damageTaken = true;
             }
         }
-        return null;
+
+        if (damageTaken) {
+            invlunerabilityTimer = 2f;
+        }
+    }
+
+    private void damageEnemy(EnemyEntity enemy, Direction direction, float damage) {
+        playSound(punchHitSound);
+        bleed(direction, punchRect.x + punchRect.width / 2, punchRect.y + punchRect.height / 2);
+        enemy.takeDamage(punchDamage);
     }
 
     public void jump() {
@@ -182,5 +210,9 @@ public class MoveEntity extends GameEntity {
 
     private boolean canPunch() {
         return !(state == State.jumping || state == State.falling);
+    }
+
+    public boolean isInvulnerable() {
+        return invlunerabilityTimer > 0;
     }
 }

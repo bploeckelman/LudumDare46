@@ -148,11 +148,9 @@ public class Player extends MoveEntity {
         }
     }
 
-    Rectangle punchRect = new Rectangle(0, 0, 10, 10);
     @Override
-    protected Rectangle getPunchRect() {
+    protected void updatePunchRect(Rectangle punchRect) {
         float x = (direction == Direction.left) ? collisionBounds.x - 15 : collisionBounds.x + collisionBounds.width + 5;
-        punchRect.setPosition(x, collisionBounds.y + collisionBounds.height - 20);
-        return punchRect;
+        punchRect.set(x, collisionBounds.y + collisionBounds.height - 20, 10, 10);
     }
 }
