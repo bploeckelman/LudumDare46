@@ -56,7 +56,7 @@ public class ZombieMech extends MoveEntity {
         if (checkPunch) {
             // check for punches against punchWalls in the level
             screen.level.punchWalls.forEach(wall -> {
-                if (wall.bounds.contains(punchRect)) {
+                if (wall.bounds.overlaps(punchRect)) {
                     Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
                     wall.punch(punchDir);
                     playSound(punchWallSound);

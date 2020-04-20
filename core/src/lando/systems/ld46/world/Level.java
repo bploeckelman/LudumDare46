@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld46.Assets;
+import lando.systems.ld46.entities.BodyPart;
 import lando.systems.ld46.entities.EnemyType;
 import lando.systems.ld46.physics.Segment2D;
 import lando.systems.ld46.screens.GameScreen;
@@ -48,9 +49,10 @@ public class Level {
 
     public MapLayer objectsLayer;
     public SpawnPlayer playerSpawn;
+    public Exit exit;
     public Array<SpawnEnemy> enemySpawns;
     public Array<PunchWall> punchWalls;
-    public Exit exit;
+    public ObjectMap<BodyPart.Type, Vector2> initialBodyPartPositions;
 
     public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
 
@@ -107,10 +109,11 @@ public class Level {
         }
 
         // Load map objects
+        exit = null;
         playerSpawn = null;
         enemySpawns = new Array<>();
         punchWalls = new Array<>();
-        exit = null;
+        initialBodyPartPositions = new ObjectMap<>();
 
         MapObjects objects = objectsLayer.getObjects();
         for (MapObject object : objects) {
@@ -120,15 +123,13 @@ public class Level {
                 Gdx.app.log("Map", "Map object missing 'type' property");
                 continue;
             }
+            float x = props.get("x", Float.class);
+            float y = props.get("y", Float.class);
 
             if ("spawn-player".equalsIgnoreCase(type)) {
-                float x = props.get("x", Float.class);
-                float y = props.get("y", Float.class);
                 playerSpawn = new SpawnPlayer(x, y, assets);
             }
             else if ("spawn-enemy".equalsIgnoreCase(type)) {
-                float x = props.get("x", Float.class);
-                float y = props.get("y", Float.class);
                 EnemyType enemyType = EnemyType.valueOf((String)props.get("enemy-type"));
                 int maxSpawn = props.get("max-spawn", Integer.class);
                 float spawnRate = props.get("spawn-rate", Float.class);
@@ -136,14 +137,14 @@ public class Level {
                 enemySpawns.add(spawn);
             }
             else if ("exit".equalsIgnoreCase(type)) {
-                float x = props.get("x", Float.class);
-                float y = props.get("y", Float.class);
                 exit = new Exit(x, y, assets);
             }
             else if ("punch-wall".equalsIgnoreCase(type)) {
-                float x = props.get("x", Float.class);
-                float y = props.get("y", Float.class);
                 punchWalls.add(new PunchWall(x, y, assets));
+            }
+            else if ("body-part".equalsIgnoreCase(type)) {
+                BodyPart.Type partType = BodyPart.Type.valueOf(object.getName());
+                initialBodyPartPositions.put(partType, new Vector2(x, y));
             }
         }
 
