@@ -26,6 +26,8 @@ public class Mob extends EnemyEntity {
         }
 
         maxDistance = totalWidth/2;
+
+        damage = 30;
     }
 
     @Override

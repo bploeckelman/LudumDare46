@@ -10,6 +10,7 @@ public class Bat extends EnemyEntity {
     public Bat(GameScreen screen) {
         super(screen, screen.assets.batAnimation, 2);
 
+        damage = 5;
         collisionBounds.height = 30;
         setHealth(20);
     }

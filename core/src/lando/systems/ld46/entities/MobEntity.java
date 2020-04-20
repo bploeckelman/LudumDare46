@@ -30,6 +30,8 @@ public class MobEntity extends EnemyEntity {
         // prevent first update until physics engine has had a pass
         grounded = false;
 
+        damage = 20;
+
         initEntity(0, 0, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
     }
 

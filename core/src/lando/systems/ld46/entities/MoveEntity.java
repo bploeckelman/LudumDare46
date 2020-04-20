@@ -3,6 +3,7 @@ package lando.systems.ld46.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
@@ -187,9 +188,10 @@ public class MoveEntity extends GameEntity {
             if (invulnerabilityTimer > 0) { continue; }
 
             if (collisionBounds.overlaps(enemy.collisionBounds)) {
-                // assign damage to enemies
                 // bounce back
-                takeDamage(10);
+                float distance = enemy.damage * 50; // modify for size
+                velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
+                takeDamage(enemy.damage);
                 damageTaken = true;
             }
         }
@@ -202,7 +204,15 @@ public class MoveEntity extends GameEntity {
     private void damageEnemy(EnemyEntity enemy, Direction direction, float damage) {
         playSound(punchHitSound);
         bleed(direction, punchRect.x + punchRect.width / 2, punchRect.y + punchRect.height / 2);
-        enemy.takeDamage(punchDamage);
+        enemy.takeDamage(damage);
+
+        float distance = damage * 20;
+        if (damage > 40 && MathUtils.random(0, 100) > 50) { // should be 80, but lower for more fun
+            enemy.maxHorizontalVelocity = 100000;
+            distance = 2500;
+        }
+
+        enemy.velocity.add(direction == Direction.right ? distance : -distance, MathUtils.random(20, 40));
     }
 
     public void jump() {

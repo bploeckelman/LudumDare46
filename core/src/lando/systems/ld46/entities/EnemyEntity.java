@@ -1,5 +1,6 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,8 @@ public class EnemyEntity extends GameEntity {
     public float removeTime = 2f;
     public Feeler leftFeeler;
     public Feeler rightFeeler;
+
+    public float damage = 10f;
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation, float scale) {
         super(screen, animation);
@@ -57,5 +60,14 @@ public class EnemyEntity extends GameEntity {
                 removeFromScreen();
             }
         }
+    }
+
+    @Override
+    public Color getEffectColor() {
+        if (dead) {
+            if ((int)(removeTime * 30) % 2 == 0 ) { return Color.BLACK; }
+        }
+        return super.getEffectColor();
+
     }
 }
