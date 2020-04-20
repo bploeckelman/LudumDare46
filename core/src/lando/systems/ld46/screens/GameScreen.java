@@ -22,6 +22,7 @@ import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
+import lando.systems.ld46.ui.tutorial.TutorialManager;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 
@@ -45,6 +46,7 @@ public class GameScreen extends BaseScreen {
     private boolean cameraOverride = false;
 
     private ParallaxBackground background;
+    public TutorialManager tutorials;
 
     public ZombieMech zombieMech;
     public PhysicsSystem physicsSystem;
@@ -74,6 +76,8 @@ public class GameScreen extends BaseScreen {
         this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
 
         this.bodyBag = new BodyBag(this, level.initialBodyPartPositions);
+        tutorials = new TutorialManager(this);
+
     }
 
     @Override
@@ -116,7 +120,6 @@ public class GameScreen extends BaseScreen {
                 batch.begin();
                 {
                     level.renderDebug(batch);
-//                    physicsSystem.collisionTree.renderDebug(batch);
                 }
                 batch.end();
             }
@@ -125,7 +128,10 @@ public class GameScreen extends BaseScreen {
         batch.setProjectionMatrix(hudCamera.combined);
         batch.begin();
         {
-            assets.pixelFont16.draw(batch, " fps: " + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
+            if (Config.debug) {
+                assets.pixelFont16.draw(batch, " fps: " + Gdx.graphics.getFramesPerSecond(), 10f, hudCamera.viewportHeight - 10f);
+            }
+            tutorials.render(batch);
         }
         batch.end();
     }
@@ -139,13 +145,14 @@ public class GameScreen extends BaseScreen {
         }
 
         handleTempCommands();
+        tutorials.update(dt);
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         worldCamera.unproject(touchPos);
         particles.update(dt);
 
+        if (tutorials.shouldBlockInput()) return;
         level.update(dt);
-
         player.update(dt);
         zombieMech.update(dt);
 

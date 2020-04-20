@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.I18NBundle;
 import lando.systems.ld46.entities.BodyPart;
 
 public class Assets implements Disposable {
@@ -29,11 +30,13 @@ public class Assets implements Disposable {
     public ShapeRenderer shapes;
     public GlyphLayout layout;
     public AssetManager mgr;
+    public I18NBundle tutorialText;
 
     public Texture launchImage;
     public Texture pixel;
 
     public NinePatch debugNinePatch;
+    public NinePatch tutorialNinePatch;
 
     public TextureRegion debugTexture;
     public TextureRegion whitePixel;
@@ -116,6 +119,7 @@ public class Assets implements Disposable {
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
         mgr.load(launchTextureAsset);
+        mgr.load("i18n/tutorial", I18NBundle.class);
 
         mgr.load("audio/sample-music.wav", Music.class);
         mgr.load("audio/sample-sound.wav", Sound.class);
@@ -137,10 +141,13 @@ public class Assets implements Disposable {
         pixel = mgr.get(pixelTextureAsset);
         launchImage = mgr.get(launchTextureAsset);
 
+        tutorialText = mgr.get("i18n/tutorial", I18NBundle.class);
+
         // Cache TextureRegions from TextureAtlas in fields for quicker access
         atlas = mgr.get(atlasAsset);
 
         debugNinePatch = new NinePatch(atlas.findRegion("debug_patch"), 6, 6, 6, 6);
+        tutorialNinePatch = new NinePatch(atlas.findRegion("ninepatch-screws"), 12, 12, 12, 12);
 
         debugTexture = atlas.findRegion("badlogic");
         whitePixel = atlas.findRegion("white-pixel");

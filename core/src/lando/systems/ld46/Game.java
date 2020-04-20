@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.accessors.*;
@@ -44,6 +45,7 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		I18NBundle.setSimpleFormatter(true);
 		transitionPercent = new MutableFloat(0);
 		transitionFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Config.windowWidth, Config.windowHeight, false);
 		transitionTexture = transitionFBO.getColorBufferTexture();

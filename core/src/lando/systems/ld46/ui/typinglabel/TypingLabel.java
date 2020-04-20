@@ -49,7 +49,7 @@ public class TypingLabel {
     private       boolean            ignoringEffects       = false;
     private       String             defaultToken          = "";
 
-    boolean wrap;
+    boolean wrap = true;
     String  ellipsis;
     float   lastPrefHeight;
     boolean fontScaleChanged = false;
