@@ -138,7 +138,7 @@ public class PhysicsSystem {
                 checkCollisions(obj);
                 float dtUsed = 0;
                 for(Collision c : collisions) {
-                    if (c.distance.normal.dot(c.segment.normal) == 0) continue;
+//                    if (c.distance.normal.dot(c.segment.normal) == 0) continue;
                     if (c.segment.normal.dot(moveVector) > 0) continue;
 
                     bounds = (Rectangle) obj.getCollisionBounds();
