@@ -244,6 +244,7 @@ public class GameEntity implements PhysicsComponent {
         hitPoints = Math.max(0, hitPoints - damage);
         if (hitPoints == 0) {
             dead = true;
+            velocity.set(0, 0);
             playSound(deathSound);
         } else {
             playSound(hurtSound);

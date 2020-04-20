@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
@@ -42,6 +43,9 @@ public class Player extends MoveEntity {
         initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
 
         id = MoveEntityIds.Doctor;
+
+        // temp
+        setHealth(8);
     }
 
     @Override
