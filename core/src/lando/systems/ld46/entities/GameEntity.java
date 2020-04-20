@@ -160,8 +160,6 @@ public class GameEntity implements PhysicsComponent {
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
-                
-        healthMeter.render(batch);
 
         if (Config.debug) {
             batch.setColor(Color.YELLOW);

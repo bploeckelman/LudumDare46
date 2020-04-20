@@ -101,7 +101,7 @@ public class GameScreen extends BaseScreen {
 
                 for (EnemyEntity enemy : enemies) {
                     if (enemy.showHealth) {
-                        enemy.renderHealthMeter(batch);
+                        //enemy.renderHealthMeter(batch);
                     }
                 }
                 zombieMech.renderHealthMeter(batch);
