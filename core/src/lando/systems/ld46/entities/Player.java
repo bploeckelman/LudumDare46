@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
@@ -15,6 +14,8 @@ import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
 public class Player extends MoveEntity {
+
+    public final static float SCALE = 1.95f;
 
     private final float horizontalSpeed = 50f;
 
@@ -40,7 +41,7 @@ public class Player extends MoveEntity {
 
         setSounds(Audio.Sounds.doc_hurt, Audio.Sounds.doc_death);
 
-        initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
+        initEntity(x, y, keyframe.getRegionWidth() * SCALE, keyframe.getRegionHeight() * SCALE);
 
         id = MoveEntityIds.Doctor;
 

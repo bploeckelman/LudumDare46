@@ -57,14 +57,12 @@ public class GameScreen extends BaseScreen {
     public Array<DropEntity> drops;
 
     public BodyBag bodyBag;
-    public Animation<TextureRegion> zombieMechBuildAnimation;
     public float zombieMechBuildAnimTime;
     public boolean buildingMech;
 
     public GameScreen(Game game) {
         super(game);
         this.touchPos = new Vector3();
-        this.zombieMechBuildAnimation = assets.mechBuildAnimation;
 
         loadLevel(LevelDescriptor.level_tutorial);
     }
@@ -119,8 +117,19 @@ public class GameScreen extends BaseScreen {
                 level.renderObjects(batch);
                 bodyBag.render(batch);
                 if (buildingMech) {
-                    batch.draw(zombieMechBuildAnimation.getKeyFrame(zombieMechBuildAnimTime),
-                            player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
+                    TextureRegion frame = assets.mechBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
+                    float x = player.position.x;
+                    float y = player.collisionBounds.y;
+
+                    batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                            frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
+
+                    // insert smoke particles here - OTHER BRIAN
+
+                    frame = assets.playerBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
+                    batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                            frame.getRegionWidth() * Player.SCALE, frame.getRegionHeight() * Player.SCALE, 1, 1, 0);
+
                 }
                 particles.draw(batch, Particles.Layer.foreground);
 
@@ -214,11 +223,12 @@ public class GameScreen extends BaseScreen {
 
         // when done, spawn mech, reshow and reenable input for player
         Timeline.createSequence()
-                .delay(zombieMechBuildAnimation.getAnimationDuration())
+                .delay(assets.mechBuildAnimation.getAnimationDuration() + 0.25f)
                 .push(Tween.call((type, source) -> {
                     buildingMech = false;
                     zombieMech = new ZombieMech(GameScreen.this,
-                            player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
+                            // hack alert!
+                            player.position.x, player.position.y - player.collisionBounds.height /2 + 50 );
                     physicsEntities.add(zombieMech);
                     player.hide = false;
                     player.freeze = false;

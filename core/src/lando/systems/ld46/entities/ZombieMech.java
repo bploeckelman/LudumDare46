@@ -8,6 +8,8 @@ import lando.systems.ld46.ui.GuideArrow;
 
 public class ZombieMech extends MoveEntity {
 
+    public static final float SCALE = 2f;
+
     public float moveModifier = 0.5f;
 
     private Audio.Sounds punchWallSound = Audio.Sounds.zombie_punch_wall;
@@ -23,7 +25,7 @@ public class ZombieMech extends MoveEntity {
         setSounds(Audio.Sounds.zombie_hurt, Audio.Sounds.zombie_death);
         mechIndicator = new GuideArrow(screen, x, y, screen.assets.zombiePin);
 
-        initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
+        initEntity(x, y, keyframe.getRegionWidth() * SCALE, keyframe.getRegionHeight() * SCALE);
 
         id = MoveEntityIds.Zombie;
     }
@@ -87,10 +89,5 @@ public class ZombieMech extends MoveEntity {
                 explode();
             }
         }
-    }
-
-    public void resetMech() {
-        hitPoints = 100f;
-        dead = false;
     }
 }
