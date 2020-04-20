@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import lando.systems.ld46.entities.BodyPart;
 
+import javax.xml.soap.Text;
+
 public class Assets implements Disposable {
 
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
@@ -80,6 +82,9 @@ public class Assets implements Disposable {
     // build
     public Animation<TextureRegion> mechBuildAnimation;
     public Animation<TextureRegion> playerBuildAnimation;
+
+    public Animation<TextureRegion> playerEnterMech;
+    public Animation<TextureRegion> playerLeaveMech;
 
     // enemies!!
     public Animation<TextureRegion> mobBossAnimation;
@@ -219,6 +224,9 @@ public class Assets implements Disposable {
         playerFallAnimation = new Animation<>(0.08f, atlas.findRegions("doc-fall"), Animation.PlayMode.NORMAL);
         playerDieAnimation = new Animation<>(0.1f, atlas.findRegions("doc-death"), Animation.PlayMode.NORMAL);
 
+        playerEnterMech = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.NORMAL);
+        playerLeaveMech = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.REVERSED);
+
         mechAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-idle"), Animation.PlayMode.LOOP);
         mechMoveAnimation = new Animation<>(0.1f, atlas.findRegions("zombie-walk"), Animation.PlayMode.LOOP);
         mechAttackAnimation = new Animation<>(0.15f, atlas.findRegions("zombie-punch"), Animation.PlayMode.NORMAL);
@@ -241,7 +249,7 @@ public class Assets implements Disposable {
 
         fleshDropAnimation = new Animation<>(0.3f, atlas.findRegions("pickup-meat"), Animation.PlayMode.LOOP);
         syringeDropAnimation = new Animation<>(0.3f, atlas.findRegions("pickup-syringe"), Animation.PlayMode.LOOP);
-        holyHandGrenadeDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
+        holyHandGrenadeDropAnimation = new Animation<>(0.1f, atlas.findRegions("pickup-holyhand"), Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");

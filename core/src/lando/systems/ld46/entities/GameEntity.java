@@ -179,7 +179,7 @@ public class GameEntity implements PhysicsComponent {
 
         batch.setColor(Color.WHITE);
         // drops have 0 hit points, so this works
-        if (hitPoints > 0) {
+        if (showHealth()) {
             healthMeter.render(batch);
         }
 
@@ -190,6 +190,10 @@ public class GameEntity implements PhysicsComponent {
             assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
             batch.setColor(Color.WHITE);
         }
+    }
+
+    public boolean showHealth() {
+        return hitPoints > 0;
     }
 
     // override for effects

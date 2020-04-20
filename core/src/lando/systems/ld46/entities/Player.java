@@ -1,6 +1,8 @@
 package lando.systems.ld46.entities;
 
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -27,6 +29,9 @@ public class Player extends MoveEntity {
     public boolean hide = false;
 
     private float deathTime = -1;
+
+    private boolean climbIn = false;
+    private boolean climbOut = false;
 
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
@@ -64,6 +69,8 @@ public class Player extends MoveEntity {
 
         // death takes priority
         if (updateDeath(dt)) return;
+
+        if (updateClimb(dt)) return;
 
         super.update(dt);
 
@@ -103,13 +110,10 @@ public class Player extends MoveEntity {
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             if (inMech()) {
                 jumpOut();
-                screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
             } else {
                 ZombieMech mech = this.screen.zombieMech;
                 if (mech != null && collisionBounds.overlaps(mech.collisionBounds)) {
-                    //mech.resetMech();
                     jumpIn(this.screen.zombieMech);
-                    screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
                 }
             }
         }
@@ -196,21 +200,42 @@ public class Player extends MoveEntity {
     }
 
     public void jumpIn(ZombieMech mech) {
-        this.mech = mech;
-        mech.showHeart = true;
+        if (inMech() || climbIn || climbOut) return;
+
+        climbTime = 0;
+        climbIn = true;
         showHeart = false;
-        ignore = true;
-         // add state and animation jumping up its ass - update rendering call
+
+        Timeline.createSequence()
+                .delay(assets.playerEnterMech.getAnimationDuration())
+                .push(Tween.call((type, source) -> {
+                    climbIn = false;
+                    this.mech = mech;
+                    ignore = true;
+                    mech.showHeart = true;
+                    screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
+                }))
+                .start(screen.game.tween);
     }
 
     public void jumpOut() {
-        if (inMech()) {
-            setPosition(mech.position.x, mech.position.y + 20);
-            mech.showHeart = false;
-            showHeart = true;
-            ignore = false;
-            mech = null;
-        }
+        if (!inMech() || climbIn || climbOut) return;
+
+        climbTime = 0;
+        climbOut = true;
+        mech.showHeart = false;
+        setPosition(mech.position.x, mech.position.y + 20);
+        ignore = false;
+        mech = null;
+
+        Timeline.createSequence()
+                .delay(assets.playerLeaveMech.getAnimationDuration())
+                .push(Tween.call((type, source) -> {
+                    climbOut = false;
+                    showHeart = true;
+                    screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
+                }))
+                .start(screen.game.tween);
     }
 
     @Override
@@ -256,5 +281,22 @@ public class Player extends MoveEntity {
         }
 
         return true;
+    }
+
+
+    private float climbTime = 0;
+    private boolean updateClimb(float dt) {
+        if (!(climbIn || climbOut)) return false;
+
+        Animation<TextureRegion> anim = (climbIn) ? screen.assets.playerEnterMech : screen.assets.playerLeaveMech;
+        keyframe = anim.getKeyFrame(climbTime);
+        climbTime += dt;
+
+        return true;
+    }
+
+    @Override
+    public boolean showHealth() {
+        return (climbIn || climbOut) ? false : super.showHealth();
     }
 }

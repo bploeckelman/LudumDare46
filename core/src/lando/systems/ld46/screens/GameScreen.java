@@ -150,12 +150,13 @@ public class GameScreen extends BaseScreen {
             level.render(Level.LayerType.foreground, worldCamera);
             batch.begin();
             {
-                if (zombieMech != null) {
-                    zombieMech.renderHealthMeter(batch);
-                }
-                if (!player.inMech() && !player.hide) {
-                    player.renderHealthMeter(batch);
-                }
+                // fhese are already drawn on the entity - stop adding back in
+//                if (zombieMech != null) {
+//                    zombieMech.renderHealthMeter(batch);
+//                }
+//                if (!player.inMech() && !player.hide) {
+//                    player.renderHealthMeter(batch);
+//                }
                 if (!player.inMech() && zombieMech != null) {
                     zombieMech.mechIndicator.render(batch);
                 }
