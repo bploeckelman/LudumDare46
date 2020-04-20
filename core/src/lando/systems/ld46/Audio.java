@@ -23,7 +23,9 @@ public class Audio implements Disposable {
     public enum Sounds {
         none, sample_sound, doc_punch, doc_punch_land, doc_jump, doc_hurt, doc_death, zombie_punch,
         zombie_punch_land, zombie_punch_wall, zombie_jump, zombie_hurt, zombie_death, pickup_flesh, pickup_syringe,
-        pickup_handgrenade, bat_attack, bat_death, snek_attack, snek_death, mob_attack, mob_death
+        pickup_handgrenade, // halleyluya
+        bat_attack, bat_hurt, bat_death, snek_attack, snek_hurt, snek_death, // mob_attack, mob_death,
+        mob_boss_flee // tom & jerry run sound
     }
 
     public enum Musics {

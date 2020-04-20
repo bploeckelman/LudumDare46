@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
+import lando.systems.ld46.Config;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
@@ -99,8 +100,13 @@ public class Player extends MoveEntity {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-            setPosition(position.x, 0);
+        if (Config.debug) {
+            // debug controls
+
+            // send player to hell
+            if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+                setPosition(position.x, 0);
+            }
         }
 
         if (inMech()){
@@ -180,6 +186,7 @@ public class Player extends MoveEntity {
         this.mech = mech;
         mech.showHeart = true;
         showHeart = false;
+        ignore = true;
          // add state and animation jumping up its ass - update rendering call
     }
 
@@ -188,6 +195,7 @@ public class Player extends MoveEntity {
             setPosition(mech.position.x, mech.position.y + 20);
             mech.showHeart = false;
             showHeart = true;
+            ignore = false;
             mech = null;
         }
     }

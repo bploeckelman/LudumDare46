@@ -54,9 +54,17 @@ public class GameEntity implements PhysicsComponent {
 
     protected float renderRotation = 0;
 
+    protected Audio.Sounds hurtSound = Audio.Sounds.none;
+    protected Audio.Sounds deathSound = Audio.Sounds.none;
+
     GameEntity(GameScreen screen, Animation<TextureRegion> animation) {
         this(screen, animation.getKeyFrame(0f));
         this.animation = animation;
+    }
+
+    public void setSounds(Audio.Sounds hurtSound, Audio.Sounds death) {
+        this.hurtSound = hurtSound;
+        this.deathSound = death;
     }
 
     protected GameEntity(GameScreen screen, TextureRegion keyframe) {
@@ -235,6 +243,9 @@ public class GameEntity implements PhysicsComponent {
         hitPoints = Math.max(0, hitPoints - damage);
         if (hitPoints == 0) {
             dead = true;
+            playSound(deathSound);
+        } else {
+            playSound(hurtSound);
         }
     }
 

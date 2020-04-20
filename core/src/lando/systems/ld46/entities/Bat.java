@@ -1,6 +1,7 @@
 package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class Bat extends EnemyEntity {
@@ -9,6 +10,8 @@ public class Bat extends EnemyEntity {
 
     public Bat(GameScreen screen) {
         super(screen, screen.assets.batAnimation, 2);
+
+        setSounds(Audio.Sounds.bat_hurt, Audio.Sounds.bat_death);
 
         damage = 5;
         collisionBounds.height = 30;

@@ -76,7 +76,7 @@ public class EnemyEntity extends GameEntity {
         return super.getEffectColor();
     }
 
-    private void spawnDrop() {
+    protected void spawnDrop() {
         // add more drops?
         DropEntity drop;
 

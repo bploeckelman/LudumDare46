@@ -1,6 +1,7 @@
 package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class Snek extends EnemyEntity {
@@ -9,6 +10,8 @@ public class Snek extends EnemyEntity {
         super(screen, screen.assets.snakeAnimation, 2);
 
         damage = 8;
+
+        setSounds(Audio.Sounds.snek_hurt, Audio.Sounds.snek_death);
 
         // hack the planet!
         renderRotation = 90;

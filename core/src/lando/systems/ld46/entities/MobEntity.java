@@ -12,10 +12,11 @@ public class MobEntity extends EnemyEntity {
         return MathUtils.randomBoolean() ? assets.mobPitchforkAnimation : assets.mobTorchAnimation;
     }
 
-    private float nextMoveTime;
     private Mob boss;
+    private float nextMoveTime;
     private float toX;
     private boolean doneMoving = false;
+    private boolean initialPlacement = true;
 
     public MobEntity(Mob boss) {
         super(boss.screen, MobEntity.getAnimation(boss.screen.assets));
@@ -27,9 +28,6 @@ public class MobEntity extends EnemyEntity {
 
         nextMoveTime = MathUtils.random(2f, 5f);
 
-        // prevent first update until physics engine has had a pass
-        grounded = false;
-
         damage = 20;
 
         initEntity(0, 0, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
@@ -37,9 +35,8 @@ public class MobEntity extends EnemyEntity {
 
     private void setBehavior() {
         nextMoveTime = MathUtils.random(2f, 5f);
-        toX = boss.position.x + MathUtils.random(-boss.maxDistance, boss.maxDistance) * MathUtils.random(1f, 2f);
+        toX = boss.position.x + MathUtils.random(-boss.influenceDistance, boss.influenceDistance);
         doneMoving = false;
-
     }
 
     @Override
@@ -62,9 +59,18 @@ public class MobEntity extends EnemyEntity {
 
     @Override
     public void update(float dt) {
+        if (initialPlacement) {
+            initialPlacement = false;
+            return;
+        }
+
         super.update(dt);
 
-        if (!isGrounded() || dead) return;
+        if (boss.dead) {
+            removeFromScreen();
+        }
+
+        if (!grounded || dead) return;
 
         if (!doneMoving) {
             if (toX > position.x + 5) {
@@ -72,12 +78,14 @@ public class MobEntity extends EnemyEntity {
                     velocity.x += 15;
                 } else {
                     toX = position.x;
+                    doneMoving = true;
                 }
             } else if (toX < position.x - 5) {
                 if (screen.physicsSystem.isPositionAboveGround(position.x - 20, collisionBounds.y + 30, 90)) {
                     velocity.x -= 15;
                 } else {
                     toX = position.x;
+                    doneMoving = true;
                 }
             } else {
                 toX = position.x;

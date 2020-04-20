@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -39,9 +38,8 @@ public class MoveEntity extends GameEntity {
 
     private float invulnerabilityTimer = 0;
 
-    // other sounds
-    private Audio.Sounds deathSound = Audio.Sounds.none;
-    private Audio.Sounds hurtSound = Audio.Sounds.none;
+    // for when doc is in the zombie
+    protected boolean ignore = false;
 
     // bitwise id
     public int id;
@@ -73,11 +71,6 @@ public class MoveEntity extends GameEntity {
         this.punchDamage = punchDamage;
     }
 
-    protected void setSounds(Audio.Sounds hurtSound, Audio.Sounds deathSound) {
-        this.hurtSound = hurtSound;
-        this.deathSound = deathSound;
-    }
-
     // punch rect display
 //    @Override
 //    public void render(SpriteBatch batch) {
@@ -89,6 +82,8 @@ public class MoveEntity extends GameEntity {
 
     @Override
     public void update(float dt) {
+        if (ignore) return;
+
         super.update(dt);
 
         if (velocity.y < -50) {
@@ -184,6 +179,9 @@ public class MoveEntity extends GameEntity {
 
     protected void updateDamage() {
 
+        // now player can hit multiple targets in same frame
+        // cannot take damage on frame they hit - probably will next frame
+
         boolean damageTaken = false;
 
         // go through every enemy checking for damage (giving or taking)
@@ -195,18 +193,22 @@ public class MoveEntity extends GameEntity {
             if (checkPunch && punchRect.overlaps(enemy.collisionBounds)) {
                 damageEnemy(enemy, direction, punchDamage);
                 // only damage one enemy
-                checkPunch = false;
-            }
+                // checkPunch = false;
+            } else {
+                // don't take damage after hitting an enemy
 
-            // don't take damage for a smidge
-            if (invulnerabilityTimer > 0) { continue; }
+                // don't take damage for a smidge
+                if (invulnerabilityTimer > 0) {
+                    continue;
+                }
 
-            if (collisionBounds.overlaps(enemy.collisionBounds)) {
-                // bounce back
-                float distance = enemy.damage * 50; // modify for size
-                velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
-                takeDamage(enemy.damage);
-                damageTaken = true;
+                if (collisionBounds.overlaps(enemy.collisionBounds)) {
+                    // bounce back
+                    float distance = enemy.damage * 50; // modify for size
+                    velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
+                    takeDamage(enemy.damage);
+                    damageTaken = true;
+                }
             }
         }
 

@@ -89,6 +89,10 @@ public class GameScreen extends BaseScreen {
         this.guideArrow = new GuideArrow(this, 1300f, 200f);
 
         tutorials = new TutorialManager(this);
+
+        // temp
+        Mob mob = new Mob(this);
+        mob.addToScreen(500, 300);
     }
 
     @Override
@@ -162,7 +166,7 @@ public class GameScreen extends BaseScreen {
             Gdx.app.exit();
         }
 
-        handleTempCommands();
+        handleDebugCommands();
         tutorials.update(dt);
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -221,15 +225,17 @@ public class GameScreen extends BaseScreen {
                 .start(game.tween);
     }
 
-    private void handleTempCommands() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            // kill em all, let the engine sort it out
-            for (EnemyEntity e : enemies) {
-                e.takeDamage(e.hitPoints);
+    private void handleDebugCommands() {
+        if (Config.debug) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+                // kill em all, let the engine sort it out
+                for (EnemyEntity e : enemies) {
+                    e.takeDamage(e.hitPoints);
+                }
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
-            particles.makePhysicsParticles(touchPos.x, touchPos.y);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+                particles.makePhysicsParticles(touchPos.x, touchPos.y);
+            }
         }
     }
 

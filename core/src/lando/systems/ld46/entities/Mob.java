@@ -1,51 +1,42 @@
 package lando.systems.ld46.entities;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class Mob extends EnemyEntity {
 
     private Array<MobEntity> mobEntities;
 
-    public float maxDistance;
+    // how far the cronies move from him
+    public float influenceDistance = 75;
 
     public Mob(GameScreen screen) {
-        super(screen, screen.assets.playerAnimation, 0);
+        // he's small, but scrappy
+        super(screen, screen.assets.playerAnimation, 1.50f);
 
-        int count = MathUtils.random(3, 7);
-        count = 1;
+        // he's tougher - kind of
+        maxHorizontalVelocity = 300;
 
+        int count = MathUtils.random(4, 7);
         mobEntities = new Array<>(count);
 
-        float totalWidth = 0;
         while (count-- > 0) {
             MobEntity entity = new MobEntity(this);
-            totalWidth += entity.collisionBounds.width;
             mobEntities.add(entity);
         }
-
-        maxDistance = totalWidth/2;
-
         damage = 30;
     }
 
     @Override
-    public void setPosition(float x, float y) {
-        super.setPosition(x, y);
-        for (MobEntity entity : mobEntities) {
-            entity.setPosition(x, y);
-        }
-
-    }
-
-    @Override
     public void addToScreen(float x, float y) {
-        super.addToScreen(x, y);
         for (MobEntity entity : mobEntities) {
             entity.addToScreen(x, y);
         }
+        // add last so it gets drawn over the others
+        super.addToScreen(x, y);
     }
 
     @Override
@@ -60,23 +51,68 @@ public class Mob extends EnemyEntity {
     public void update(float dt) {
         super.update(dt);
 
-        for (int i = mobEntities.size - 1; i >= 0; i--) {
-            MobEntity entity = mobEntities.get(i);
-            // update is called in enemy update
-            // entity.update(dt);
-            if (entity.dead) {
-                mobEntities.removeIndex(i);
+        if (mobEntities.size > 0) {
+            // you eye balling me punk?
+            updateDirection();
+
+            // this checks to remove dead homies - their update is in the game screen
+            for (int i = mobEntities.size - 1; i >= 0; i--) {
+                MobEntity entity = mobEntities.get(i);
+                // this removes from index, actual removal is in game screen
+                if (entity.dead) {
+                    mobEntities.removeIndex(i);
+                }
             }
+        } else {
+            flee(dt);
         }
     }
 
-    @Override
-    public void render(SpriteBatch batch) {
-        for (MobEntity entity : mobEntities) {
-            entity.render(batch);
+    private boolean fled = false;
+    // enough time for the dead homies to die
+    private float fleeTime = 4;
+    private void flee(float dt) {
+        if (!fled) {
+            spawnDrop();
+            screen.physicsEntities.removeValue(this, true);
+            changeDirection();
+            fled = true;
+            playSound(Audio.Sounds.mob_boss_flee);
         }
 
-        // when there is a main guy, render this in front
-        // super.render(batch);
+        float runDist = 300*dt;
+        if (direction == Direction.left) {
+            runDist = -runDist;
+        }
+
+        // make him run away
+        setPosition(position.x + runDist, position.y);
+        fleeTime -= dt;
+        if (fleeTime < 0) {
+            removeFromScreen();
+        }
+    }
+
+    private void updateDirection() {
+        Player player = screen.player;
+        ZombieMech zombie = screen.zombieMech;
+
+        float x = Float.MAX_VALUE;
+        float dx = Float.MAX_VALUE;
+        if (zombie != null) {
+            x = zombie.position.x;
+            dx = Math.abs(position.x - x);
+        }
+        // player needs to be 2x closer to get this guy's attention
+        if (Math.abs(player.position.x - position.x) < (dx / 2)) {
+            x = player.position.x;
+        }
+
+        direction = (x < position.x) ? Direction.left : Direction.right;
+    }
+
+    @Override
+    public Color getEffectColor() {
+        return Color.GREEN;
     }
 }
