@@ -176,6 +176,7 @@ public class GameEntity implements PhysicsComponent {
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, renderRotation);
 
+        batch.setColor(Color.WHITE);
         // drops have 0 hit points, so this works
         if (hitPoints > 0) {
             healthMeter.render(batch);
