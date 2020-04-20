@@ -251,7 +251,7 @@ public class GameEntity implements PhysicsComponent {
     }
     
     public long playSound(Audio.Sounds sound) {
-        return screen.game.audio.playSound(sound);
+        return screen.game.audio.playSound(sound, true);
     }
 
     public void takeDamage(float damage) {
