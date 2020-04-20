@@ -54,8 +54,8 @@ public class GuideArrow {
             targetOffscreenInX = false;
         }
 
-        if (screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2 + arrowSize > target.y) {
-            y = screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2 + arrowSize;
+        if (screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2 > target.y) {
+            y = screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2;
             targetOffscreenInY = true;
         } else if (screen.cameraTargetPos.y + screen.hudCamera.viewportHeight / 2 - arrowSize * 2 < target.y){
             y = screen.cameraTargetPos.y + screen.hudCamera.viewportHeight / 2 - arrowSize * 2;
