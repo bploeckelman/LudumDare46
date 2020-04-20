@@ -51,6 +51,7 @@ public class Assets implements Disposable {
     public TextureRegion zombieRippedHead;
     public TextureRegion iconHeart;
     public TextureRegion iconSkull;
+    public TextureRegion iconArrow;
     public TextureRegion smokeTex;
     public TextureRegion particleSparkle;
     public TextureRegion particleBlood1;
@@ -167,6 +168,7 @@ public class Assets implements Disposable {
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
         iconHeart = atlas.findRegion("icon-heart");
         iconSkull = atlas.findRegion("icon-skull");
+        iconArrow = atlas.findRegion("icon-arrow");
         smokeTex = atlas.findRegion("smoke");
         particleSparkle = atlas.findRegion("particle-sparkle");
         particleBlood1 = atlas.findRegion("particle-blood-1");

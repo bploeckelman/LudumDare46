@@ -26,6 +26,7 @@ import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
 import lando.systems.ld46.ui.tutorial.TutorialManager;
+import lando.systems.ld46.ui.GuideArrow;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 
@@ -44,7 +45,7 @@ public class GameScreen extends BaseScreen {
     private static final float CAM_VERT_MARGIN = 20;
     private static final float CAM_VERT_JUMP_MARGIN = 150;
 
-    private Vector3 cameraTargetPos;
+    public Vector3 cameraTargetPos;
     private MutableFloat targetZoom = new MutableFloat(1.0f);
     private boolean cameraOverride = false;
 
@@ -61,6 +62,7 @@ public class GameScreen extends BaseScreen {
     public Animation<TextureRegion> zombieMechBuildAnimation;
     public float zombieMechBuildAnimTime;
     public boolean buildingMech;
+    public GuideArrow guideArrow;
 
     public GameScreen(Game game) {
         super(game);
@@ -86,6 +88,7 @@ public class GameScreen extends BaseScreen {
         this.buildingMech = false;
 
         tutorials = new TutorialManager(this);
+        this.guideArrow = new GuideArrow(this, 1300f, 200f);
     }
 
     @Override
@@ -128,10 +131,10 @@ public class GameScreen extends BaseScreen {
                 if (!player.inMech() && !player.hide) {
                     player.renderHealthMeter(batch);
                 }
+                guideArrow.render(batch);
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
-
             if (Config.debug) {
                 batch.begin();
                 {
@@ -182,6 +185,7 @@ public class GameScreen extends BaseScreen {
         if (buildingMech) {
             zombieMechBuildAnimTime += dt;
         }
+        guideArrow.update(dt);
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);
