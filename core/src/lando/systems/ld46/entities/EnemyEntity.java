@@ -9,6 +9,7 @@ import lando.systems.ld46.screens.GameScreen;
 public class EnemyEntity extends GameEntity {
 
     public float removeTime = 2f;
+    public boolean showHealth = false;
     public Feeler leftFeeler;
     public Feeler rightFeeler;
 

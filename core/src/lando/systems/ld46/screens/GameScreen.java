@@ -100,7 +100,9 @@ public class GameScreen extends BaseScreen {
                 particles.draw(batch, Particles.Layer.foreground);
 
                 for (EnemyEntity enemy : enemies) {
-                    enemy.renderHealthMeter(batch);
+                    if (enemy.showHealth) {
+                        enemy.renderHealthMeter(batch);
+                    }
                 }
                 zombieMech.renderHealthMeter(batch);
                 if (!player.inMech()) {
