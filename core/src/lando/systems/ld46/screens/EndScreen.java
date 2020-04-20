@@ -26,9 +26,8 @@ public class EndScreen extends BaseScreen {
     static String thanks = "Thanks for playing our game!";
     static String developers = "Developed by:\nDoug Graham\nBrian Ploeckelman\nBrian Rossman\nJeffrey Hwang";
     static String artists = "Art by:\nMatt Neumann";
-    static String otherDuties = "Other Duties as Assigned:\nLuke Bain";
     static String emotionalSupport = "Emotional Support:\nHamsters";
-    static String music = "Sound by:\nSomeone";
+    static String music = "Sound by:\nLuke Bain";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nHamsters were harmed in making of this game.";
     Color textColor = new Color(Color.WHITE);
@@ -49,7 +48,7 @@ public class EndScreen extends BaseScreen {
         leftCreditLabel.setLineAlign(Align.left);
         leftCreditLabel.setFontScale(1f);
 
-        rightCreditLabel = new TypingLabel(assets.riseFont16, artists + "\n\n" + music + "\n\n" + otherDuties + "\n\n" + libgdx, Config.windowWidth / 2 + 75f, Config.windowHeight / 2f + 155f);
+        rightCreditLabel = new TypingLabel(assets.riseFont16, artists + "\n\n" + music + "\n\n" + libgdx, Config.windowWidth / 2 + 75f, Config.windowHeight / 2f + 155f);
         rightCreditLabel.setWidth(Config.windowWidth / 2 - 150f);
         rightCreditLabel.setLineAlign(Align.left);
         rightCreditLabel.setFontScale(1f);
