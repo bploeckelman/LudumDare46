@@ -1,5 +1,7 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +12,8 @@ import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class MoveEntity extends GameEntity {
+
+    public static float JUMP_BONUS = .5f;
 
     private State lastState;
 
@@ -31,6 +35,7 @@ public class MoveEntity extends GameEntity {
     protected Rectangle punchRect = new Rectangle();
     private int punchFrameIndex[];
     private float punchDamage = 0f;
+    private float jumpKeyHeldTimer = 0f;
 
     private float invulnerabilityTimer = 0;
 
@@ -123,6 +128,9 @@ public class MoveEntity extends GameEntity {
     private void updateJump(float dt) {
         if (jumpTime == -1) return;
 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            jumpKeyHeldTimer += dt;
+        }
         jumpTime += dt;
         if (jumpAnimation != null) {
             keyframe = jumpAnimation.getKeyFrame(jumpTime);
@@ -130,7 +138,8 @@ public class MoveEntity extends GameEntity {
 
         if (state == State.jumping && (jumpAnimation == null || jumpTime > jumpAnimation.getAnimationDuration())) {
             playSound(jumpSound);
-            velocity.y = jumpVelocity;
+            float bonusJump = (jumpKeyHeldTimer / jumpAnimation.getAnimationDuration()) * JUMP_BONUS;
+            velocity.y = jumpVelocity * (1f + bonusJump);
             state = State.jump;
         }
     }
@@ -219,6 +228,7 @@ public class MoveEntity extends GameEntity {
     public void jump() {
         if (jumpTime == -1 && grounded) {
             jumpTime = 0;
+            jumpKeyHeldTimer = 0;
             state = State.jumping;
         }
     }
