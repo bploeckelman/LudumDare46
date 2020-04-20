@@ -60,11 +60,11 @@ public class MoveEntity extends GameEntity {
     public void update(float dt) {
         super.update(dt);
 
-        if (velocity.y < 0) {
+        if (velocity.y < -50) {
             state = State.falling;
             jumpTime = -1;
         }
-        
+
         if (lastState != state) {
             if (state == State.standing) {
                 setAnimation(idleAnimation);
