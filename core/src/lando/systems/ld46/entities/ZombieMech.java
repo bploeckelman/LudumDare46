@@ -31,6 +31,11 @@ public class ZombieMech extends MoveEntity {
         super.move(direction, speed * moveModifier);
     }
 
+    @Override
+    public boolean updateStateTimer() {
+        return true;
+    }
+
     Rectangle punchRect = new Rectangle(0, 0, 10, 10);
     @Override
     protected Rectangle getPunchRect() {
@@ -40,20 +45,18 @@ public class ZombieMech extends MoveEntity {
     }
 
     @Override
-    protected void handleDamage() {
-        Rectangle r = getPunchRect();
-        if (hasHit(r)) {
-            // check for punches against punchWalls in the level
-            screen.level.punchWalls.forEach(wall -> {
-                if (wall.bounds.contains(r)) {
-                    Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
-                    wall.punch(punchDir);
-                }
-            });
-
-            playSound(punchHitSound);
-            bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
-        }
+    protected Rectangle handleDamage() {
+        Rectangle r = super.handleDamage();
+        // check for punches against punchWalls in the level
+        screen.level.punchWalls.forEach(wall -> {
+            if (wall.bounds.contains(r)) {
+                Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
+                wall.punch(punchDir);
+                playSound(punchHitSound);
+                bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
+            }
+        });
+        return r;
     }
 
     public void explode() {

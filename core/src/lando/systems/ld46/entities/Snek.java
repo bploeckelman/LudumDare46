@@ -7,6 +7,7 @@ public class Snek extends EnemyEntity {
     public Snek(GameScreen screen) {
         super(screen, screen.assets.snakeAnimation, 2);
 
-        hitPoints = 25;
+        collisionBounds.height = 30;
+        setHealth(25f);
     }
 }

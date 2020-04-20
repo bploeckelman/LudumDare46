@@ -133,21 +133,29 @@ public class MoveEntity extends GameEntity {
         return false;
     }
 
-    protected void handleDamage() {
+    protected Rectangle handleDamage() {
         Rectangle r = getPunchRect();
-        if (hasHit(r)) {
+        EnemyEntity enemy = getHitEnemy(r);
+        if (enemy != null) {
             playSound(punchHitSound);
             bleed(direction, r.x + r.width / 2, r.y + r.height / 2);
+            enemy.takeDamage(punchDamage);
         }
+        return r;
     }
 
     protected Rectangle getPunchRect() {
-        return null;
+        return punchRect;
     }
 
-    protected boolean hasHit(Rectangle hitRect) {
-        // check rect
-        return hitRect != null;
+    protected EnemyEntity getHitEnemy(Rectangle hitRect) {
+        for (int i = 0; i < screen.enemies.size; i++) {
+            EnemyEntity en = screen.enemies.get(i);
+            if (!en.dead && hitRect.overlaps(en.collisionBounds)) {
+                return en;
+            }
+        }
+        return null;
     }
 
     public void jump() {

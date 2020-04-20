@@ -62,6 +62,10 @@ public class GameEntity implements PhysicsComponent {
         this.healthMeter = new HealthMeter(this);
     }
 
+    protected void setHealth(float hitPoints) {
+        this.maxHealth = this.hitPoints = hitPoints;
+    }
+
     protected void setAnimation(Animation<TextureRegion> animation) {
         this.animation = animation;
         stateTime = 0;
@@ -92,7 +96,10 @@ public class GameEntity implements PhysicsComponent {
     }
 
     public void update(float dt) {
-        stateTime += dt;
+        if (updateStateTimer()) {
+            stateTime += dt;
+        }
+
         if (animation != null) {
             float frameTime = state != State.jumping ? stateTime: 0;
             keyframe = animation.getKeyFrame(frameTime);
@@ -116,6 +123,10 @@ public class GameEntity implements PhysicsComponent {
         healthMeter.update(dt);
     }
 
+    protected boolean updateStateTimer() {
+        return !dead;
+    }
+
     public void updateBounds(){
         collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
     }
@@ -137,41 +148,27 @@ public class GameEntity implements PhysicsComponent {
     public void render(SpriteBatch batch) {
         if (keyframe == null) return;
 
-        if (Config.debug) {
-//            batch.setColor(Color.RED);
-//            batch.draw(assets.ringTexture, collisionCircle.x - collisionCircle.radius, collisionCircle.y - collisionCircle.radius, collisionCircle.radius*2, collisionCircle.radius*2);
-            batch.setColor(Color.YELLOW);
-            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
-            batch.setColor(Color.WHITE);
-        }
-
         float scaleX = (direction == Direction.right) ? 1 : -1;
         float scaleY = 1;
-        if (!grounded){
-            scaleX *= .85f;
-            scaleY = 1.15f;
-        }
+//        if (!grounded){
+//            scaleX *= .85f;
+//            scaleY = 1.15f;
+//        }
 
         batch.setColor(Color.WHITE);
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
-//        batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
-//                collisionBounds.width / 2, collisionBounds.height / 2,
-//                collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
+                
+        healthMeter.render(batch);
 
-//        batch.draw(assets.whiteCircleOutline, collisionBounds.x, collisionBounds.y,
-//                   collisionBounds.width / 2, collisionBounds.height / 2,
-//                   collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
-
-//        if (Config.debug) {
-//            batch.setColor(Color.MAGENTA);
-//            batch.draw(assets.whiteCircleOutline,
-//                    collisionCircle.x - collisionCircle.radius,
-//                    collisionCircle.y - collisionCircle.radius,
-//                    collisionCircle.radius * 2f, collisionCircle.radius * 2f);
-//            batch.setColor(Color.WHITE);
-//        }
+        if (Config.debug) {
+            batch.setColor(Color.YELLOW);
+            assets.debugNinePatch.draw(batch, imageBounds.x, imageBounds.y, imageBounds.width, imageBounds.height);
+            batch.setColor(Color.RED);
+            assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
+            batch.setColor(Color.WHITE);
+        }
     }
 
     public void renderHealthMeter(SpriteBatch batch) {
@@ -219,8 +216,8 @@ public class GameEntity implements PhysicsComponent {
     }
 
     public void takeDamage(float damage) {
-        hitPoints -= damage;
-        if (hitPoints <= 0) {
+        hitPoints = Math.max(0, hitPoints - damage);
+        if (hitPoints == 0) {
             dead = true;
         }
     }
