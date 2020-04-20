@@ -21,7 +21,7 @@ public class EndScreen extends BaseScreen {
     private TypingLabel disclaimerLabel;
 
 
-    static String title = "Zombie Prober: {SICK}Necrophelia Edition{ENDSICK}";
+    static String title = "In the Flesh";
     static String theme = "Made for Ludum Dare 46: Keep it alive";
     static String thanks = "Thanks for playing our game!";
     static String developers = "Developed by:\nDoug Graham\nBrian Ploeckelman\nBrian Rossman\nJeffrey Hwang";
