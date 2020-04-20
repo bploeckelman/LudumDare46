@@ -179,6 +179,9 @@ public class Level {
         for (SpawnEnemy spawn : enemySpawns) {
             spawn.update(gameScreen, dt);
         }
+        if (bossSpawn != null) {
+            bossSpawn.update(dt);
+        }
 
         // remove punch walls that have been marked for deletion and spawn a particle effect for each removed wall
         for (int i = punchWalls.size - 1; i >= 0; --i) {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
+import lando.systems.ld46.entities.boss.Boss;
 import lando.systems.ld46.screens.GameScreen;
 
 public class MoveEntity extends GameEntity {
@@ -183,6 +184,12 @@ public class MoveEntity extends GameEntity {
         // cannot take damage on frame they hit - probably will next frame
 
         boolean damageTaken = false;
+        if (screen.boss != null && screen.boss.alive && id == MoveEntityIds.Zombie) {
+            Boss b = screen.boss;
+            if (checkPunch && punchRect.overlaps(b.collisionBounds)) {
+                b.takeDamage(direction, punchDamage);
+            }
+        }
 
         // go through every enemy checking for damage (giving or taking)
         for (EnemyEntity enemy : screen.enemies) {

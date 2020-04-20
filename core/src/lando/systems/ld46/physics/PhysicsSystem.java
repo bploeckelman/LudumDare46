@@ -109,6 +109,7 @@ public class PhysicsSystem {
             Vector2 accel = obj.getAcceleration();
             Vector2 vel = obj.getVelocity();
             Vector2 pos = obj.getPosition();
+            Vector3 impulse = obj.getImpulse();
             Rectangle bounds = (Rectangle) obj.getCollisionBounds();
             oldPos.set(pos);
             vel.x *= (float)Math.pow(.02f, dt);
@@ -117,6 +118,13 @@ public class PhysicsSystem {
             float gravity = obj.isGrounded() ? 0 : GRAVITY;
             vel.y += (accel.y + gravity) * dt;
 //            if (Math.abs(vel.y) < 4) vel.y = 0;
+
+            if (impulse.z > 0){
+                vel.x += impulse.x;
+                vel.y += impulse.y;
+                impulse.z -= dt;
+            }
+
             float dtLeft = dt;
             moveVector.set(vel.x, vel.y);
 

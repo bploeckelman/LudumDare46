@@ -19,6 +19,7 @@ import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
 import lando.systems.ld46.entities.*;
+import lando.systems.ld46.entities.boss.Boss;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
@@ -52,6 +53,7 @@ public class GameScreen extends BaseScreen {
     public PhysicsSystem physicsSystem;
     public Array<PhysicsComponent> physicsEntities;
 
+    public Boss boss;
     public Array<EnemyEntity> enemies;
     public Array<DropEntity> drops;
 
@@ -63,8 +65,8 @@ public class GameScreen extends BaseScreen {
     public GameScreen(Game game) {
         super(game);
         this.touchPos = new Vector3();
-
         loadLevel(LevelDescriptor.level_tutorial);
+//        loadLevel(LevelDescriptor.level_boss);
     }
 
     public void loadLevel(LevelDescriptor levelDescriptor) {
@@ -79,7 +81,11 @@ public class GameScreen extends BaseScreen {
         this.worldCamera.position.set(cameraTargetPos);
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
         float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
-        this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
+        if (levelDescriptor == LevelDescriptor.level_boss){
+            this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.mausoleumBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
+        } else {
+            this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
+        }
         this.bodyBag = new BodyBag(this, level.initialBodyPartPositions);
         this.zombieMechBuildAnimTime = 0f;
         this.buildingMech = false;
@@ -100,6 +106,7 @@ public class GameScreen extends BaseScreen {
                 if (level.thisLevel == LevelDescriptor.level_tutorial) {
                     batch.draw(assets.mausoleumBackground, 64f, 64f);
                 }
+                if (boss != null) boss.render(batch);
             }
             batch.end();
 
@@ -196,6 +203,7 @@ public class GameScreen extends BaseScreen {
         particles.update(dt);
 
         if (tutorials.shouldBlockInput()) return;
+        if (boss != null) boss.update(dt);
         level.update(dt);
         player.update(dt);
         if (level.exit != null && level.nextLevel != null) {

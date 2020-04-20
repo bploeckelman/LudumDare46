@@ -46,6 +46,7 @@ public class Assets implements Disposable {
     public TextureRegion punchWall1x4;
     public TextureRegion ringTexture;
     public TextureRegion sunsetBackground;
+    public TextureRegion mausoleumBackground;
     public TextureRegion zombieRippedArm;
     public TextureRegion zombieRippedLeg;
     public TextureRegion zombieRippedHead;
@@ -62,7 +63,6 @@ public class Assets implements Disposable {
     public TextureRegion particleBlood2;
     public TextureRegion particleBlood3;
     public TextureRegion particleBloodSplat1;
-    public TextureRegion mausoleumBackground;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -88,6 +88,10 @@ public class Assets implements Disposable {
 
     public Animation<TextureRegion> batAnimation;
     public Animation<TextureRegion> snakeAnimation;
+
+    public Animation<TextureRegion> bossWalkAnimation;
+    public Animation<TextureRegion> bossPunchAnimation;
+    public Animation<TextureRegion> bossHurtAnimation;
 
     // drops - ftw!
     public Animation<TextureRegion> fleshDropAnimation;
@@ -178,6 +182,7 @@ public class Assets implements Disposable {
         punchWall1x4 = atlas.findRegion("punch-wall-1x4");
         ringTexture = atlas.findRegion("ring");
         sunsetBackground = atlas.findRegion("background-sunset-columns-reflection");
+        mausoleumBackground = atlas.findRegion("mausoleum");
         zombieRippedArm = atlas.findRegion("zombie-ripped-arm");
         zombieRippedHead = atlas.findRegion("zombie-ripped-head");
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
@@ -194,7 +199,6 @@ public class Assets implements Disposable {
         particleBlood2 = atlas.findRegion("particle-blood-2");
         particleBlood3 = atlas.findRegion("particle-blood-3");
         particleBloodSplat1 = atlas.findRegion("particle-blood-splat-1");
-        mausoleumBackground = atlas.findRegion("mausoleum");
 
         BodyPart.Type.arm1.texture = zombieRippedArm;
         BodyPart.Type.arm2.texture = zombieRippedArm;
@@ -227,6 +231,10 @@ public class Assets implements Disposable {
         mobBossAnimation = new Animation<>(0.2f, atlas.findRegions("organ-grinder"), Animation.PlayMode.LOOP);
         mobPitchforkAnimation = new Animation<>(0.1f, atlas.findRegions("pitchfork-idle"), Animation.PlayMode.LOOP);
         mobTorchAnimation = new Animation<>(0.3f, atlas.findRegions("torch-idle"), Animation.PlayMode.LOOP);
+
+        bossWalkAnimation = new Animation<>(0.3f, atlas.findRegions("boss-walk"), Animation.PlayMode.LOOP);
+        bossPunchAnimation = new Animation<>(0.2f, atlas.findRegions("boss-punch"), Animation.PlayMode.NORMAL);
+        bossHurtAnimation = new Animation<>(0.2f, atlas.findRegions("boss-hurt"), Animation.PlayMode.NORMAL);
 
         batAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
         snakeAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);

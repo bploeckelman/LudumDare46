@@ -185,6 +185,11 @@ public class Particle implements Pool.Poolable, PhysicsComponent, QuadTreeable {
     }
 
     @Override
+    public Vector3 getImpulse() {
+        return Vector3.Zero;
+    }
+
+    @Override
     public boolean isGrounded() {
         return false;
     }

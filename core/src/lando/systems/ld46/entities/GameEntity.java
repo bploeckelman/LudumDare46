@@ -38,6 +38,7 @@ public class GameEntity implements PhysicsComponent {
     public Rectangle imageBounds = new Rectangle();
     public Rectangle collisionBounds = new Rectangle();
     public Circle collisionCircle = new Circle();
+    public Vector3 impulse = new Vector3();
 
     public boolean grounded;
 
@@ -224,6 +225,11 @@ public class GameEntity implements PhysicsComponent {
     public Shape2D getCollisionBounds() {
         updateBounds();
         return collisionBounds;
+    }
+
+    @Override
+    public Vector3 getImpulse() {
+        return impulse;
     }
 
     @Override
