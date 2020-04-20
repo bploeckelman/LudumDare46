@@ -29,7 +29,7 @@ public class Player extends MoveEntity {
     public Player(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
 
-        setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 400f);
+        setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 370f);
         setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, Audio.Sounds.doc_punch_land, new int[]{2, 3},10);
         setFall(screen.game.assets.playerFallAnimation);
 
