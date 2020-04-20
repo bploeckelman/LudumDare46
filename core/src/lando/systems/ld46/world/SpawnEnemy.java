@@ -72,6 +72,9 @@ public class SpawnEnemy {
             case mob:
                 enemy = new Mob(screen);
                 break;
+            case mummy:
+                enemy = new Mummy(screen);
+                break;
         }
 
         if (enemy == null) return;
