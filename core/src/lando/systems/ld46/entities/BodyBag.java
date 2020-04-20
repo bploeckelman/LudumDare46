@@ -67,6 +67,9 @@ public class BodyBag {
         }
     }
 
+    // Down apparently? can't figure out which winding MathUtils trig functions use....
+//    private static final float[] explodeAngles = new float[] { 202.5f, 247.5f, 270f, 292.5f, 337.5f };
+    private static final float[] explodeAngles = new float[] { 22.5f, 67.5f, 90f, 112.5f, 157.5f };
     public void explodeParts(float x, float y) {
         screen.player.freeze = true;
         Timeline.createSequence()
@@ -76,13 +79,14 @@ public class BodyBag {
                 }))
                 .start(screen.game.tween);
 
+        int i = 0;
         for (BodyPart part : bodyParts.values()) {
             part.collected = false;
             part.setPosition(x, y);
-            float velX = (GameEntity.Direction.random() == GameEntity.Direction.left)
-                       ? MathUtils.random(-2000f, -1000f)
-                       : MathUtils.random(1000f, 2000);
-            float velY = MathUtils.random(800f, 1000f);
+            float angle = explodeAngles[i++];
+            float speed = MathUtils.random(1000f, 2000f);
+            float velX = MathUtils.cosDeg(angle) * speed;
+            float velY = MathUtils.sinDeg(angle) * speed;
             part.velocity.add(velX, velY);
             screen.physicsEntities.add(part);
         }
