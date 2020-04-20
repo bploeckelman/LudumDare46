@@ -17,6 +17,7 @@ public class BodyPart extends GameEntity {
         , head
         ;
         public TextureRegion texture; // initialized in Assets
+        public TextureRegion pin; // init in Assets
     }
 
     public Type type;
@@ -30,7 +31,7 @@ public class BodyPart extends GameEntity {
         this.maxHorizontalVelocity = 2000;
         float scale = 2f;
         initEntity(x, y, type.texture.getRegionWidth() * scale, type.texture.getRegionHeight() * scale);
-        guideArrow = new GuideArrow(screen, x, y, null);
+        guideArrow = new GuideArrow(screen, x, y, type.pin);
     }
 
     @Override

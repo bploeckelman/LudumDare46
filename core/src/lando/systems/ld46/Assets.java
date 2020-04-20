@@ -50,6 +50,9 @@ public class Assets implements Disposable {
     public TextureRegion zombieRippedLeg;
     public TextureRegion zombieRippedHead;
     public TextureRegion zombiePin;
+    public TextureRegion zombieArmPin;
+    public TextureRegion zombieLegPin;
+    public TextureRegion zombieHeadPin;
     public TextureRegion iconHeart;
     public TextureRegion iconSkull;
     public TextureRegion iconArrow;
@@ -179,6 +182,9 @@ public class Assets implements Disposable {
         zombieRippedHead = atlas.findRegion("zombie-ripped-head");
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
         zombiePin = atlas.findRegion("zombie-pin");
+        zombieArmPin = atlas.findRegion("zombie-arm-pin");
+        zombieLegPin = atlas.findRegion("zombie-leg-pin");
+        zombieHeadPin = atlas.findRegion("zombie-head-pin");
         iconHeart = atlas.findRegion("icon-heart");
         iconSkull = atlas.findRegion("icon-skull");
         iconArrow = atlas.findRegion("icon-arrow");
@@ -195,6 +201,12 @@ public class Assets implements Disposable {
         BodyPart.Type.leg1.texture = zombieRippedLeg;
         BodyPart.Type.leg2.texture = zombieRippedLeg;
         BodyPart.Type.head.texture  = zombieRippedHead;
+
+        BodyPart.Type.arm1.pin = zombieArmPin;
+        BodyPart.Type.arm2.pin = zombieArmPin;
+        BodyPart.Type.leg1.pin = zombieLegPin;
+        BodyPart.Type.leg2.pin = zombieLegPin;
+        BodyPart.Type.head.pin  = zombieHeadPin;
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);
