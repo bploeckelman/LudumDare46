@@ -61,6 +61,28 @@ public class Audio implements Disposable {
         this.tween = game.tween;
 
         putSound(Sounds.sample_sound, assets.sampleSound);
+        putSound(Sounds.doc_punch, assets.doc_punch);
+        putSound(Sounds.doc_punch_land, assets.doc_punch_land);
+        putSound(Sounds.doc_jump, assets.doc_jump);
+        putSound(Sounds. doc_hurt, assets.doc_hurt);
+        putSound(Sounds.doc_death, assets.doc_death);
+        putSound(Sounds.zombie_punch, assets.zombie_punch);
+        putSound(Sounds.zombie_punch_land, assets.zombie_punch_land);
+        putSound(Sounds.zombie_punch_wall, assets.zombie_punch_wall);
+        putSound(Sounds.zombie_jump, assets.zombie_jump);
+        putSound(Sounds.zombie_hurt, assets.zombie_hurt);
+        putSound(Sounds.zombie_death, assets.zombie_death);
+        putSound(Sounds.pickup_flesh, assets.pickup_flesh);
+        putSound(Sounds.pickup_syringe, assets.pickup_syringe);
+        putSound(Sounds.pickup_handgrenade, assets.pickup_handgrenade); // halleyluya
+        putSound(Sounds.bat_attack, assets.bat_attack);
+        putSound(Sounds.bat_hurt, assets.bat_hurt);
+        putSound(Sounds.bat_death, assets.bat_death);
+        putSound(Sounds.snek_attack, assets.snek_attack);
+        putSound(Sounds.snek_hurt, assets.snek_hurt);
+        putSound(Sounds.snek_death, assets.snek_death);
+                // mob_attack, mob_death,
+        putSound(Sounds.mob_boss_flee, assets.mob_boss_flee);
 
         musics.put(Musics.barkMusic, assets.barkMusic);
         musics.put(Musics.ritzMusic, assets.ritzMusic);
