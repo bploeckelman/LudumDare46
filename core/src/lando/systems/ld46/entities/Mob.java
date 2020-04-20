@@ -15,7 +15,7 @@ public class Mob extends EnemyEntity {
 
     public Mob(GameScreen screen) {
         // he's small, but scrappy
-        super(screen, screen.assets.playerAnimation, 1.50f);
+        super(screen, screen.assets.mobBossAnimation, 1.50f);
 
         // he's tougher - kind of
         maxHorizontalVelocity = 300;
@@ -69,10 +69,11 @@ public class Mob extends EnemyEntity {
     }
 
     private boolean fled = false;
-    // enough time for the dead homies to die
-    private float fleeTime = 4;
+    private float fleeTime = 0;
     private void flee(float dt) {
         if (!fled) {
+            // enough time for the dead homies to die
+            fleeTime = 4;
             spawnDrop();
             screen.physicsEntities.removeValue(this, true);
             changeDirection();
@@ -113,6 +114,9 @@ public class Mob extends EnemyEntity {
 
     @Override
     public Color getEffectColor() {
-        return Color.GREEN;
+        if (fleeTime > 0) {
+            return Color.YELLOW;
+        }
+        return super.getEffectColor();
     }
 }
