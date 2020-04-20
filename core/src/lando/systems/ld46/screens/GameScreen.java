@@ -89,10 +89,6 @@ public class GameScreen extends BaseScreen {
         this.guideArrow = new GuideArrow(this, 1300f, 200f);
 
         tutorials = new TutorialManager(this);
-
-        // temp
-        Mob mob = new Mob(this);
-        mob.addToScreen(500, 300);
     }
 
     @Override
