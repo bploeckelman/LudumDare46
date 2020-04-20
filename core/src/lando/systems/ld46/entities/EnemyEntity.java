@@ -13,7 +13,7 @@ public class EnemyEntity extends GameEntity {
     public Feeler rightFeeler;
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation, float scale) {
-        this(screen, animation);
+        super(screen, animation);
         this.maxHealth = 10f;
         this.hitPoints = 10f;
         collisionBounds.set(0, 0, keyframe.getRegionWidth() * scale, keyframe.getRegionHeight() * scale);
@@ -23,7 +23,7 @@ public class EnemyEntity extends GameEntity {
     }
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation) {
-        super(screen, animation);
+        this(screen, animation, 1f);
     }
 
     public void addToScreen(float x, float y) {

@@ -15,13 +15,14 @@ import lando.systems.ld46.Game;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
-import lando.systems.ld46.entities.*;
+import lando.systems.ld46.entities.EnemyEntity;
+import lando.systems.ld46.entities.Player;
+import lando.systems.ld46.entities.ZombieMech;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
-import lando.systems.ld46.world.SpawnEnemy;
 
 public class GameScreen extends BaseScreen {
 
@@ -70,9 +71,6 @@ public class GameScreen extends BaseScreen {
         TextureRegionParallaxLayer columnLayer = new TextureRegionParallaxLayer(assets.columnsBackground, levelHeight, new Vector2(.4f, .9f), ParallaxUtils.WH.height);
         // TODO: fix optional padding on parallax layers
         this.background = new ParallaxBackground(sunsetLayer, columnLayer);
-
-        // TEMP until current map has a spawner
-        this.level.enemySpawns.add(new SpawnEnemy(game, EnemyType.snake, 600, 200, 4, 3f));
     }
 
     @Override

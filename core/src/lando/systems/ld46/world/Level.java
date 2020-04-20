@@ -129,8 +129,8 @@ public class Level {
                 float x = props.get("x", Float.class);
                 float y = props.get("y", Float.class);
                 EnemyType enemyType = EnemyType.valueOf((String)props.get("enemy-type"));
-                int maxSpawn = 4; //props.get("max-spawn", Integer.class);
-                float spawnRate = 5; // props.get("spawn-rate", Float.class);
+                int maxSpawn = props.get("max-spawn", Integer.class);
+                float spawnRate = props.get("spawn-rate", Float.class);
                 SpawnEnemy spawn = new SpawnEnemy(gameScreen.game, enemyType, x, y, maxSpawn, spawnRate);
                 enemySpawns.add(spawn);
             }
