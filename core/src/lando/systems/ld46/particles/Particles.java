@@ -187,6 +187,26 @@ public class Particles implements Disposable {
         }
     }
 
+    public void makeSpawnClouds(float x, float y) {
+        for (int i = 0; i < 50; i++){
+            float g = MathUtils.random(.7f) + .3f;
+            activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.smokeTex)
+                    .startPos(x + MathUtils.random(-30f, 30f), y + MathUtils.random(-30f, 30f))
+                    .velocityDirection(MathUtils.random(360f), MathUtils.random(10f))
+                    .startSize(MathUtils.random(20f, 40f))
+                    .endSize(MathUtils.random(.1f, 10f))
+                    .startAlpha(1f)
+                    .endAlpha(0f)
+                    .startRotation(MathUtils.random(40))
+                    .endRotation(MathUtils.random(-40, 80))
+                    .timeToLive(MathUtils.random(1f, 3f))
+                    .startColor(g, g, g, 1)
+                    .init());
+
+        }
+    }
+
     public void makeBloodParticles(float x, float y) {
         TextureRegion keyframe = assets.particleBloodSplat1;
 
