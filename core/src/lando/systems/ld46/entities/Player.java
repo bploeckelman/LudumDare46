@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
-import lando.systems.ld46.Config;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
 
