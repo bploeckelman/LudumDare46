@@ -20,6 +20,7 @@ public class Assets implements Disposable {
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
+    private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
     private final AssetDescriptor<BitmapFont> pixelFont16Asset = new AssetDescriptor<>("fonts/emulogic-16pt.fnt", BitmapFont.class);
     private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
 
@@ -33,6 +34,7 @@ public class Assets implements Disposable {
     public I18NBundle tutorialText;
 
     public Texture launchImage;
+    public Texture titleImage;
     public Texture pixel;
 
     public NinePatch debugNinePatch;
@@ -121,6 +123,7 @@ public class Assets implements Disposable {
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
         mgr.load(launchTextureAsset);
+        mgr.load(titleTextureAsset);
         mgr.load("i18n/tutorial", I18NBundle.class);
 
         mgr.load("audio/sample-music.wav", Music.class);
@@ -144,6 +147,7 @@ public class Assets implements Disposable {
 
         pixel = mgr.get(pixelTextureAsset);
         launchImage = mgr.get(launchTextureAsset);
+        titleImage = mgr.get(titleTextureAsset);
 
         tutorialText = mgr.get("i18n/tutorial", I18NBundle.class);
 

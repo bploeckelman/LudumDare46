@@ -12,11 +12,11 @@ import lando.systems.ld46.ui.typinglabel.TypingLabel;
 public class LaunchScreen extends BaseScreen {
 
     private TypingLabel titleLabel;
-    static String title = "{WAVE=0.9;1.2;1.75}{GRADIENT=black;red} ZOMBIE PROBER {ENDGRADIENT}{ENDWAVE}\n{RAINBOW}{SICK}Necrophelia Edition{ENDSICK}{ENDRAINBOW}";
+    static String title = "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}CLICK TO LAUNCH{ENDRAINBOW}{ENDWAVE}{ENDJUMP}";
 
     public LaunchScreen(Game game) {
         super(game);
-        titleLabel = new TypingLabel(assets.riseFont16, title, 0f, Config.windowHeight / 2f + 150f);
+        titleLabel = new TypingLabel(assets.riseFont16, title, 0f, Config.windowHeight / 2f + 50f);
         titleLabel.setWidth(Config.windowWidth);
         titleLabel.setFontScale(2.5f);
     }
@@ -25,8 +25,7 @@ public class LaunchScreen extends BaseScreen {
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched()){
-            game.audio.stopMusic();
-            game.setScreen(new GameScreen(game), assets.cubeShader, 3f);
+            game.setScreen(new TitleScreen(game), assets.doorwayShader, 3f);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             game.audio.stopMusic();
@@ -40,7 +39,8 @@ public class LaunchScreen extends BaseScreen {
         batch.begin();
         batch.setProjectionMatrix(shaker.getCombinedMatrix());
 
-        batch.draw(assets.launchImage, 0,0, shaker.getViewCamera().viewportWidth, shaker.getViewCamera().viewportHeight);
+        batch.setColor(Color.BLACK);
+        batch.draw(assets.whitePixel, 0,0, shaker.getViewCamera().viewportWidth, shaker.getViewCamera().viewportHeight);
         titleLabel.render(batch);
 
         batch.end();

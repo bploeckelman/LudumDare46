@@ -77,7 +77,7 @@ public class Game extends ApplicationAdapter {
 			audio = new Audio(false, this);
 		}
 
-		if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
+		if (Gdx.app.getType() == Application.ApplicationType.WebGL || Config.showLaunchScreen) {
 			setScreen(new LaunchScreen(this));
 		} else {
 			setScreen(new TitleScreen(this));

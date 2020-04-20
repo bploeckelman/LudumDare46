@@ -21,9 +21,9 @@ vec4 getToColor(vec2 p){
 // License: MIT
 const float persp = 0.5; // = 0.7
 const float unzoom = 0.7; // = 0.3
-const float reflection = 0.8; // = 0.4
+const float reflection = 0.9; // = 0.4
 const float floating = 3.0; // = 3.0
-const vec4 backgroundColor = vec4(0.0, 0.0, 0.5, 1.0);
+const vec4 backgroundColor = vec4(0.3, 0.3, 0.3, 1.0);
 
 vec2 project (vec2 p) {
     return p * vec2(1.0, -1.2) + vec2(0.0, -floating/100.);
