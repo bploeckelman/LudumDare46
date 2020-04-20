@@ -149,6 +149,7 @@ public class Assets implements Disposable {
     public Sound snek_hurt;
     public Sound snek_death;
     public Sound mob_boss_flee;
+    public Sound assemble_zombie;
 
 
     public BitmapFont pixelFont16;
@@ -190,7 +191,7 @@ public class Assets implements Disposable {
         mgr.load("audio/zombie_jump.wav", Sound.class);
         mgr.load("audio/zombie_hurt.wav", Sound.class);
         mgr.load("audio/zombie_death.wav", Sound.class);
-        mgr.load("audio/puckup_flesh.wav", Sound.class);
+        mgr.load("audio/pickup_flesh.wav", Sound.class);
         mgr.load("audio/pickup_syringe.wav", Sound.class);
         mgr.load("audio/pickup_handgrenade.wav", Sound.class);
         mgr.load("audio/bat_attack.wav", Sound.class);
@@ -200,6 +201,7 @@ public class Assets implements Disposable {
         mgr.load("audio/snek_hurt.wav", Sound.class);
         mgr.load("audio/snek_death.wav", Sound.class);
         mgr.load("audio/tom_gerry_run_sound.wav", Sound.class);
+        mgr.load("audio/assemble_zombie.wav", Sound.class);
 
         mgr.load(pixelFont16Asset);
         mgr.load(riseFont16Asset);
@@ -329,7 +331,7 @@ public class Assets implements Disposable {
         zombie_jump = mgr.get("audio/zombie_jump.wav", Sound.class);
         zombie_hurt = mgr.get("audio/zombie_hurt.wav", Sound.class);
         zombie_death = mgr.get("audio/zombie_death.wav", Sound.class);
-        pickup_flesh = mgr.get("audio/puckup_flesh.wav", Sound.class);
+        pickup_flesh = mgr.get("audio/pickup_flesh.wav", Sound.class);
         pickup_syringe = mgr.get("audio/pickup_syringe.wav", Sound.class);
         pickup_handgrenade = mgr.get("audio/pickup_handgrenade.wav", Sound.class);
         bat_attack = mgr.get("audio/bat_attack.wav", Sound.class);
@@ -339,6 +341,7 @@ public class Assets implements Disposable {
         snek_hurt = mgr.get("audio/snek_hurt.wav", Sound.class);
         snek_death = mgr.get("audio/snek_death.wav", Sound.class);
         mob_boss_flee = mgr.get("audio/tom_gerry_run_sound.wav", Sound.class);
+        assemble_zombie = mgr.get("audio/assemble_zombie.wav", Sound.class);
 
         sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
         barkMusic = mgr.get("audio/bark.mp3", Music.class);

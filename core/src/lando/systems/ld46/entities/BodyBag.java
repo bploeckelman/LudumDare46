@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class BodyBag {
@@ -46,6 +47,7 @@ public class BodyBag {
             } else {
                 if (!player.freeze && player.collisionBounds.overlaps(part.collisionBounds)) {
                     part.collected = true;
+                    player.playSound(Audio.Sounds.pickup_flesh);
                     screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
                     screen.physicsEntities.removeValue(part, true);
                 }
@@ -57,6 +59,7 @@ public class BodyBag {
         // Just collected all parts, tell the gamescreen to trigger the mech rebuild
         if (allPartsCollected && !allPartsWereAlreadyCollected) {
             screen.buildZombieMech();
+            player.playSound(Audio.Sounds.assemble_zombie);
         }
     }
 
