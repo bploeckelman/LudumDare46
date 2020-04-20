@@ -166,6 +166,12 @@ public class GameScreen extends BaseScreen {
         handleCameraConstraints();
     }
 
+    public void buildZombieMech() {
+        // TODO: hide player
+        // TODO: play build animation
+        // TODO: when done, spawn mech
+    }
+
     private void handleTempCommands() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             // kill em all, let the engine sort it out

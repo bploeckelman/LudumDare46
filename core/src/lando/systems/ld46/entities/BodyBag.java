@@ -34,17 +34,21 @@ public class BodyBag {
     }
 
     public void update(float dt, Player player) {
+        boolean allPartsWereAlreadyCollected = allPartsCollected;
         allPartsCollected = true;
         for (BodyPart part : bodyParts.values()) {
             part.update(dt);
-            if (part.collected) {
-                allPartsCollected = false;
-            } else {
-                if (player.collisionBounds.overlaps(part.collisionBounds)) {
-                    part.collected = true;
-                    screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
-                }
+            if (player.collisionBounds.overlaps(part.collisionBounds)) {
+                part.collected = true;
+                screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
             }
+            if (!part.collected) {
+                allPartsCollected = false;
+            }
+        }
+        // Just collected all parts, tell the gamescreen to trigger the mech rebuild
+        if (allPartsCollected && !allPartsWereAlreadyCollected) {
+            screen.buildZombieMech();
         }
     }
 
