@@ -1,14 +1,17 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.ui.GuideArrow;
 
 public class ZombieMech extends MoveEntity {
 
     public float moveModifier = 0.5f;
 
     private Audio.Sounds punchWallSound = Audio.Sounds.zombie_punch_wall;
+    public GuideArrow mechIndicator;
 
     public ZombieMech(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.mechAnimation, screen.game.assets.mechMoveAnimation);
@@ -18,6 +21,7 @@ public class ZombieMech extends MoveEntity {
         setFall(screen.game.assets.mechFallAnimation);
 
         setSounds(Audio.Sounds.zombie_hurt, Audio.Sounds.zombie_death);
+        mechIndicator = new GuideArrow(screen, x, y, screen.assets.zombiePin);
 
         initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
 

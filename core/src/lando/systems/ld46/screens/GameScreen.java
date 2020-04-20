@@ -123,6 +123,13 @@ public class GameScreen extends BaseScreen {
                             player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
                 }
                 particles.draw(batch, Particles.Layer.foreground);
+
+                if (zombieMech != null) {
+                    zombieMech.renderHealthMeter(batch);
+                }
+                if (!player.inMech() && !player.hide) {
+                    player.renderHealthMeter(batch);
+                }
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);

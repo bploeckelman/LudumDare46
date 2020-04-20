@@ -30,7 +30,7 @@ public class BodyPart extends GameEntity {
         this.maxHorizontalVelocity = 2000;
         float scale = 2f;
         initEntity(x, y, type.texture.getRegionWidth() * scale, type.texture.getRegionHeight() * scale);
-        guideArrow = new GuideArrow(screen, x, y);
+        guideArrow = new GuideArrow(screen, x, y, null);
     }
 
     @Override

@@ -25,8 +25,8 @@ public class GuideArrow {
     public boolean show;
 
 
-    public GuideArrow(GameScreen screen, float x, float y) {
-        this.icon = screen.assets.iconArrow;
+    public GuideArrow(GameScreen screen, float x, float y, TextureRegion texture) {
+        this.icon = texture == null ? screen.assets.iconArrow : texture;
         this.pulseTimer = 0;
         this.screen = screen;
         this.targetOffscreenInX = false;
@@ -34,7 +34,6 @@ public class GuideArrow {
         this.target = new Vector2(x, y);
         this.position = new Vector2(x, y);
         this.show = false;
-
     }
 
     public void setTargetPosition(float x, float y) {
@@ -70,8 +69,8 @@ public class GuideArrow {
     public void render(SpriteBatch batch) {
         if (show) {
             float iconSize = arrowSize;
-            if (pulseTimer % 1.001f > 0 && !targetOffscreenInY && !targetOffscreenInX) {
-                float pulsePercentage = (pulseTimer % 0.25f) +1f;
+            if (pulseTimer % 1.3f > 1.2f && !targetOffscreenInY && !targetOffscreenInX) {
+                    float pulsePercentage = (pulseTimer % 0.1f) +1f;
                 iconSize = iconSize * pulsePercentage;
             }
             //float rotation = position.sub(screen.player.position).angle(Vector2.Y);
