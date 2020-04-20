@@ -206,8 +206,8 @@ public class Assets implements Disposable {
         batAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
         snakeAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
-        fleshDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
-        syringeDropAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
+        fleshDropAnimation = new Animation<>(0.3f, atlas.findRegions("pickup-meat"), Animation.PlayMode.LOOP);
+        syringeDropAnimation = new Animation<>(0.3f, atlas.findRegions("pickup-syringe"), Animation.PlayMode.LOOP);
         holyHandGrenadeDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();

@@ -9,7 +9,7 @@ public class SyringeDrop extends DropEntity {
         super(screen, screen.assets.syringeDropAnimation, MoveEntityIds.Doctor);
 
         pickupSound = Audio.Sounds.pickup_syringe;
-        initEntity(0, 0, keyframe.getRegionWidth() * 1.5f, keyframe.getRegionHeight() * 1.5f);
+        initEntity(0, 0, keyframe.getRegionWidth(), keyframe.getRegionHeight());
     }
 
     @Override

@@ -9,7 +9,7 @@ public class FleshDrop extends DropEntity {
         super(screen, screen.assets.fleshDropAnimation, MoveEntityIds.Zombie);
 
         pickupSound = Audio.Sounds.pickup_flesh;
-        initEntity(0, 0, keyframe.getRegionWidth() * 1.5f, keyframe.getRegionHeight() * 1.5f);
+        initEntity(0, 0, keyframe.getRegionWidth(), keyframe.getRegionHeight());
     }
 
     @Override
