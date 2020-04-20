@@ -95,6 +95,10 @@ public class Player extends MoveEntity {
             setPosition(position.x, 0);
         }
 
+        if (inMech()){
+            centerOn(mech);
+        }
+
         catchHell();
     }
 
@@ -137,7 +141,6 @@ public class Player extends MoveEntity {
     private void move(Direction direction) {
         if (inMech()) {
             mech.move(direction, horizontalSpeed);
-            centerOn(mech);
         } else {
             move(direction, horizontalSpeed);
         }
