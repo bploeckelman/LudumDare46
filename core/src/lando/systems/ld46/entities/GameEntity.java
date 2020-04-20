@@ -42,7 +42,8 @@ public class GameEntity implements PhysicsComponent {
     private Array<Rectangle> tiles = new Array<>();
 
     public float maxHealth = 100f;
-    public float currentHealth = 100f;
+    public float hitPoints = 100f;
+    public boolean dead = false;
     public HealthMeter healthMeter;
 
     GameEntity(GameScreen screen, Animation<TextureRegion> animation) {
@@ -213,8 +214,14 @@ public class GameEntity implements PhysicsComponent {
         return screen.game.audio.playSound(sound);
     }
 
+    public void takeDamage(float damage) {
+        hitPoints -= damage;
+        if (hitPoints <= 0) {
+            dead = true;
+        }
+    }
 
     public float getHealthPercentage() {
-        return currentHealth / maxHealth;
+        return hitPoints / maxHealth;
     }
 }

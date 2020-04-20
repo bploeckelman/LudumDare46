@@ -14,6 +14,7 @@ public class Player extends MoveEntity {
     private final float horizontalSpeed = 50f;
 
     private ZombieMech mech = null;
+    private float inMechTimer = 0f;
 
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
@@ -55,6 +56,12 @@ public class Player extends MoveEntity {
                 move(Direction.right);
             }
         }
+        inMechTimer += dt;
+        if (inMech() && !mech.dead && inMechTimer > .5f) {
+            mech.takeDamage(5f);
+            screen.particles.makeBloodParticles(mech.position.x, mech.position.y);
+            inMechTimer = 0;
+        }
 
         boolean jumpPressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         if (jumpPressed) {
@@ -72,6 +79,7 @@ public class Player extends MoveEntity {
             } else {
                 ZombieMech mech = this.screen.zombieMech;
                 if (collisionBounds.overlaps(mech.collisionBounds)) {
+                    mech.resetMech();
                     jumpIn(this.screen.zombieMech);
                 }
             }
@@ -131,7 +139,6 @@ public class Player extends MoveEntity {
     public void jumpOut() {
         if (inMech()) {
             setPosition(mech.position.x, mech.position.y + 20);
-            mech.explode();
             mech = null;
         }
     }

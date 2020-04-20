@@ -59,4 +59,18 @@ public class ZombieMech extends MoveEntity {
     public void explode() {
         screen.particles.makeExplodingZombieParticles(position.x, position.y);
     }
+
+    @Override
+    public void takeDamage(float damage) {
+        hitPoints -= damage;
+        if (hitPoints <= 0) {
+            dead = true;
+            explode();
+        }
+    }
+
+    public void resetMech() {
+        hitPoints = 100f;
+        dead = false;
+    }
 }

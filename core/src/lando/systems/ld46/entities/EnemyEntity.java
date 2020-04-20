@@ -4,11 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.ui.HealthMeter;
 
 public class EnemyEntity extends GameEntity {
-
-    public float hitPoints = 10;
-    public boolean dead = false;
 
     public float removeTime = 2f;
     public Feeler leftFeeler;
@@ -16,7 +14,8 @@ public class EnemyEntity extends GameEntity {
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation, float scale) {
         this(screen, animation);
-
+        this.maxHealth = 10f;
+        this.hitPoints = 10f;
         collisionBounds.set(0, 0, keyframe.getRegionWidth() * scale, keyframe.getRegionHeight() * scale);
         imageBounds.set(this.collisionBounds);
         leftFeeler = new Feeler(this, assets, -collisionBounds.width/2, 100);
@@ -38,6 +37,7 @@ public class EnemyEntity extends GameEntity {
         screen.physicsEntities.removeValue(this, true);
     }
 
+    @Override
     public void takeDamage(float damage) {
         hitPoints -= damage;
         if (hitPoints <= 0) {
