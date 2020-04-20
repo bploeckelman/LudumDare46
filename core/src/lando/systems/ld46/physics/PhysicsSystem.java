@@ -235,9 +235,9 @@ public class PhysicsSystem {
             for (QuadTreeable entity : quadEntities) {
                 Segment2D segment = (Segment2D)entity;
                 collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
-                if (collisionResult.x != Float.MAX_VALUE && nearest1.dst2(nearest2) < (bounds.radius + 2f) * (bounds.radius + 2f)){
+                if (collisionResult.x != Float.MAX_VALUE && nearest1.dst2(nearest2) < (bounds.radius + 1f) * (bounds.radius + 1f)){
                     frameEndPos.set(nearest1);
-                    float backupDist = (bounds.radius + 2.1f) - nearest1.dst(nearest2);
+                    float backupDist = (bounds.radius + 1.1f) - nearest1.dst(nearest2);
                     float x = frameEndPos.x + backupDist * (segment.normal.x);
                     float y = frameEndPos.y + backupDist * (segment.normal.y);
                     frameEndPos.set(x, y);
@@ -245,10 +245,10 @@ public class PhysicsSystem {
                     vel.scl(scale);
                     vel.set(Utils.reflectVector(incomingVector.set(vel), segment.normal));
 
-                    if (vel.epsilonEquals(0, 0, 6f)) {
-                        ((Particle)obj).setPhysics(false);
-                        vel.set(0,0);
-                    }
+//                    if (vel.epsilonEquals(0, 0, 6f)) {
+//                        ((Particle)obj).setPhysics(false);
+//                        vel.set(0,0);
+//                    }
                 }
             }
             pos.set(frameEndPos);

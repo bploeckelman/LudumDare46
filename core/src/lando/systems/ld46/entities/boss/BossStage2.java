@@ -23,7 +23,8 @@ public class BossStage2 implements BossStage {
         snekTimer -= dt;
         if (snekTimer < 0) {
             snekTimer += 15;
-            for (int i = 0 ; i < 3; i++) {
+            for (int i = 0 ; i < 2; i++) {
+                if (screen.enemies.size > 4) break;
                 Snek snek = new Snek(screen);
                 float x = MathUtils.random(60f, 400);
                 if (MathUtils.randomBoolean()) x += 800;

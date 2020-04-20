@@ -37,7 +37,7 @@ public class MoveEntity extends GameEntity {
     private float punchDamage = 0f;
     private float jumpKeyHeldTimer = 0f;
 
-    protected float invulnerabilityTimer = 0;
+    public float invulnerabilityTimer = 0;
 
     // for when doc is in the zombie
     protected boolean ignore = false;
