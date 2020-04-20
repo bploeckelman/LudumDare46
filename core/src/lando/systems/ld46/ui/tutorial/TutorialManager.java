@@ -23,6 +23,8 @@ public class TutorialManager {
             TutorialSection section1 = new TutorialSection(screen, null, null, texts.get("tutorial_1"), true);
             section1.delay = 3f;
             sections.add(section1);
+            TutorialSection section2 = new TutorialSection(screen, null, null, texts.get("tutorial_2"), true);
+            sections.add(section2);
         }
     }
 

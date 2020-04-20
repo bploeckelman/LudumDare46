@@ -81,7 +81,7 @@ public class Boss {
                 Rectangle bounds = direction == GameEntity.Direction.left ? leftBounds : rightBounds;
                 MoveEntity p = screen.player;
                 if (screen.player.inMech()) p = screen.zombieMech;
-                if (bounds.overlaps(p.collisionBounds) && !(p.invulnerabilityTimer > 0)){
+                if (bounds.overlaps(p.collisionBounds) && !(p.invulnerabilityTimer > 0) && !screen.buildingMech){
                     p.impulse.set(direction == GameEntity.Direction.right ? 800 : -800, 100, .15f);
                     p.takeDamage(damage);
                     p.invulnerabilityTimer = 2f;

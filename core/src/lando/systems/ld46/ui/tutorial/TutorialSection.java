@@ -108,6 +108,8 @@ public class TutorialSection {
                         typingLabel = new TypingLabel(screen.assets.riseFont16, text, 90, screen.hudCamera.viewportHeight - 90);
                         typingLabel.setWidth(screen.hudCamera.viewportWidth - 180);
                         typingLabel.setFontScale(.8f);
+                        float height = typingLabel.getHeight();
+                        typingLabel.setY(bounds.y + bounds.height/2f + height/2f - 15);
                     }))
                 .start(screen.game.tween);
     }
