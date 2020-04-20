@@ -30,7 +30,7 @@ public class GuideArrow {
         this.screen = screen;
         this.targetOffscreen = false;
         this.target = new Vector2(x, y);
-        this.position = new Vector2();
+        this.position = new Vector2(x, y);
 
     }
 

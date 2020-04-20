@@ -87,9 +87,9 @@ public class GameScreen extends BaseScreen {
         this.zombieMechBuildAnimation = assets.mechBuildAnimation;
         this.zombieMechBuildAnimTime = 0f;
         this.buildingMech = false;
+        this.guideArrow = new GuideArrow(this, 1300f, 200f);
 
         tutorials = new TutorialManager(this);
-        this.guideArrow = new GuideArrow(this, 1300f, 200f);
     }
 
     @Override
