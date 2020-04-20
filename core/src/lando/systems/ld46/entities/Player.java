@@ -35,6 +35,7 @@ public class Player extends MoveEntity {
         imageBounds.set(x, y, width, height);
         float paddingX = (1f / 2f) * width;
         collisionBounds.set(x + paddingX / 2f, y, width - paddingX, height);
+        showHeart = true;
         setPosition(x, y);
     }
 
@@ -133,12 +134,16 @@ public class Player extends MoveEntity {
 
     public void jumpIn(ZombieMech mech) {
         this.mech = mech;
+        mech.showHeart = true;
+        showHeart = false;
          // add state and animation jumping up its ass - update rendering call
     }
 
     public void jumpOut() {
         if (inMech()) {
             setPosition(mech.position.x, mech.position.y + 20);
+            mech.showHeart = false;
+            showHeart = true;
             mech = null;
         }
     }

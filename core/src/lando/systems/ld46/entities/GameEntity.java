@@ -45,6 +45,7 @@ public class GameEntity implements PhysicsComponent {
     public float hitPoints = 100f;
     public boolean dead = false;
     public HealthMeter healthMeter;
+    public boolean showHeart = false;
 
     GameEntity(GameScreen screen, Animation<TextureRegion> animation) {
         this(screen, animation.getKeyFrame(0f));
@@ -155,7 +156,6 @@ public class GameEntity implements PhysicsComponent {
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
-        healthMeter.render(batch);
 //        batch.draw(keyframe, collisionBounds.x, collisionBounds.y,
 //                collisionBounds.width / 2, collisionBounds.height / 2,
 //                collisionBounds.width, collisionBounds.height, scaleX, scaleY, 0);
@@ -172,6 +172,10 @@ public class GameEntity implements PhysicsComponent {
 //                    collisionCircle.radius * 2f, collisionCircle.radius * 2f);
 //            batch.setColor(Color.WHITE);
 //        }
+    }
+
+    public void renderHealthMeter(SpriteBatch batch) {
+        healthMeter.render(batch);
     }
 
     @Override

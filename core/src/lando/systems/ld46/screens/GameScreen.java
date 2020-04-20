@@ -98,6 +98,13 @@ public class GameScreen extends BaseScreen {
                 level.renderObjects(batch);
 
                 particles.draw(batch, Particles.Layer.foreground);
+                if (!player.inMech()) {
+                    player.renderHealthMeter(batch);
+                }
+                zombieMech.renderHealthMeter(batch);
+                for (EnemyEntity enemy : enemies) {
+                    enemy.renderHealthMeter(batch);
+                }
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);

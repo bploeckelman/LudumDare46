@@ -51,7 +51,9 @@ public class HealthMeter {
             float pulsePercentage = (pulseTimer % 0.25f) +1f;
             iconSize = iconSize * pulsePercentage;
         }
-        batch.draw(icon, bounds.x - bounds.width / 2 - iconSize / 2f, bounds.y + bounds.height / 2f - iconSize / 2f, iconSize, iconSize);
+        if (entity.showHeart) {
+            batch.draw(icon, bounds.x - bounds.width / 2 - iconSize / 2f, bounds.y + bounds.height / 2f - iconSize / 2f, iconSize, iconSize);
+        }
     }
 
 }
