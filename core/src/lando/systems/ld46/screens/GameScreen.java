@@ -96,6 +96,10 @@ public class GameScreen extends BaseScreen {
             batch.begin();
             {
                 background.render(worldCamera, batch);
+                // Fuck it, we'll do it live
+                if (level.thisLevel == LevelDescriptor.level_tutorial) {
+                    batch.draw(assets.mausoleumBackground, 64f, 64f);
+                }
             }
             batch.end();
 

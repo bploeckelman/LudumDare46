@@ -59,6 +59,7 @@ public class Assets implements Disposable {
     public TextureRegion particleBlood2;
     public TextureRegion particleBlood3;
     public TextureRegion particleBloodSplat1;
+    public TextureRegion mausoleumBackground;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -187,6 +188,7 @@ public class Assets implements Disposable {
         particleBlood2 = atlas.findRegion("particle-blood-2");
         particleBlood3 = atlas.findRegion("particle-blood-3");
         particleBloodSplat1 = atlas.findRegion("particle-blood-splat-1");
+        mausoleumBackground = atlas.findRegion("mausoleum");
 
         BodyPart.Type.arm1.texture = zombieRippedArm;
         BodyPart.Type.arm2.texture = zombieRippedArm;
