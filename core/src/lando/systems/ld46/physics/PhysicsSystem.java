@@ -188,7 +188,7 @@ public class PhysicsSystem {
 
             for (Segment2D segment : screen.level.collisionSegments) {
                 collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
-                if (collisionResult.x != Float.MAX_VALUE && nearest1.dst(nearest2) < bounds.radius + 2f){
+                if (collisionResult.x != Float.MAX_VALUE && nearest1.dst2(nearest2) < (bounds.radius + 2f) * (bounds.radius + 2f)){
                     tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
                     normal.set(segment.end).sub(segment.start).nor().rotate90(1);
                     frameEndPos.set(nearest1);
