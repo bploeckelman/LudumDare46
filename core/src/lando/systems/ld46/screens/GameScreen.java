@@ -6,7 +6,6 @@ import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -58,6 +57,7 @@ public class GameScreen extends BaseScreen {
 
     public BodyBag bodyBag;
     public float zombieMechBuildAnimTime;
+    public float zombieMechBuildParticleSpawnTimer;
     public boolean buildingMech;
 
     public GameScreen(Game game) {
@@ -128,7 +128,7 @@ public class GameScreen extends BaseScreen {
                     batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
                             frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
 
-                    // insert smoke particles here - OTHER BRIAN
+                    particles.draw(batch, Particles.Layer.middle);
 
                     frame = assets.playerBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
                     batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
@@ -224,6 +224,11 @@ public class GameScreen extends BaseScreen {
         bodyBag.update(dt, player);
         if (buildingMech) {
             zombieMechBuildAnimTime += dt;
+            zombieMechBuildParticleSpawnTimer += dt;
+            if (zombieMechBuildParticleSpawnTimer > 0.33f) {
+                zombieMechBuildParticleSpawnTimer = 0f;
+                particles.makeZombieBuildClouds(player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
+            }
         }
 
         for (EnemyEntity enemy : enemies) {
@@ -246,6 +251,8 @@ public class GameScreen extends BaseScreen {
         // play zombie build animation right where player was standing
         buildingMech = true;
         zombieMechBuildAnimTime = 0f;
+
+        particles.makeZombieBuildClouds(player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
 
         // when done, spawn mech, reshow and reenable input for player
         Timeline.createSequence()
