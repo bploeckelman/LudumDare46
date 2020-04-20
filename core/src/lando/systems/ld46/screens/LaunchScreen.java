@@ -27,10 +27,6 @@ public class LaunchScreen extends BaseScreen {
         if (Gdx.input.justTouched()){
             game.setScreen(new TitleScreen(game), assets.doorwayShader, 3f);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
-            game.audio.stopMusic();
-            game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
-        }
         titleLabel.update(dt);
     }
 
