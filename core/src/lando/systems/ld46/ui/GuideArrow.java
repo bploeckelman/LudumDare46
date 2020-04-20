@@ -11,25 +11,29 @@ import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
 public class GuideArrow {
-    private static final float arrowSize = 150f;
+    private static final float arrowSize = 50f;
 
     private TextureRegion icon;
     private float pulseTimer;
     private GameScreen screen;
-    private boolean targetOffscreen;
+    private boolean targetOffscreenInX;
+    private boolean targetOffscreenInY;
     private Vector2 target;
     private Vector2 position;
     private float x;
     private float y;
+    public boolean show;
 
 
     public GuideArrow(GameScreen screen, float x, float y) {
         this.icon = screen.assets.iconArrow;
         this.pulseTimer = 0;
         this.screen = screen;
-        this.targetOffscreen = false;
+        this.targetOffscreenInX = false;
+        this.targetOffscreenInY = false;
         this.target = new Vector2(x, y);
         this.position = new Vector2(x, y);
+        this.show = false;
 
     }
 
@@ -39,31 +43,42 @@ public class GuideArrow {
 
     public void update(float dt) {
         pulseTimer += dt;
-        if (screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 > target.x - arrowSize / 2f) {
-            x = screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2;
-            targetOffscreen = true;
-        } else if (screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize / 2f < target.x - arrowSize / 2f){
-            x = screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize / 2f;
-            targetOffscreen = true;
+        if (screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 + arrowSize + 50f  > target.x) {
+            x = screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 + arrowSize + 50f;
+            targetOffscreenInX = true;
+        } else if (screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize - 50f < target.x){
+            x = screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize - 50f;
+            targetOffscreenInX = true;
         } else {
-            x = target.x - arrowSize / 2f;
-            targetOffscreen = false;
+            x = target.x;
+            targetOffscreenInX = false;
         }
-        position.set(x, 500f);
+
+        if (screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2 + arrowSize > target.y) {
+            y = screen.cameraTargetPos.y - screen.hudCamera.viewportHeight / 2 + arrowSize;
+            targetOffscreenInY = true;
+        } else if (screen.cameraTargetPos.y + screen.hudCamera.viewportHeight / 2 - arrowSize * 2 < target.y){
+            y = screen.cameraTargetPos.y + screen.hudCamera.viewportHeight / 2 - arrowSize * 2;
+            targetOffscreenInY = true;
+        } else {
+            y = target.y;
+            targetOffscreenInY = false;
+        }
+        position.set(x, y + arrowSize / 2);
     }
 
     public void render(SpriteBatch batch) {
-        float iconSize = 150f;
-        float margin = 50f;
-        if (pulseTimer % 1.001f > 0 && targetOffscreen) {
-            float pulsePercentage = (pulseTimer % 0.25f) +1f;
-            iconSize = iconSize * pulsePercentage;
+        if (show) {
+            float iconSize = arrowSize;
+            if (pulseTimer % 1.001f > 0 && !targetOffscreenInY && !targetOffscreenInX) {
+                float pulsePercentage = (pulseTimer % 0.25f) +1f;
+                iconSize = iconSize * pulsePercentage;
+            }
+            //float rotation = position.sub(screen.player.position).angle(Vector2.Y);
+            Vector2 tempVec = new Vector2(target.x, target.y);
+            float rotation = -tempVec.sub(position).angle(Vector2.Y);
+            //batch.draw(icon, position.x, position.y, iconSize, iconSize);
+            batch.draw(icon, position.x - iconSize / 2f, position.y, iconSize / 2, iconSize, iconSize, iconSize, 1f, 1f, rotation );
         }
-        //float rotation = position.sub(screen.player.position).angle(Vector2.Y);
-        Vector2 tempVec = new Vector2(target.x - arrowSize / 2f, target.y);
-        float rotation = -tempVec.sub(position).angle(Vector2.Y);
-        //batch.draw(icon, position.x, position.y, iconSize, iconSize);
-
-        batch.draw(icon, position.x, position.y, iconSize / 2, iconSize / 2, iconSize, iconSize, 1f, 1f, rotation );
     }
 }

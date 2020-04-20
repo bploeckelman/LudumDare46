@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.ui.GuideArrow;
 
 public class BodyPart extends GameEntity {
 
@@ -20,6 +21,7 @@ public class BodyPart extends GameEntity {
 
     public Type type;
     public boolean collected;
+    public GuideArrow guideArrow;
 
     public BodyPart(GameScreen screen, Type type, float x, float y) {
         super(screen, type.texture);
@@ -28,6 +30,19 @@ public class BodyPart extends GameEntity {
         this.maxHorizontalVelocity = 2000;
         float scale = 2f;
         initEntity(x, y, type.texture.getRegionWidth() * scale, type.texture.getRegionHeight() * scale);
+        guideArrow = new GuideArrow(screen, x, y);
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if (collected) {
+            guideArrow.show = false;
+        } else {
+            guideArrow.show = true;
+        }
+        guideArrow.setTargetPosition(position.x, position.y);
+        guideArrow.update(dt);
     }
 
     @Override
@@ -37,6 +52,10 @@ public class BodyPart extends GameEntity {
             batch.setColor(Color.YELLOW);
             assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
             batch.setColor(Color.WHITE);
+        }
+
+        if (!collected) {
+            guideArrow.render(batch);
         }
 
         float scaleX = 1f;
