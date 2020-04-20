@@ -43,7 +43,6 @@
   <object id="15" name="head" type="body-part" gid="758" x="768" y="1472" width="32" height="32"/>
   <object id="16" type="punch-wall" gid="757" x="912" y="1504" width="32" height="128"/>
   <object id="17" type="punch-wall" gid="757" x="1568" y="1280" width="32" height="128"/>
-  <object id="18" name="boss" type="spawn-enemy" gid="3" x="4864" y="1248" width="32" height="32"/>
   <object id="20" type="punch-wall" gid="757" x="1568" y="1152" width="32" height="128"/>
   <object id="21" type="punch-wall" gid="757" x="912" y="1376" width="32" height="128"/>
   <object id="22" type="punch-wall" gid="757" x="2208" y="1280" width="32" height="128"/>
