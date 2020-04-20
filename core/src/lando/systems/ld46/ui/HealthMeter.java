@@ -46,11 +46,12 @@ public class HealthMeter {
         batch.setColor(Color.WHITE);
         entity.screen.assets.debugNinePatch.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
 
-        float iconSize = icon.getRegionHeight();
-        if (pulseTimer % 1.1f > (healthPercentage)) {
+        float iconSize = 25f;
+        if (pulseTimer % 1.1f > (healthPercentage) && healthPercentage > 0) {
             float pulsePercentage = (pulseTimer % 0.25f) +1f;
             iconSize = iconSize * pulsePercentage;
         }
+        icon = healthPercentage > 0 ? entity.screen.assets.iconHeart : entity.screen.assets.iconSkull;
         if (entity.showHeart) {
             batch.draw(icon, bounds.x - bounds.width / 2 - iconSize / 2f, bounds.y + bounds.height / 2f - iconSize / 2f, iconSize, iconSize);
         }
