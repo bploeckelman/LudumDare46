@@ -44,8 +44,8 @@ public class ZombieMech extends MoveEntity {
 
     @Override
     protected void updatePunchRect(Rectangle punchRect) {
-        float x = (direction == Direction.left) ? collisionBounds.x - 25 : collisionBounds.x + collisionBounds.width + 15;
-        punchRect.set(x, collisionBounds.y + collisionBounds.height - 45, 20, 20);
+        float x = (direction == Direction.left) ? collisionBounds.x - 35 : collisionBounds.x + collisionBounds.width + 25;
+        punchRect.set(x, collisionBounds.y + collisionBounds.height - 55, 40, 40);
     }
 
     @Override

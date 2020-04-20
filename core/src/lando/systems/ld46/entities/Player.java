@@ -152,7 +152,7 @@ public class Player extends MoveEntity {
 
     @Override
     protected void updatePunchRect(Rectangle punchRect) {
-        float x = (direction == Direction.left) ? collisionBounds.x - 15 : collisionBounds.x + collisionBounds.width + 5;
-        punchRect.set(x, collisionBounds.y + collisionBounds.height - 20, 10, 10);
+        float x = (direction == Direction.left) ? collisionBounds.x - 25 : collisionBounds.x + collisionBounds.width + 15;
+        punchRect.set(x, collisionBounds.y + collisionBounds.height - 25, 20, 20);
     }
 }
