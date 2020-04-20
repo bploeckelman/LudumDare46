@@ -1,10 +1,13 @@
 package lando.systems.ld46.screens;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -55,6 +58,9 @@ public class GameScreen extends BaseScreen {
     public Array<EnemyEntity> enemies;
 
     public BodyBag bodyBag;
+    public Animation<TextureRegion> zombieMechBuildAnimation;
+    public float zombieMechBuildAnimTime;
+    public boolean buildingMech;
 
     public GameScreen(Game game) {
         super(game);
@@ -64,8 +70,7 @@ public class GameScreen extends BaseScreen {
         this.physicsEntities = new Array<>();
         this.player = new Player(this, level.playerSpawn);
         physicsEntities.add(player);
-        this.zombieMech = new ZombieMech(this, 400, 500);
-        physicsEntities.add(zombieMech);
+        this.zombieMech = null;
         this.touchPos = new Vector3();
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
 
@@ -76,8 +81,11 @@ public class GameScreen extends BaseScreen {
         this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
 
         this.bodyBag = new BodyBag(this, level.initialBodyPartPositions);
-        tutorials = new TutorialManager(this);
+        this.zombieMechBuildAnimation = assets.mechBuildAnimation;
+        this.zombieMechBuildAnimTime = 0f;
+        this.buildingMech = false;
 
+        tutorials = new TutorialManager(this);
     }
 
     @Override
@@ -97,19 +105,27 @@ public class GameScreen extends BaseScreen {
                 for (EnemyEntity enemy : enemies) {
                     enemy.render(batch);
                 }
+                if (zombieMech != null) {
+                    zombieMech.render(batch);
+                }
                 player.render(batch);
-                zombieMech.render(batch);
                 level.renderObjects(batch);
                 bodyBag.render(batch);
+                if (buildingMech) {
+                    batch.draw(zombieMechBuildAnimation.getKeyFrame(zombieMechBuildAnimTime),
+                            player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
+                }
                 particles.draw(batch, Particles.Layer.foreground);
 
-                for (EnemyEntity enemy : enemies) {
-                    if (enemy.showHealth) {
-                        //enemy.renderHealthMeter(batch);
-                    }
+//                for (EnemyEntity enemy : enemies) {
+//                    if (enemy.showHealth) {
+//                        enemy.renderHealthMeter(batch);
+//                    }
+//                }
+                if (zombieMech != null) {
+                    zombieMech.renderHealthMeter(batch);
                 }
-                zombieMech.renderHealthMeter(batch);
-                if (!player.inMech()) {
+                if (!player.inMech() && !player.hide) {
                     player.renderHealthMeter(batch);
                 }
             }
@@ -154,9 +170,18 @@ public class GameScreen extends BaseScreen {
         if (tutorials.shouldBlockInput()) return;
         level.update(dt);
         player.update(dt);
-        zombieMech.update(dt);
+        if (zombieMech != null) {
+            zombieMech.update(dt);
+            if (zombieMech.dead) {
+                player.jumpOut();
+                zombieMech = null;
+            }
+        }
 
         bodyBag.update(dt, player);
+        if (buildingMech) {
+            zombieMechBuildAnimTime += dt;
+        }
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);
@@ -167,9 +192,26 @@ public class GameScreen extends BaseScreen {
     }
 
     public void buildZombieMech() {
-        // TODO: hide player
-        // TODO: play build animation
-        // TODO: when done, spawn mech
+        // hide and block input from player
+        player.hide = true;
+        player.freeze = true;
+
+        // play zombie build animation right where player was standing
+        buildingMech = true;
+        zombieMechBuildAnimTime = 0f;
+
+        // when done, spawn mech, reshow and reenable input for player
+        Timeline.createSequence()
+                .delay(zombieMechBuildAnimation.getAnimationDuration())
+                .setCallback((type, source) -> {
+                    player.hide = false;
+                    player.freeze = false;
+                    buildingMech = false;
+                    zombieMech = new ZombieMech(GameScreen.this,
+                            player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
+                    physicsEntities.add(zombieMech);
+                })
+                .start(game.tween);
     }
 
     private void handleTempCommands() {

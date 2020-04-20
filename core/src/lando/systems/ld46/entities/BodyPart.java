@@ -13,7 +13,6 @@ public class BodyPart extends GameEntity {
         , arm2
         , leg1
         , leg2
-        , torso
         , head
         ;
         public TextureRegion texture; // initialized in Assets

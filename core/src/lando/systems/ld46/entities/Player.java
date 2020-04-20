@@ -17,6 +17,11 @@ public class Player extends MoveEntity {
     private ZombieMech mech = null;
     private float inMechTimer = 0f;
 
+    // for when building the mech suit, ignore input, hide sprite while playing build animation
+    public boolean freeze = false;
+    public boolean hide = false;
+
+
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
     }
@@ -44,6 +49,7 @@ public class Player extends MoveEntity {
 
     @Override
     public void update(float dt) {
+        if (freeze) return;
         super.update(dt);
 
         // this is the animation of starting to jump
@@ -83,7 +89,7 @@ public class Player extends MoveEntity {
                 screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
             } else {
                 ZombieMech mech = this.screen.zombieMech;
-                if (collisionBounds.overlaps(mech.collisionBounds)) {
+                if (mech != null && collisionBounds.overlaps(mech.collisionBounds)) {
                     mech.resetMech();
                     jumpIn(this.screen.zombieMech);
                     screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
@@ -127,9 +133,8 @@ public class Player extends MoveEntity {
 
     @Override
     public void render(SpriteBatch batch) {
-        if (inMech()) {
-            return;
-        }
+        if (hide) return;
+        if (inMech()) return;
 
         super.render(batch);
     }

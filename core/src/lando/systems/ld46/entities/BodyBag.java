@@ -2,6 +2,7 @@ package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import lando.systems.ld46.screens.GameScreen;
@@ -38,9 +39,14 @@ public class BodyBag {
         allPartsCollected = true;
         for (BodyPart part : bodyParts.values()) {
             part.update(dt);
-            if (player.collisionBounds.overlaps(part.collisionBounds)) {
-                part.collected = true;
-                screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
+            if (part.collected) {
+                continue;
+            } else {
+                if (player.collisionBounds.overlaps(part.collisionBounds)) {
+                    part.collected = true;
+                    screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
+                    screen.physicsEntities.removeValue(part, true);
+                }
             }
             if (!part.collected) {
                 allPartsCollected = false;
@@ -56,6 +62,18 @@ public class BodyBag {
         for (BodyPart part : bodyParts.values()) {
             if (part.collected) continue;
             part.render(batch);
+        }
+    }
+
+    public void explodeParts(Vector2 position) {
+        for (BodyPart part : bodyParts.values()) {
+            part.collected = false;
+            part.setPosition(position.x, position.y);
+            part.velocity.add(
+                    MathUtils.random(-256f, 256f),
+                    MathUtils.random(100f, 300f)
+            );
+            screen.physicsEntities.add(part);
         }
     }
 

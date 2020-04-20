@@ -49,7 +49,6 @@ public class Assets implements Disposable {
     public TextureRegion zombieRippedArm;
     public TextureRegion zombieRippedLeg;
     public TextureRegion zombieRippedHead;
-    public TextureRegion zombieRippedTorso;
     public TextureRegion iconHeart;
     public TextureRegion iconSkull;
     public TextureRegion smokeTex;
@@ -166,7 +165,6 @@ public class Assets implements Disposable {
         zombieRippedArm = atlas.findRegion("zombie-ripped-arm");
         zombieRippedHead = atlas.findRegion("zombie-ripped-head");
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
-        zombieRippedTorso = atlas.findRegion("zombie-ripped-torso");
         iconHeart = atlas.findRegion("icon-heart");
         iconSkull = atlas.findRegion("icon-skull");
         smokeTex = atlas.findRegion("smoke");
@@ -180,7 +178,6 @@ public class Assets implements Disposable {
         BodyPart.Type.arm2.texture = zombieRippedArm;
         BodyPart.Type.leg1.texture = zombieRippedLeg;
         BodyPart.Type.leg2.texture = zombieRippedLeg;
-        BodyPart.Type.torso.texture = zombieRippedTorso;
         BodyPart.Type.head.texture  = zombieRippedHead;
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
@@ -194,7 +191,7 @@ public class Assets implements Disposable {
         mechAttackAnimation = new Animation<>(0.15f, atlas.findRegions("zombie-punch"), Animation.PlayMode.NORMAL);
         mechJumpAnimation = new Animation<>(0.1f, atlas.findRegions("zombie-jump"), Animation.PlayMode.NORMAL);
         mechFallAnimation = new Animation<>(0.5f, atlas.findRegions("zombie-fall"), Animation.PlayMode.NORMAL);
-        mechBuildAnimation = new Animation<>(0.5f, atlas.findRegions("zombie-build"), Animation.PlayMode.NORMAL);
+        mechBuildAnimation = new Animation<>(1.0f, atlas.findRegions("zombie-build"), Animation.PlayMode.NORMAL);
 
         mobPitchforkAnimation = new Animation<>(0.1f, atlas.findRegions("pitchfork-idle"), Animation.PlayMode.LOOP);
         mobTorchAnimation = new Animation<>(0.3f, atlas.findRegions("torch-idle"), Animation.PlayMode.LOOP);

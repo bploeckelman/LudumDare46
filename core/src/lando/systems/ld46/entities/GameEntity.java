@@ -15,7 +15,12 @@ import lando.systems.ld46.ui.HealthMeter;
 
 public class GameEntity implements PhysicsComponent {
 
-    public enum Direction {right, left}
+    public enum Direction {
+        right, left;
+        public static Direction random() {
+            return MathUtils.randomBoolean() ? right : left;
+        }
+    }
     public enum State { standing, walking, jumping, jump, falling }
 
     protected Assets assets;

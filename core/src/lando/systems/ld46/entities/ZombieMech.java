@@ -68,6 +68,8 @@ public class ZombieMech extends MoveEntity {
 
     public void explode() {
         screen.particles.makeExplodingZombieParticles(position.x, position.y);
+        screen.physicsEntities.removeValue(this, true);
+        screen.bodyBag.explodeParts(position);
     }
 
     @Override
