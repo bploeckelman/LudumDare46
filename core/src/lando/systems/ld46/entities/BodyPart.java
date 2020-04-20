@@ -55,9 +55,7 @@ public class BodyPart extends GameEntity {
             batch.setColor(Color.WHITE);
         }
 
-        if (!collected) {
-            guideArrow.render(batch);
-        }
+
 
         float scaleX = 1f;
         float scaleY = 1f;
@@ -66,6 +64,12 @@ public class BodyPart extends GameEntity {
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
+    }
+
+    public void renderBodyPartPins(SpriteBatch batch) {
+        if (!collected) {
+            guideArrow.render(batch);
+        }
     }
 
 

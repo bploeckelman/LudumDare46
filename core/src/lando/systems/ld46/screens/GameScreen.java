@@ -151,7 +151,11 @@ public class GameScreen extends BaseScreen {
                 }
                 if (!player.inMech() && zombieMech != null) {
                     zombieMech.mechIndicator.render(batch);
-                }            }
+                }
+                for (BodyPart part : bodyBag.bodyParts.values()) {
+                    part.renderBodyPartPins(batch);
+                }
+            }
             batch.end();
             if (Config.debug) {
                 batch.begin();
