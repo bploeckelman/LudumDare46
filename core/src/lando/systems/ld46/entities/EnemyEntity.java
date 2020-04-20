@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld46.screens.GameScreen;
 
 public class EnemyEntity extends GameEntity {
@@ -74,7 +75,16 @@ public class EnemyEntity extends GameEntity {
 
     private void spawnDrop() {
         // add more drops?
-        FleshDrop drop = new FleshDrop(screen);
+        DropEntity drop;
+
+        float dropValue = MathUtils.random(0, 110);
+        if (dropValue < 70) {
+            drop = new FleshDrop(screen);
+        } else if (dropValue < 100) {
+            drop = new SyringeDrop(screen);
+        } else {
+            drop = new HolyHandGrenadeDrop(screen);
+        }
         drop.addToScreen(position.x, position.y);
         drop.velocity.set(0, 20);
     }

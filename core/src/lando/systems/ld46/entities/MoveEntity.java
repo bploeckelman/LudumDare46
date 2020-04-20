@@ -43,6 +43,9 @@ public class MoveEntity extends GameEntity {
     private Audio.Sounds deathSound = Audio.Sounds.none;
     private Audio.Sounds hurtSound = Audio.Sounds.none;
 
+    // bitwise id
+    public int id;
+
     protected MoveEntity(GameScreen screen, Animation<TextureRegion> idle, Animation<TextureRegion> move) {
         super(screen, idle);
 
@@ -230,8 +233,9 @@ public class MoveEntity extends GameEntity {
         for (int i = screen.drops.size - 1; i >= 0; i--) {
             DropEntity drop = screen.drops.get(i);
             if (collisionBounds.overlaps(drop.collisionBounds)) {
-                drop.useOn(this);
-                drop.removeFromScreen();
+                if (drop.useOn(this)) {
+                    drop.removeFromScreen();
+                }
             }
         }
     }
@@ -270,5 +274,9 @@ public class MoveEntity extends GameEntity {
             if ((int)(invulnerabilityTimer * 20) % 2 == 0 ) { return Color.RED; }
         }
         return super.getEffectColor();
+    }
+
+    public void addHealth(float health) {
+        hitPoints = Math.min(maxHealth, hitPoints + health);
     }
 }

@@ -36,6 +36,8 @@ public class Player extends MoveEntity {
         setSounds(Audio.Sounds.doc_hurt, Audio.Sounds.doc_death);
 
         initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
+
+        id = MoveEntityIds.Doctor;
     }
 
     @Override

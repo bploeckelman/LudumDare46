@@ -3,6 +3,7 @@ package lando.systems.ld46.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class DropEntity extends GameEntity {
@@ -11,10 +12,17 @@ public class DropEntity extends GameEntity {
 
     private float dropTimer = 0;
 
-    public DropEntity(GameScreen screen, Animation<TextureRegion> animation) {
+    private int ids;
+
+    protected Audio.Sounds pickupSound = Audio.Sounds.none;
+
+    public DropEntity(GameScreen screen, Animation<TextureRegion> animation, int ids) {
         super(screen, animation);
 
         setHealth(0);
+
+        // who it's for - can be both
+        this.ids = ids;
     }
 
     @Override
@@ -27,8 +35,17 @@ public class DropEntity extends GameEntity {
         }
     }
 
-    public void useOn(MoveEntity mover) {
-        // override to do shit
+    public boolean useOn(MoveEntity mover) {
+        if ((mover.id & ids) == mover.id) {
+            applyDrop(mover);
+            playSound(pickupSound);
+            return true;
+        }
+        return false;
+    }
+
+    public void applyDrop(MoveEntity mover) {
+        // override for effect
     }
 
     public void addToScreen(float x, float y) {

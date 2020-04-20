@@ -81,6 +81,8 @@ public class Assets implements Disposable {
 
     // drops - ftw!
     public Animation<TextureRegion> fleshDropAnimation;
+    public Animation<TextureRegion> syringeDropAnimation;
+    public Animation<TextureRegion> holyHandGrenadeDropAnimation;
 
     public Array<ShaderProgram> randomTransitions;
     public ShaderProgram blindsShader;
@@ -205,6 +207,8 @@ public class Assets implements Disposable {
         snakeAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
         fleshDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
+        syringeDropAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
+        holyHandGrenadeDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");

@@ -20,6 +20,8 @@ public class ZombieMech extends MoveEntity {
         setSounds(Audio.Sounds.zombie_hurt, Audio.Sounds.zombie_death);
 
         initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
+
+        id = MoveEntityIds.Zombie;
     }
 
     @Override
