@@ -33,6 +33,10 @@ public class GuideArrow {
 
     }
 
+    public void setTargetPosition(float x, float y) {
+        this.target.set(x, y);
+    }
+
     public void update(float dt) {
         pulseTimer += dt;
         if (screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 > target.x - arrowSize / 2f) {
