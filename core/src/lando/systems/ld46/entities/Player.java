@@ -90,7 +90,7 @@ public class Player extends MoveEntity {
             } else {
                 ZombieMech mech = this.screen.zombieMech;
                 if (mech != null && collisionBounds.overlaps(mech.collisionBounds)) {
-                    mech.resetMech();
+                    //mech.resetMech();
                     jumpIn(this.screen.zombieMech);
                     screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
                 }
