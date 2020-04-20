@@ -72,7 +72,9 @@ public class Player extends MoveEntity {
         inMechTimer += dt;
         if (inMech() && !mech.dead && inMechTimer > 2f) {
             mech.takeDamage(5f);
-            screen.particles.makeBloodParticles(mech.position.x, mech.position.y);
+            float offsetX = ((mech.direction == Direction.left) ? 2 : -2);
+            float offsetY = mech.collisionBounds.height/2 + ((mech.velocity.y != 0) ? 10 : -10);
+            screen.particles.makeBloodParticles(mech.position.x + offsetX, mech.position.y + offsetY);
             inMechTimer = 0;
         }
 
