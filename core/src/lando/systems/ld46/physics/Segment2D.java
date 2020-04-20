@@ -22,6 +22,8 @@ public class Segment2D implements QuadTreeable {
     public Segment2D(float x1, float y1, float x2, float y2){
         this.start = new Vector2(x1, y1);
         this.end = new Vector2(x2, y2);
+        this.delta = new Vector2();
+        this.normal = new Vector2();
         collisionRect = new Rectangle();
         updateSegment();
     }
@@ -54,8 +56,8 @@ public class Segment2D implements QuadTreeable {
     }
 
     private void updateSegment() {
-        this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+        this.delta.set(end).sub(start);
+        this.normal.set(end).sub(start).nor().rotate90(-1);
         float minX = Math.min(start.x, end.x);
         float minY = Math.min(start.y, end.y);
         float maxX = Math.max(start.x, end.x);

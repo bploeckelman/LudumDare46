@@ -8,10 +8,13 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.particles.Particle;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.utils.PointComparator;
 import lando.systems.ld46.utils.QuadTree;
 import lando.systems.ld46.utils.QuadTreeable;
 import lando.systems.ld46.utils.Utils;
 import lando.systems.ld46.world.Level;
+
+import java.util.Comparator;
 
 
 public class PhysicsSystem {
@@ -40,6 +43,7 @@ public class PhysicsSystem {
     Array<Collision> collisions = new Array<>();
     public QuadTree collisionTree;
     Array<QuadTreeable> quadEntities = new Array<>();
+    PointComparator sorter;
 
 
 
@@ -54,6 +58,7 @@ public class PhysicsSystem {
         float height = collisionLayer.getHeight() * collisionLayer.getTileHeight();
         collisionTree = new QuadTree(screen.assets, 0, new Rectangle(0,0, width, height));
         rebuildTree();
+        sorter = new PointComparator();
     }
 
     public void update(float dt) {
@@ -213,8 +218,6 @@ public class PhysicsSystem {
                 Segment2D segment = (Segment2D)entity;
                 collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
                 if (collisionResult.x != Float.MAX_VALUE && nearest1.dst2(nearest2) < (bounds.radius + 2f) * (bounds.radius + 2f)){
-//                    tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
-//                    normal.set(segment.end).sub(segment.start).nor().rotate90(1);
                     frameEndPos.set(nearest1);
                     float backupDist = (bounds.radius + 2.1f) - nearest1.dst(nearest2);
                     float x = frameEndPos.x + backupDist * (segment.normal.x);
@@ -229,25 +232,16 @@ public class PhysicsSystem {
         }
     }
 
-//    private void testCollision(Vector2 startPos, Segment2D segment, Vector2 movement) {
+//    private void handleCollision(Vector2 startPos, Segment2D segment, Vector2 movement, Vector2 end) {
 //        tempStart1.set(startPos.x, startPos.y);
 //        tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
 ////        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
 //        if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
-//            collisions.add(new Collision(tempStart1, segment, Math.min(collisionResult.dst2(segment.start), collisionResult.dst2(segment.end))));
+//            tempStart1.set(segment.end).sub(segment.start);
+//            float dot = tempEnd1.set(movement).dot(tempStart1);
+//            movement.set(tempStart1.scl(dot/ tempStart1.len2()));
 //        }
 //    }
-
-    private void handleCollision(Vector2 startPos, Segment2D segment, Vector2 movement, Vector2 end) {
-        tempStart1.set(startPos.x, startPos.y);
-        tempEnd1.set(startPos.x + movement.x, startPos.y + movement.y);
-//        collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
-        if (intersectSegments(tempStart1, tempEnd1, segment.start, segment.end, collisionResult)){
-            tempStart1.set(segment.end).sub(segment.start);
-            float dot = tempEnd1.set(movement).dot(tempStart1);
-            movement.set(tempStart1.scl(dot/ tempStart1.len2()));
-        }
-    }
 
     Array<Vector2> touchPoints = new Array<>();
     Vector2 intersectionPoint = new Vector2();
@@ -269,12 +263,8 @@ public class PhysicsSystem {
         projPoints.get(2).set(segment.end);
         projPoints.get(3).set(segment.end.x - v.x, segment.end.y - v.y);
 
-        Vector2 center = findCentroid(projPoints);
-        projPoints.sort((a, b) -> {
-            double a1 = (Math.toDegrees(Math.atan2(a.x - center.x, a.y - center.y)) + 360) % 360;
-            double a2 = (Math.toDegrees(Math.atan2(b.x - center.x, b.y - center.y)) + 360) % 360;
-            return (int) (a1 - a2);
-        });
+        sorter.center = findCentroid(projPoints);
+        projPoints.sort(sorter);
         for (int i = 0; i < 4; i ++){
             velVerts[i*2] = projPoints.get(i).x;
             velVerts[i*2 +1] = projPoints.get(i).y;

@@ -208,7 +208,7 @@ public class Particles implements Disposable {
     public void makeBloodParticles(GameEntity.Direction direction, float x, float y) {
         TextureRegion keyframe = assets.whiteCircle;
 
-        int numParticles = 200;
+        int numParticles = 50;
         for (int i = 0; i < numParticles; ++i) {
             Utils.hsvToRgb(MathUtils.random(.99f, 1.01f), 1f, MathUtils.random(.1f, 1f), bloodColor);
             float xVelocity = direction == GameEntity.Direction.left ?  MathUtils.random(75f, 285f) : MathUtils.random(-105f, 105f);
