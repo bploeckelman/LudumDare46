@@ -5,16 +5,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class EnemyEntity extends GameEntity {
 
     public float removeTime = 2f;
-    public boolean showHealth = false;
     public Feeler leftFeeler;
     public Feeler rightFeeler;
 
     public float damage = 10f;
+
+    protected Audio.Sounds deathSound = Audio.Sounds.none;
+    protected Audio.Sounds attackSound = Audio.Sounds.none;
 
     protected EnemyEntity(GameScreen screen, Animation<TextureRegion> animation, float scale) {
         super(screen, animation);

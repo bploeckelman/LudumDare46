@@ -8,7 +8,8 @@ import lando.systems.ld46.screens.GameScreen;
 
 public class DropEntity extends GameEntity {
 
-    protected float dropDuration = 8;
+    // default to 10 seconds of drop time before disappearing
+    protected float dropDuration = 10;
 
     private float dropTimer = 0;
 

@@ -1,5 +1,6 @@
 package lando.systems.ld46.entities;
 
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 
 public class HolyHandGrenadeDrop extends DropEntity {
@@ -8,6 +9,10 @@ public class HolyHandGrenadeDrop extends DropEntity {
         super(screen, screen.assets.holyHandGrenadeDropAnimation, MoveEntityIds.Doctor|MoveEntityIds.Zombie);
 
         initEntity(0, 0, keyframe.getRegionWidth() * 2.5f, keyframe.getRegionHeight() * 2.5f);
+
+        // super powerful - cut the time
+        pickupSound = Audio.Sounds.pickup_handgrenade;
+        dropDuration = 5;
     }
 
     @Override
