@@ -1,7 +1,5 @@
 package lando.systems.ld46.entities;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
@@ -10,6 +8,8 @@ public class ZombieMech extends MoveEntity {
 
     public float moveModifier = 0.5f;
 
+    private Audio.Sounds punchWallSound = Audio.Sounds.zombie_punch_wall;
+
     public ZombieMech(GameScreen screen, float x, float y) {
         super(screen, screen.game.assets.mechAnimation, screen.game.assets.mechMoveAnimation);
 
@@ -17,8 +17,11 @@ public class ZombieMech extends MoveEntity {
         setPunch(screen.game.assets.mechAttackAnimation, Audio.Sounds.zombie_punch, Audio.Sounds.zombie_punch_land, new int[]{2},100f);
         setFall(screen.game.assets.mechFallAnimation);
 
+        setSounds(Audio.Sounds.zombie_hurt, Audio.Sounds.zombie_death);
+
         initEntity(x, y, keyframe.getRegionWidth() * 2, keyframe.getRegionHeight() * 2);
     }
+
     @Override
     protected void initEntity(float x, float y, float width, float height) {
         imageBounds.set(x, y, width, height);
@@ -35,6 +38,7 @@ public class ZombieMech extends MoveEntity {
 
     @Override
     public boolean updateStateTimer() {
+        // allows animation at this point when dead
         return true;
     }
 
@@ -55,7 +59,7 @@ public class ZombieMech extends MoveEntity {
                 if (wall.bounds.contains(punchRect)) {
                     Direction punchDir = (wall.center.x < position.x) ? Direction.left : Direction.right;
                     wall.punch(punchDir);
-                    playSound(punchHitSound);
+                    playSound(punchWallSound);
                     bleed(direction, punchRect.x + punchRect.width / 2, punchRect.y + punchRect.height / 2);
                 }
             });
@@ -79,13 +83,5 @@ public class ZombieMech extends MoveEntity {
     public void resetMech() {
         hitPoints = 100f;
         dead = false;
-    }
-
-    @Override
-    public void render(SpriteBatch batch) {
-        super.render(batch);
-        batch.setColor(Color.RED);
-        batch.draw(screen.assets.whitePixel, punchRect.x, punchRect.y, punchRect.width, punchRect.height);
-        batch.setColor(Color.WHITE);
     }
 }

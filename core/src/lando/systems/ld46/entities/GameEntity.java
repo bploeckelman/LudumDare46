@@ -155,7 +155,8 @@ public class GameEntity implements PhysicsComponent {
 //            scaleY = 1.15f;
 //        }
 
-        batch.setColor(Color.WHITE);
+        batch.setColor(getEffectColor());
+
         batch.draw(keyframe, imageBounds.x, imageBounds.y,
                 imageBounds.width / 2, imageBounds.height / 2,
                 imageBounds.width, imageBounds.height, scaleX, scaleY, 0);
@@ -169,6 +170,11 @@ public class GameEntity implements PhysicsComponent {
             assets.debugNinePatch.draw(batch, collisionBounds.x, collisionBounds.y, collisionBounds.width, collisionBounds.height);
             batch.setColor(Color.WHITE);
         }
+    }
+
+    // override for effects
+    public Color getEffectColor() {
+        return Color.WHITE;
     }
 
     public void renderHealthMeter(SpriteBatch batch) {
@@ -224,5 +230,9 @@ public class GameEntity implements PhysicsComponent {
 
     public float getHealthPercentage() {
         return hitPoints / maxHealth;
+    }
+
+    public boolean isInvulnerable() {
+        return false;
     }
 }

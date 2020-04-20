@@ -1,5 +1,6 @@
 package lando.systems.ld46.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -29,7 +30,11 @@ public class MoveEntity extends GameEntity {
     private int punchFrameIndex[];
     private float punchDamage = 0f;
 
-    private float invlunerabilityTimer = 0;
+    private float invulnerabilityTimer = 0;
+
+    // other sounds
+    private Audio.Sounds deathSound = Audio.Sounds.none;
+    private Audio.Sounds hurtSound = Audio.Sounds.none;
 
     protected MoveEntity(GameScreen screen, Animation<TextureRegion> idle, Animation<TextureRegion> move) {
         super(screen, idle);
@@ -58,6 +63,20 @@ public class MoveEntity extends GameEntity {
         this.punchDamage = punchDamage;
     }
 
+    protected void setSounds(Audio.Sounds hurtSound, Audio.Sounds deathSound) {
+        this.hurtSound = hurtSound;
+        this.deathSound = deathSound;
+    }
+
+    // punch rect display
+//    @Override
+//    public void render(SpriteBatch batch) {
+//        super.render(batch);
+//        batch.setColor(Color.RED);
+//        batch.draw(screen.assets.whitePixel, punchRect.x, punchRect.y, punchRect.width, punchRect.height);
+//        batch.setColor(Color.WHITE);
+//    }
+
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -82,8 +101,8 @@ public class MoveEntity extends GameEntity {
         updateJump(dt);
         updatePunch(dt);
 
-        if (invlunerabilityTimer > 0) {
-            invlunerabilityTimer -= dt;
+        if (invulnerabilityTimer > 0) {
+            invulnerabilityTimer -= dt;
         }
 
         // checks both sides
@@ -165,7 +184,7 @@ public class MoveEntity extends GameEntity {
             }
 
             // don't take damage for a smidge
-            if (invlunerabilityTimer > 0) { continue; }
+            if (invulnerabilityTimer > 0) { continue; }
 
             if (collisionBounds.overlaps(enemy.collisionBounds)) {
                 // assign damage to enemies
@@ -176,7 +195,7 @@ public class MoveEntity extends GameEntity {
         }
 
         if (damageTaken) {
-            invlunerabilityTimer = 2f;
+            invulnerabilityTimer = 2f;
         }
     }
 
@@ -200,10 +219,6 @@ public class MoveEntity extends GameEntity {
         }
     }
 
-    public void bleed(float x, float y) {
-        screen.particles.makeBloodParticles(x, y);
-    }
-
     public void bleed(Direction direction, float x, float y) {
         screen.particles.makeBloodParticles(direction, x, y);
     }
@@ -212,7 +227,16 @@ public class MoveEntity extends GameEntity {
         return !(state == State.jumping || state == State.falling);
     }
 
+    @Override
     public boolean isInvulnerable() {
-        return invlunerabilityTimer > 0;
+        return invulnerabilityTimer > 0;
+    }
+
+    @Override
+    public Color getEffectColor() {
+        if (isInvulnerable()) {
+            if ((int)(invulnerabilityTimer * 20) % 2 == 0 ) { return Color.RED; }
+        }
+        return super.getEffectColor();
     }
 }

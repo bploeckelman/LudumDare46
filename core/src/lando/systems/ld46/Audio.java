@@ -21,7 +21,8 @@ public class Audio implements Disposable {
 
     // none should not have a sound
     public enum Sounds {
-        none, sample_sound, doc_punch, doc_punch_land, doc_jump, zombie_punch, zombie_punch_land, zombie_jump
+        none, sample_sound, doc_punch, doc_punch_land, doc_jump, doc_hurt, doc_death, zombie_punch,
+        zombie_punch_land, zombie_punch_wall, zombie_jump, zombie_hurt, zombie_death
     }
 
     public enum Musics {

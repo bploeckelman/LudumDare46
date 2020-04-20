@@ -27,6 +27,8 @@ public class Player extends MoveEntity {
         setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, Audio.Sounds.doc_punch_land, new int[]{2, 3},10);
         setFall(screen.game.assets.playerFallAnimation);
 
+        setSounds(Audio.Sounds.doc_hurt, Audio.Sounds.doc_death);
+
         initEntity(x, y, keyframe.getRegionWidth() * 1.95f, keyframe.getRegionHeight() * 1.95f);
     }
 
