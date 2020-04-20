@@ -25,6 +25,7 @@ public class BodyPart extends GameEntity {
         super(screen, type.texture);
         this.type = type;
         this.collected = false;
+        this.maxHorizontalVelocity = 2000;
         float scale = 2f;
         initEntity(x, y, type.texture.getRegionWidth() * scale, type.texture.getRegionHeight() * scale);
     }

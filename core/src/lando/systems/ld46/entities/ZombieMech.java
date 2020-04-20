@@ -70,7 +70,7 @@ public class ZombieMech extends MoveEntity {
         screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
         screen.particles.makeExplodingZombieParticles(position.x, position.y);
         screen.physicsEntities.removeValue(this, true);
-        screen.bodyBag.explodeParts(position);
+        screen.bodyBag.explodeParts(collisionBounds.x + collisionBounds.width / 2f, collisionBounds.y + collisionBounds.height / 2f);
     }
 
     @Override

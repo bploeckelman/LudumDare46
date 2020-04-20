@@ -1,6 +1,7 @@
 package lando.systems.ld46.screens;
 
 import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -207,14 +208,14 @@ public class GameScreen extends BaseScreen {
         // when done, spawn mech, reshow and reenable input for player
         Timeline.createSequence()
                 .delay(zombieMechBuildAnimation.getAnimationDuration())
-                .setCallback((type, source) -> {
-                    player.hide = false;
-                    player.freeze = false;
+                .push(Tween.call((type, source) -> {
                     buildingMech = false;
                     zombieMech = new ZombieMech(GameScreen.this,
                             player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
                     physicsEntities.add(zombieMech);
-                })
+                    player.hide = false;
+                    player.freeze = false;
+                }))
                 .start(game.tween);
     }
 

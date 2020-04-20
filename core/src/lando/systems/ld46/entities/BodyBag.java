@@ -1,5 +1,7 @@
 package lando.systems.ld46.entities;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -42,7 +44,7 @@ public class BodyBag {
             if (part.collected) {
                 continue;
             } else {
-                if (player.collisionBounds.overlaps(part.collisionBounds)) {
+                if (!player.freeze && player.collisionBounds.overlaps(part.collisionBounds)) {
                     part.collected = true;
                     screen.particles.spawnBodyPartPickup(part.position.x, part.position.y);
                     screen.physicsEntities.removeValue(part, true);
@@ -65,14 +67,23 @@ public class BodyBag {
         }
     }
 
-    public void explodeParts(Vector2 position) {
+    public void explodeParts(float x, float y) {
+        screen.player.freeze = true;
+        Timeline.createSequence()
+                .delay(1.5f)
+                .push(Tween.call((type, source) -> {
+                    screen.player.freeze = false;
+                }))
+                .start(screen.game.tween);
+
         for (BodyPart part : bodyParts.values()) {
             part.collected = false;
-            part.setPosition(position.x, position.y);
-            part.velocity.add(
-                    MathUtils.random(-256f, 256f),
-                    MathUtils.random(100f, 300f)
-            );
+            part.setPosition(x, y);
+            float velX = (GameEntity.Direction.random() == GameEntity.Direction.left)
+                       ? MathUtils.random(-2000f, -1000f)
+                       : MathUtils.random(1000f, 2000);
+            float velY = MathUtils.random(800f, 1000f);
+            part.velocity.add(velX, velY);
             screen.physicsEntities.add(part);
         }
     }
