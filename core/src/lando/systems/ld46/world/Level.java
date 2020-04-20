@@ -57,6 +57,9 @@ public class Level {
 
     public Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
 
+    public LevelDescriptor thisLevel;
+    public LevelDescriptor nextLevel = null;
+
     private Array<Rectangle> tileRects = new Array<>();
     private Rectangle tempRect = new Rectangle();
     public boolean segmentsDirty;
@@ -66,6 +69,7 @@ public class Level {
 
         this.assets = gameScreen.game.assets;
         this.gameScreen = gameScreen;
+        this.thisLevel = levelDescriptor;
 
         // Load map
         this.map = (new TmxMapLoader()).load(levelDescriptor.mapFileName, new TmxMapLoader.Parameters() {{
@@ -78,6 +82,10 @@ public class Level {
 
         // Load map properties
         this.name = map.getProperties().get("name", "[UNNAMED]", String.class);
+        String nextLevelName = map.getProperties().get("next-level", null, String.class);
+        if (nextLevelName != null) {
+            this.nextLevel = LevelDescriptor.valueOf(nextLevelName);
+        }
 
         // Load and validate map layers
         MapLayers mapLayers = map.getLayers();

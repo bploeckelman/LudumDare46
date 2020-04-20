@@ -24,7 +24,6 @@ import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
 import lando.systems.ld46.ui.tutorial.TutorialManager;
-import lando.systems.ld46.ui.GuideArrow;
 import lando.systems.ld46.world.Level;
 import lando.systems.ld46.world.LevelDescriptor;
 
@@ -61,36 +60,35 @@ public class GameScreen extends BaseScreen {
     public Animation<TextureRegion> zombieMechBuildAnimation;
     public float zombieMechBuildAnimTime;
     public boolean buildingMech;
-    public GuideArrow guideArrow;
 
     public GameScreen(Game game) {
         super(game);
+        this.touchPos = new Vector3();
+        this.zombieMechBuildAnimation = assets.mechBuildAnimation;
 
-        this.level = new Level(LevelDescriptor.level1, this);
-//        this.level = new Level(LevelDescriptor.level_boss, this);
-//        this.level = new Level(LevelDescriptor.level_tutorial, this);
+        loadLevel(LevelDescriptor.level_tutorial);
+    }
+
+    public void loadLevel(LevelDescriptor levelDescriptor) {
+        this.level = new Level(levelDescriptor, this);
         this.physicsSystem = new PhysicsSystem(this);
         this.physicsEntities = new Array<>();
         this.player = new Player(this, level.playerSpawn);
-        physicsEntities.add(player);
         this.zombieMech = null;
-        this.touchPos = new Vector3();
-        this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
-
         this.enemies = new Array<>();
         this.drops = new Array<>();
-
+        this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
+        this.worldCamera.position.set(cameraTargetPos);
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
         float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
         this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
-
         this.bodyBag = new BodyBag(this, level.initialBodyPartPositions);
-        this.zombieMechBuildAnimation = assets.mechBuildAnimation;
         this.zombieMechBuildAnimTime = 0f;
         this.buildingMech = false;
-        this.guideArrow = new GuideArrow(this, 1300f, 800f);
-        this.guideArrow.show = true;
-        tutorials = new TutorialManager(this);
+        // TODO: spawn the appropriate tutorial shit for whichever level this is
+        this.tutorials = new TutorialManager(this);
+
+        this.physicsEntities.add(player);
     }
 
     @Override
@@ -132,7 +130,6 @@ public class GameScreen extends BaseScreen {
                 if (!player.inMech() && !player.hide) {
                     player.renderHealthMeter(batch);
                 }
-                guideArrow.render(batch);
             }
             batch.end();
             level.render(Level.LayerType.foreground, worldCamera);
@@ -174,6 +171,13 @@ public class GameScreen extends BaseScreen {
         if (tutorials.shouldBlockInput()) return;
         level.update(dt);
         player.update(dt);
+        if (level.exit != null && level.nextLevel != null) {
+            if (player.collisionBounds.overlaps(level.exit.bounds)
+             || (zombieMech != null && zombieMech.collisionBounds.overlaps(level.exit.bounds))) {
+                loadLevel(level.nextLevel);
+            }
+        }
+
         if (zombieMech != null) {
             zombieMech.update(dt);
             if (zombieMech.dead) {
@@ -186,7 +190,6 @@ public class GameScreen extends BaseScreen {
         if (buildingMech) {
             zombieMechBuildAnimTime += dt;
         }
-        guideArrow.update(dt);
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);

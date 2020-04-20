@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.world.LevelDescriptor;
 
 public class TutorialManager {
 
@@ -13,10 +14,13 @@ public class TutorialManager {
     public TutorialManager(GameScreen screen) {
         sections = new Array<>();
         I18NBundle texts = screen.assets.tutorialText;
-        // TODO Build some tutorials
-        TutorialSection section1 = new TutorialSection(screen, null, null, texts.get("first"), true);
-        section1.delay = 3f;
-        sections.add(section1);
+
+        // TODO: build tutorial shit based on which level is loaded
+        if (screen.level.thisLevel == LevelDescriptor.level_tutorial) {
+            TutorialSection section1 = new TutorialSection(screen, null, null, texts.get("tutorial_1"), true);
+            section1.delay = 3f;
+            sections.add(section1);
+        }
     }
 
     public void update(float dt) {
