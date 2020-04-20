@@ -1,9 +1,7 @@
 package lando.systems.ld46.ui.tutorial;
 
-import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.equations.Bounce;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -77,7 +75,7 @@ public class TutorialSection {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setColor(Color.DARK_GRAY);
+        batch.setColor(64f / 255f, 64f / 255f, 64f / 255f, 0.5f);
         batch.draw(screen.assets.whitePixel, bounds.x +1, bounds.y +1, bounds.width -2, bounds.height -2);
         batch.setColor(Color.WHITE);
         screen.assets.tutorialNinePatch.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);

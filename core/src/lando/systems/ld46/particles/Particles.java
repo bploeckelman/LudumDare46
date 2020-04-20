@@ -188,6 +188,27 @@ public class Particles implements Disposable {
     }
 
     public void makeZombieBuildClouds(float x, float y) {
+        for (int i = 0; i < 20; i++) {
+            TextureRegion keyframe = assets.particleBlood1;
+            switch (MathUtils.random(0, 2)) {
+                case 0: keyframe = assets.particleBlood1; break;
+                case 1: keyframe = assets.particleBlood2; break;
+                case 2: keyframe = assets.particleBlood3; break;
+            }
+            activeParticles.get(Layer.middle).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(keyframe)
+                    .startPos(x, y)
+                    .velocityDirection(MathUtils.random(0f, 180f), MathUtils.random(1000f))
+                    .startSize(MathUtils.random(10f, 20f))
+                    .startAlpha(1f)
+                    .endAlpha(0f)
+                    .startRotation(MathUtils.random(40))
+                    .endRotation(MathUtils.random(-40, 80))
+                    .timeToLive(MathUtils.random(1f, 3f))
+                    .makePhysics()
+                    .init());
+        }
+
         for (int i = 0; i < 100; i++){
             float g = MathUtils.random(.7f) + .3f;
             activeParticles.get(Layer.middle).add(Particle.initializer(particlePool.obtain())
