@@ -40,6 +40,7 @@ public class EnemyEntity extends GameEntity {
     public void removeFromScreen() {
         screen.enemies.removeValue(this, true);
         screen.physicsEntities.removeValue(this, true);
+        spawnDrop();
     }
 
     @Override
@@ -69,6 +70,12 @@ public class EnemyEntity extends GameEntity {
             if ((int)(removeTime * 30) % 2 == 0 ) { return Color.BLACK; }
         }
         return super.getEffectColor();
+    }
 
+    private void spawnDrop() {
+        // add more drops?
+        FleshDrop drop = new FleshDrop(screen);
+        drop.addToScreen(position.x, position.y);
+        drop.velocity.set(0, 20);
     }
 }

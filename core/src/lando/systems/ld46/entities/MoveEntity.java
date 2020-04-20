@@ -114,6 +114,7 @@ public class MoveEntity extends GameEntity {
 
         // checks both sides
         updateDamage();
+        updateDrops();
     }
 
     private void updateFall(float dt) {
@@ -223,6 +224,16 @@ public class MoveEntity extends GameEntity {
         }
 
         enemy.velocity.add(direction == Direction.right ? distance : -distance, MathUtils.random(20, 40));
+    }
+
+    public void updateDrops() {
+        for (int i = screen.drops.size - 1; i >= 0; i--) {
+            DropEntity drop = screen.drops.get(i);
+            if (collisionBounds.overlaps(drop.collisionBounds)) {
+                drop.useOn(this);
+                drop.removeFromScreen();
+            }
+        }
     }
 
     public void jump() {

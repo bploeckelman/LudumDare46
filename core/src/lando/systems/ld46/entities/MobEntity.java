@@ -14,8 +14,8 @@ public class MobEntity extends EnemyEntity {
 
     private float nextMoveTime;
     private Mob boss;
-    private float fromX, toX;
-    private float lerpTime = 0;
+    private float toX;
+    private boolean doneMoving = false;
 
     public MobEntity(Mob boss) {
         super(boss.screen, MobEntity.getAnimation(boss.screen.assets));
@@ -37,9 +37,8 @@ public class MobEntity extends EnemyEntity {
 
     private void setBehavior() {
         nextMoveTime = MathUtils.random(2f, 5f);
-
-
         toX = boss.position.x + MathUtils.random(-boss.maxDistance, boss.maxDistance) * MathUtils.random(1f, 2f);
+        doneMoving = false;
 
     }
 
@@ -55,28 +54,36 @@ public class MobEntity extends EnemyEntity {
     }
 
     @Override
+    public void takeDamage(float damage) {
+        super.takeDamage(damage);
+        // stop the little bitches from moving
+        doneMoving = true;
+    }
+
+    @Override
     public void update(float dt) {
         super.update(dt);
 
-        if (!isGrounded()) return;
-        if (toX > position.x + 5) {
-            if (screen.physicsSystem.isPositionAboveGround(position.x + 20, collisionBounds.y +30, 50)) {
-                velocity.x += 15;
+        if (!isGrounded() || dead) return;
+
+        if (!doneMoving) {
+            if (toX > position.x + 5) {
+                if (screen.physicsSystem.isPositionAboveGround(position.x + 20, collisionBounds.y + 30, 50)) {
+                    velocity.x += 15;
+                } else {
+                    toX = position.x;
+                }
+            } else if (toX < position.x - 5) {
+                if (screen.physicsSystem.isPositionAboveGround(position.x - 20, collisionBounds.y + 30, 90)) {
+                    velocity.x -= 15;
+                } else {
+                    toX = position.x;
+                }
             } else {
                 toX = position.x;
-            }
-        } else if (toX < position.x - 5) {
-            if (screen.physicsSystem.isPositionAboveGround(position.x - 20, collisionBounds.y + 30, 90)) {
-                velocity.x -= 15;
-            } else {
-                toX = position.x;
+                doneMoving = true;
             }
         } else {
-            toX = position.x;
-        }
-
-
-        if (position.x == toX) {
             nextMoveTime -= dt;
             if (nextMoveTime < 0) {
                 setBehavior();

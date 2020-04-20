@@ -19,10 +19,7 @@ import lando.systems.ld46.Game;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
-import lando.systems.ld46.entities.BodyBag;
-import lando.systems.ld46.entities.EnemyEntity;
-import lando.systems.ld46.entities.Player;
-import lando.systems.ld46.entities.ZombieMech;
+import lando.systems.ld46.entities.*;
 import lando.systems.ld46.particles.Particles;
 import lando.systems.ld46.physics.PhysicsComponent;
 import lando.systems.ld46.physics.PhysicsSystem;
@@ -58,6 +55,7 @@ public class GameScreen extends BaseScreen {
     public Array<PhysicsComponent> physicsEntities;
 
     public Array<EnemyEntity> enemies;
+    public Array<DropEntity> drops;
 
     public BodyBag bodyBag;
     public Animation<TextureRegion> zombieMechBuildAnimation;
@@ -78,6 +76,7 @@ public class GameScreen extends BaseScreen {
         this.cameraTargetPos = new Vector3(player.imageBounds.x + player.imageBounds.width / 2f, player.imageBounds.y + player.imageBounds.height / 2f, 0f);
 
         this.enemies = new Array<>();
+        this.drops = new Array<>();
 
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
         float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
@@ -109,6 +108,10 @@ public class GameScreen extends BaseScreen {
                 for (EnemyEntity enemy : enemies) {
                     enemy.render(batch);
                 }
+                for (DropEntity drop : drops) {
+                    drop.render(batch);
+                }
+
                 if (zombieMech != null) {
                     zombieMech.render(batch);
                 }
@@ -121,11 +124,6 @@ public class GameScreen extends BaseScreen {
                 }
                 particles.draw(batch, Particles.Layer.foreground);
 
-//                for (EnemyEntity enemy : enemies) {
-//                    if (enemy.showHealth) {
-//                        enemy.renderHealthMeter(batch);
-//                    }
-//                }
                 if (zombieMech != null) {
                     zombieMech.renderHealthMeter(batch);
                 }
@@ -190,6 +188,10 @@ public class GameScreen extends BaseScreen {
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);
+        }
+
+        for (DropEntity drop : drops) {
+            drop.update(dt);
         }
 
         physicsSystem.update(dt);

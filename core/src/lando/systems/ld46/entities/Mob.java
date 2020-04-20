@@ -15,6 +15,7 @@ public class Mob extends EnemyEntity {
         super(screen, screen.assets.playerAnimation, 0);
 
         int count = MathUtils.random(3, 7);
+        count = 1;
 
         mobEntities = new Array<>(count);
 
@@ -59,8 +60,13 @@ public class Mob extends EnemyEntity {
     public void update(float dt) {
         super.update(dt);
 
-        for (MobEntity entity : mobEntities) {
-            entity.update(dt);
+        for (int i = mobEntities.size - 1; i >= 0; i--) {
+            MobEntity entity = mobEntities.get(i);
+            // update is called in enemy update
+            // entity.update(dt);
+            if (entity.dead) {
+                mobEntities.removeIndex(i);
+            }
         }
     }
 

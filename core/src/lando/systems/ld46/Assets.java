@@ -79,6 +79,9 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> batAnimation;
     public Animation<TextureRegion> snakeAnimation;
 
+    // drops - ftw!
+    public Animation<TextureRegion> fleshDropAnimation;
+
     public Array<ShaderProgram> randomTransitions;
     public ShaderProgram blindsShader;
     public ShaderProgram fadeShader;
@@ -200,6 +203,8 @@ public class Assets implements Disposable {
 
         batAnimation = new Animation<>(0.1f, atlas.findRegions("bat"), Animation.PlayMode.LOOP);
         snakeAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
+
+        fleshDropAnimation = new Animation<>(0.1f, atlas.findRegions("snake"), Animation.PlayMode.LOOP);
 
         randomTransitions = new Array<>();
         blindsShader = loadShader("shaders/default.vert", "shaders/blinds.frag");
