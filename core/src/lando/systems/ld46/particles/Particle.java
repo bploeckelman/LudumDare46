@@ -153,6 +153,10 @@ public class Particle implements Pool.Poolable, PhysicsComponent, QuadTreeable {
     }
 
     boolean hasPhysics() { return isPhysics;}
+    public void setPhysics(boolean physics) {
+        isPhysics = physics;
+        Gdx.app.log("Particle", "Stopped Physics");
+    }
 
 
     @Override

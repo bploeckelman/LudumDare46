@@ -44,6 +44,7 @@ public class PhysicsSystem {
     public QuadTree collisionTree;
     Array<QuadTreeable> quadEntities = new Array<>();
     PointComparator sorter;
+    float storeDT;
 
 
 
@@ -59,6 +60,7 @@ public class PhysicsSystem {
         collisionTree = new QuadTree(screen.assets, 0, new Rectangle(0,0, width, height));
         rebuildTree();
         sorter = new PointComparator();
+        storeDT = 0;
     }
 
     public void update(float dt) {
@@ -190,7 +192,15 @@ public class PhysicsSystem {
         collisions.sort();
     }
 
+    float dtAmount = .03f;
     private void updateParticles(float dt){
+        storeDT += dt;
+        if (storeDT > dtAmount){
+            storeDT -= dtAmount;
+            dt = dtAmount;
+        } else {
+            return;
+        }
         Array<PhysicsComponent> particles = screen.particles.getPhysicalParticles();
         for(PhysicsComponent obj : particles){
             Vector2 accel = obj.getAcceleration();
@@ -226,6 +236,11 @@ public class PhysicsSystem {
 
                     vel.scl(scale);
                     vel.set(Utils.reflectVector(incomingVector.set(vel), segment.normal));
+
+                    if (vel.epsilonEquals(0, 0, 6f)) {
+                        ((Particle)obj).setPhysics(false);
+                        vel.set(0,0);
+                    }
                 }
             }
             pos.set(frameEndPos);

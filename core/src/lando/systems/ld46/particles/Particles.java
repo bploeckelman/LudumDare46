@@ -196,7 +196,7 @@ public class Particles implements Disposable {
                     .endSize(1f)
                     .startAlpha(1f)
                     .endAlpha(1f)
-                    .timeToLive(7f)
+                    .timeToLive(5f)
                     .startColor(Color.RED)
                     .makePhysicsWithCustomBounceScale(.4f)
                     .interpolation(Interpolation.fastSlow)
@@ -220,7 +220,7 @@ public class Particles implements Disposable {
                     .endSize(1f)
                     .startAlpha(1f)
                     .endAlpha(1f)
-                    .timeToLive(7f)
+                    .timeToLive(5f)
                     .startColor(bloodColor)
                     .makePhysicsWithCustomBounceScale(.4f)
                     .init());
