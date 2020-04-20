@@ -53,9 +53,10 @@ public class GameScreen extends BaseScreen {
 
     public GameScreen(Game game) {
         super(game);
+
+        this.level = new Level(LevelDescriptor.level1, this);
         this.physicsSystem = new PhysicsSystem(this);
         this.physicsEntities = new Array<>();
-        this.level = new Level(LevelDescriptor.level1, this);
         this.player = new Player(this, level.playerSpawn);
         physicsEntities.add(player);
         this.zombieMech = new ZombieMech(this, 400, 500);
@@ -105,6 +106,7 @@ public class GameScreen extends BaseScreen {
                 batch.begin();
                 {
                     level.renderDebug(batch);
+//                    physicsSystem.collisionTree.renderDebug(batch);
                 }
                 batch.end();
             }

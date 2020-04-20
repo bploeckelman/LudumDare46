@@ -1,13 +1,15 @@
 package lando.systems.ld46.physics;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld46.utils.QuadTreeable;
 
-public class Segment2D {
+public class Segment2D implements QuadTreeable {
     public Vector2 start;
     public Vector2 end;
     public Vector2 delta;
     public Vector2 normal;
-
+    public Rectangle collisionRect;
 
     public Segment2D() {
         this(new Vector2(0,0), new Vector2(1,0));
@@ -20,15 +22,14 @@ public class Segment2D {
     public Segment2D(float x1, float y1, float x2, float y2){
         this.start = new Vector2(x1, y1);
         this.end = new Vector2(x2, y2);
-        this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+        collisionRect = new Rectangle();
+        updateSegment();
     }
 
     public void fromSegment(Segment2D other){
         this.start.set(other.start);
         this.end.set(other.end);
-        this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+        updateSegment();
     }
 
     public float getRotation(){
@@ -40,8 +41,7 @@ public class Segment2D {
     }
     public void setEnd(float x, float y) {
         end.set(x, y);
-        this.delta = new Vector2(end).sub(start);
-        this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+        updateSegment();
     }
 
     public void setStart(Vector2 newStart) {
@@ -50,8 +50,17 @@ public class Segment2D {
 
     public void setStart(float x, float y) {
         start.set(x, y);
+        updateSegment();
+    }
+
+    private void updateSegment() {
         this.delta = new Vector2(end).sub(start);
         this.normal = new Vector2(end).sub(start).nor().rotate90(-1);
+        float minX = Math.min(start.x, end.x);
+        float minY = Math.min(start.y, end.y);
+        float maxX = Math.max(start.x, end.x);
+        float maxY = Math.max(start.y, end.y);
+        collisionRect.set(minX, minY, maxX - minX, maxY - minY);
     }
 
     @Override
@@ -61,5 +70,10 @@ public class Segment2D {
            return start.epsilonEquals(other.start) && end.epsilonEquals(other.end);
         } else
         return super.equals(obj);
+    }
+
+    @Override
+    public Rectangle getCollisionRect() {
+        return collisionRect;
     }
 }

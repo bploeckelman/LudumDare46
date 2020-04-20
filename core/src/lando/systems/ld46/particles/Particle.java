@@ -9,9 +9,10 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld46.physics.PhysicsComponent;
+import lando.systems.ld46.utils.QuadTreeable;
 import lando.systems.ld46.utils.SimplePath;
 
-public class Particle implements Pool.Poolable, PhysicsComponent {
+public class Particle implements Pool.Poolable, PhysicsComponent, QuadTreeable {
 
     // TODO: add additional interpolators so that some properties can be interpolated independent of others (alpha vs anim for exaample)
     // TODO: add a 'drop shadow' flag to particle and initializer to improve readability for things like text particles
@@ -70,12 +71,14 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
     private boolean persistent;
     private boolean isPhysics;
     private Circle collisionBounds;
+    private Rectangle collisionRect;
 
     public Particle() {
         velocity = new Vector2();
         position = new Vector2();
         accel = new Vector2();
         collisionBounds = new Circle();
+        collisionRect = new Rectangle();
         reset();
     }
 
@@ -131,6 +134,7 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
         g = MathUtils.lerp(gStart, gEnd, progress);
         b = MathUtils.lerp(bStart, bEnd, progress);
         a = MathUtils.lerp(aStart, aEnd, progress);
+        collisionRect.set(position.x - width/2, position.y - height/2, width, height);
     }
 
     public void draw(SpriteBatch batch) {
@@ -244,6 +248,11 @@ public class Particle implements Pool.Poolable, PhysicsComponent {
         this.persistent = false;
         this.isPhysics = false;
         this.collisionBounds.set(0,0,0);
+    }
+
+    @Override
+    public Rectangle getCollisionRect() {
+        return collisionRect;
     }
 
 

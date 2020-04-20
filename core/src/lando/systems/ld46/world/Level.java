@@ -56,6 +56,7 @@ public class Level {
 
     private Array<Rectangle> tileRects = new Array<>();
     private Rectangle tempRect = new Rectangle();
+    public boolean segmentsDirty;
 
     public Level(LevelDescriptor levelDescriptor, GameScreen gameScreen) {
         Gdx.app.log("Level", "Loading: " + levelDescriptor.toString());
@@ -156,6 +157,7 @@ public class Level {
 
         buildCollisionBounds();
         punchWalls.forEach(wall -> addCollisionRectangle(wall.bounds));
+        segmentsDirty = true;
     }
 
     public void update(float dt) {
@@ -210,6 +212,7 @@ public class Level {
         collisionSegments.add(new Segment2D(new Vector2(rect.x+rect.width, rect.y), new Vector2(rect.x + rect.width, rect.y + rect.height)));
         collisionSegments.add(new Segment2D(new Vector2(rect.x + rect.width, rect.y + rect.height), new Vector2(rect.x, rect.y + rect.height)));
         collisionSegments.add(new Segment2D(new Vector2(rect.x, rect.y + rect.height), new Vector2(rect.x, rect.y)));
+        segmentsDirty = true;
     }
 
     public void removeCollisionRectangle(Rectangle rect) {
@@ -222,6 +225,7 @@ public class Level {
         removeSegment(right);
         removeSegment(top);
         removeSegment(left);
+        segmentsDirty = true;
     }
 
     private void removeSegment(Segment2D segment){

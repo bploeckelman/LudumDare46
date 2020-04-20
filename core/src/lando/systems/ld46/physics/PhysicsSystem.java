@@ -1,13 +1,17 @@
 package lando.systems.ld46.physics;
 
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import lando.systems.ld46.particles.Particle;
 import lando.systems.ld46.screens.GameScreen;
+import lando.systems.ld46.utils.QuadTree;
+import lando.systems.ld46.utils.QuadTreeable;
 import lando.systems.ld46.utils.Utils;
-
+import lando.systems.ld46.world.Level;
 
 
 public class PhysicsSystem {
@@ -34,6 +38,8 @@ public class PhysicsSystem {
     Array<Vector2> projPoints = new Array<>();
 
     Array<Collision> collisions = new Array<>();
+    public QuadTree collisionTree;
+    Array<QuadTreeable> quadEntities = new Array<>();
 
 
 
@@ -43,12 +49,26 @@ public class PhysicsSystem {
         for (int i = 0; i < 4; i++){
             projPoints.add(new Vector2());
         }
+        TiledMapTileLayer collisionLayer = screen.level.layers.get(Level.LayerType.collision).tileLayer;
+        float width = collisionLayer.getWidth() * collisionLayer.getTileWidth();
+        float height = collisionLayer.getHeight() * collisionLayer.getTileHeight();
+        collisionTree = new QuadTree(screen.assets, 0, new Rectangle(0,0, width, height));
+        rebuildTree();
     }
 
     public void update(float dt) {
+        if (screen.level.segmentsDirty) rebuildTree();
         //update particles
         updateParticles(dt);
         updateGameEntities(dt);
+    }
+
+    private void rebuildTree() {
+        collisionTree.clear();
+        for (Segment2D segment : screen.level.collisionSegments){
+            collisionTree.insert(segment);
+        }
+        screen.level.segmentsDirty = false;
     }
 
     public boolean isPositionAboveGround(Vector2 pos) {
@@ -186,24 +206,23 @@ public class PhysicsSystem {
             tempEnd1.set(nextX, nextY);
             frameEndPos.set(tempEnd1);
 
-            for (Segment2D segment : screen.level.collisionSegments) {
+            quadEntities.clear();
+            collisionTree.retrieve(quadEntities, (Particle) obj);
+
+            for (QuadTreeable entity : quadEntities) {
+                Segment2D segment = (Segment2D)entity;
                 collisionResult = checkSegmentCollision(tempStart1, tempEnd1, segment.start, segment.end, nearest1, nearest2, collisionResult);
                 if (collisionResult.x != Float.MAX_VALUE && nearest1.dst2(nearest2) < (bounds.radius + 2f) * (bounds.radius + 2f)){
-                    tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
-                    normal.set(segment.end).sub(segment.start).nor().rotate90(1);
+//                    tempEnd1.set(tempStart1.sub(normal.x * bounds.radius, normal.y * bounds.radius));
+//                    normal.set(segment.end).sub(segment.start).nor().rotate90(1);
                     frameEndPos.set(nearest1);
                     float backupDist = (bounds.radius + 2.1f) - nearest1.dst(nearest2);
-                    float x = frameEndPos.x - backupDist * (normal.x);
-                    float y = frameEndPos.y - backupDist * (normal.y);
+                    float x = frameEndPos.x + backupDist * (segment.normal.x);
+                    float y = frameEndPos.y + backupDist * (segment.normal.y);
                     frameEndPos.set(x, y);
 
                     vel.scl(scale);
-                    if (nearest2.epsilonEquals(segment.start) || nearest2.epsilonEquals(segment.end)){
-                        normal.set(nearest2).sub(frameEndPos).nor();
-                    } else {
-                        normal.set(segment.end).sub(segment.start).nor().rotate90(1);
-                    }
-                    vel.set(Utils.reflectVector(incomingVector.set(vel), normal));
+                    vel.set(Utils.reflectVector(incomingVector.set(vel), segment.normal));
                 }
             }
             pos.set(frameEndPos);
