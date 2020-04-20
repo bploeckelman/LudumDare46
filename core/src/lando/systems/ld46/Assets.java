@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import lando.systems.ld46.entities.BodyPart;
 
 public class Assets implements Disposable {
 
@@ -40,13 +41,17 @@ public class Assets implements Disposable {
     public TextureRegion punchWall1x4;
     public TextureRegion ringTexture;
     public TextureRegion sunsetBackground;
-    public TextureRegion columnsBackground;
     public TextureRegion zombieRippedArm;
     public TextureRegion zombieRippedLeg;
     public TextureRegion zombieRippedHead;
     public TextureRegion zombieRippedTorso;
     public TextureRegion iconHeart;
     public TextureRegion smokeTex;
+    public TextureRegion particleSparkle;
+    public TextureRegion particleBlood1;
+    public TextureRegion particleBlood2;
+    public TextureRegion particleBlood3;
+    public TextureRegion particleBloodSplat1;
 
     public Animation<TextureRegion> playerAnimation;
     public Animation<TextureRegion> playerMoveAnimation;
@@ -140,14 +145,25 @@ public class Assets implements Disposable {
         whiteCircle = atlas.findRegion("white-circle");
         punchWall1x4 = atlas.findRegion("punch-wall-1x4");
         ringTexture = atlas.findRegion("ring");
-        sunsetBackground = atlas.findRegion("background-sunset");
-        columnsBackground = atlas.findRegion("background-columns");
+        sunsetBackground = atlas.findRegion("background-sunset-columns-reflection");
         zombieRippedArm = atlas.findRegion("zombie-ripped-arm");
         zombieRippedHead = atlas.findRegion("zombie-ripped-head");
         zombieRippedLeg = atlas.findRegion("zombie-ripped-leg");
         zombieRippedTorso = atlas.findRegion("zombie-ripped-torso");
         iconHeart = atlas.findRegion("icon-heart");
         smokeTex = atlas.findRegion("smoke");
+        particleSparkle = atlas.findRegion("particle-sparkle");
+        particleBlood1 = atlas.findRegion("particle-blood-1");
+        particleBlood2 = atlas.findRegion("particle-blood-2");
+        particleBlood3 = atlas.findRegion("particle-blood-3");
+        particleBloodSplat1 = atlas.findRegion("particle-blood-splat-1");
+
+        BodyPart.Type.arm1.texture = zombieRippedArm;
+        BodyPart.Type.arm2.texture = zombieRippedArm;
+        BodyPart.Type.leg1.texture = zombieRippedLeg;
+        BodyPart.Type.leg2.texture = zombieRippedLeg;
+        BodyPart.Type.torso.texture = zombieRippedTorso;
+        BodyPart.Type.head.texture  = zombieRippedHead;
 
         playerAnimation = new Animation<>(0.3f, atlas.findRegions("doc-idle"), Animation.PlayMode.LOOP);
         playerMoveAnimation = new Animation<>(0.1f, atlas.findRegions("doc-run"), Animation.PlayMode.LOOP);

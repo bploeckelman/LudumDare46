@@ -83,28 +83,32 @@ public class Particles implements Disposable {
     private final Vector2 tempVec2 = new Vector2();
     // ------------------------------------------------------------------------
     // Spawners for different particle effects
-    // NOTE: create spawner methods for each different particle effect, using the following as a template...
-    //       see Particle.Initializer for all the possible parameters
     // ------------------------------------------------------------------------
 
-    public void addParticles(float x, float y) {
-        TextureRegion keyframe = assets.debugTexture;
-
-        int numParticles = 100;
+    public void spawnBodyPartPickup(float x, float y) {
+        int numParticles = 40;
+        float angle = 0;
+        float speed = 40f;
+        float increment = 36f;
+        float ttl = 1f;
         for (int i = 0; i < numParticles; ++i) {
+            float startRotation = MathUtils.random(0f, 360f);
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
-                    .keyframe(keyframe)
+                    .keyframe(assets.particleSparkle)
                     .startPos(x, y)
-                    .velocityDirection(MathUtils.random(360f), MathUtils.random(300f, 40000f))
-                    .startSize(10f, 10f)
-                    .endSize(0f, 0f)
+                    .velocityDirection(angle, speed)
+                    .startSize(40f)
+                    .endSize(1f)
                     .startAlpha(1f)
                     .endAlpha(0f)
-                    .startRotation(0f)
-                    .endRotation(360f)
-                    .timeToLive(1.5f)
-                    .interpolation(Interpolation.slowFast)
+                    .timeToLive(ttl)
+                    .startRotation(startRotation)
+                    .endRotation(startRotation + MathUtils.random(-3f * 360f, 3f * 360f))
                     .init());
+            angle += increment;
+            speed += 5f;
+//            ttl += 0.1f;
+            increment -= 20f / numParticles;
         }
     }
 
@@ -184,7 +188,7 @@ public class Particles implements Disposable {
     }
 
     public void makeBloodParticles(float x, float y) {
-        TextureRegion keyframe = assets.whiteCircle;
+        TextureRegion keyframe = assets.particleBloodSplat1;
 
         int numParticles = 50;
         for (int i = 0; i < numParticles; ++i) {
@@ -204,13 +208,11 @@ public class Particles implements Disposable {
         }
     }
 
-    Color bloodColor = new Color();
     public void makeBloodParticles(GameEntity.Direction direction, float x, float y) {
-        TextureRegion keyframe = assets.whiteCircle;
+        TextureRegion keyframe = assets.particleBloodSplat1;
 
         int numParticles = 50;
         for (int i = 0; i < numParticles; ++i) {
-            Utils.hsvToRgb(MathUtils.random(.99f, 1.01f), 1f, MathUtils.random(.1f, 1f), bloodColor);
             float xVelocity = direction == GameEntity.Direction.left ?  MathUtils.random(75f, 285f) : MathUtils.random(-105f, 105f);
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
                     .keyframe(keyframe)
@@ -221,13 +223,14 @@ public class Particles implements Disposable {
                     .startAlpha(1f)
                     .endAlpha(1f)
                     .timeToLive(5f)
-                    .startColor(bloodColor)
                     .makePhysicsWithCustomBounceScale(.4f)
                     .init());
         }
     }
 
     public void makeExplodingZombieParticles(float x, float y) {
+
+        // TODO: just explode a bunch of viscera and bones instead of the actual parts here
 
         for (int i = 0; i < 2; ++i) {
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
@@ -291,15 +294,14 @@ public class Particles implements Disposable {
 
         for (int i = 0; i < 200; ++i) {
             activeParticles.get(Layer.foreground).add(Particle.initializer(particlePool.obtain())
-                    .keyframe(assets.whiteCircle)
+                    .keyframe(assets.particleBloodSplat1)
                     .startPos(x, y)
                     .velocityDirection(MathUtils.random(360f), MathUtils.random(30f, 500f))
-                    .startSize(5f)
+                    .startSize(10f)
                     .endSize(1f)
                     .startAlpha(1f)
                     .endAlpha(1f)
                     .timeToLive(7f)
-                    .startColor(Color.RED)
                     .makePhysicsWithCustomBounceScale(.4f)
                     .init());
         }

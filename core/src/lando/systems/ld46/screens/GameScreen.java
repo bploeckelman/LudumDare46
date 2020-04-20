@@ -10,11 +10,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
 import lando.systems.ld46.backgrounds.ParallaxUtils;
 import lando.systems.ld46.backgrounds.TextureRegionParallaxLayer;
+import lando.systems.ld46.entities.BodyPart;
 import lando.systems.ld46.entities.EnemyEntity;
 import lando.systems.ld46.entities.Player;
 import lando.systems.ld46.entities.ZombieMech;
@@ -51,6 +53,8 @@ public class GameScreen extends BaseScreen {
 
     public Array<EnemyEntity> enemies;
 
+    public ObjectMap<BodyPart.Type, BodyPart> bodyParts;
+
     public GameScreen(Game game) {
         super(game);
 
@@ -68,10 +72,17 @@ public class GameScreen extends BaseScreen {
 
         TiledMapTileLayer collisionLayer = level.layers.get(Level.LayerType.collision).tileLayer;
         float levelHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
-        TextureRegionParallaxLayer sunsetLayer = new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height);
-        TextureRegionParallaxLayer columnLayer = new TextureRegionParallaxLayer(assets.columnsBackground, levelHeight, new Vector2(.4f, .9f), ParallaxUtils.WH.height);
-        // TODO: fix optional padding on parallax layers
-        this.background = new ParallaxBackground(sunsetLayer, columnLayer);
+        this.background = new ParallaxBackground(new TextureRegionParallaxLayer(assets.sunsetBackground, levelHeight, new Vector2(.5f, .9f), ParallaxUtils.WH.height));
+
+        // ----------------- TEST ---------------------- //
+        this.bodyParts = new ObjectMap<>();
+        float x = Level.TILE_SIZE * 5;
+        for (BodyPart.Type type : BodyPart.Type.values()) {
+            BodyPart part = new BodyPart(this, type, x, 32f * 15f);
+            x += Level.TILE_SIZE * 2f;
+            this.bodyParts.put(type, part);
+            this.physicsEntities.add(part);
+        }
     }
 
     @Override
@@ -96,6 +107,10 @@ public class GameScreen extends BaseScreen {
                 zombieMech.render(batch);
 
                 level.renderObjects(batch);
+
+                for (BodyPart part : bodyParts.values()) {
+                    if (!part.collected) part.render(batch);
+                }
 
                 particles.draw(batch, Particles.Layer.foreground);
                 for (EnemyEntity enemy : enemies) {
@@ -145,6 +160,16 @@ public class GameScreen extends BaseScreen {
 
         player.update(dt);
         zombieMech.update(dt);
+
+        for (BodyPart bodyPart : bodyParts.values()) {
+            if (!bodyPart.collected) {
+                bodyPart.update(dt);
+                if (player.collisionBounds.overlaps(bodyPart.collisionBounds)) {
+                    particles.spawnBodyPartPickup(bodyPart.position.x, bodyPart.position.y);
+                    bodyPart.collected = true;
+                }
+            }
+        }
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);

@@ -1,6 +1,5 @@
 package lando.systems.ld46.physics;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
