@@ -11,8 +11,7 @@ import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.utils.Utils;
 
 public class GuideArrow {
-    private static final float width = 150f;
-    private static final float height = 150f;
+    private static final float arrowSize = 150f;
 
     private TextureRegion icon;
     private float pulseTimer;
@@ -36,14 +35,14 @@ public class GuideArrow {
 
     public void update(float dt) {
         pulseTimer += dt;
-        if (screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 > target.x) {
+        if (screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2 > target.x - arrowSize / 2f) {
             x = screen.cameraTargetPos.x - screen.hudCamera.viewportWidth / 2;
             targetOffscreen = true;
-        } else if (screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - 75f < target.x){
-            x = screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - 75f;
+        } else if (screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize / 2f < target.x - arrowSize / 2f){
+            x = screen.cameraTargetPos.x + screen.hudCamera.viewportWidth / 2 - arrowSize / 2f;
             targetOffscreen = true;
         } else {
-            x = target.x;
+            x = target.x - arrowSize / 2f;
             targetOffscreen = false;
         }
         position.set(x, 500f);
@@ -57,7 +56,7 @@ public class GuideArrow {
             iconSize = iconSize * pulsePercentage;
         }
         //float rotation = position.sub(screen.player.position).angle(Vector2.Y);
-        Vector2 tempVec = new Vector2(target.x, target.y);
+        Vector2 tempVec = new Vector2(target.x - arrowSize / 2f, target.y);
         float rotation = -tempVec.sub(position).angle(Vector2.Y);
         //batch.draw(icon, position.x, position.y, iconSize, iconSize);
 
