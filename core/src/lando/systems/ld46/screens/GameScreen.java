@@ -133,15 +133,22 @@ public class GameScreen extends BaseScreen {
                 }
                 particles.draw(batch, Particles.Layer.foreground);
 
+
+            }
+            batch.end();
+            level.render(Level.LayerType.foreground, worldCamera);
+            batch.begin();
+            {
                 if (zombieMech != null) {
                     zombieMech.renderHealthMeter(batch);
                 }
                 if (!player.inMech() && !player.hide) {
                     player.renderHealthMeter(batch);
                 }
-            }
+                if (!player.inMech() && zombieMech != null) {
+                    zombieMech.mechIndicator.render(batch);
+                }            }
             batch.end();
-            level.render(Level.LayerType.foreground, worldCamera);
             if (Config.debug) {
                 batch.begin();
                 {
@@ -193,6 +200,14 @@ public class GameScreen extends BaseScreen {
                 player.jumpOut();
                 zombieMech = null;
             }
+        }
+
+        if (!player.inMech() && zombieMech != null) {
+            zombieMech.mechIndicator.show = true;
+            zombieMech.mechIndicator.setTargetPosition(zombieMech.position.x, zombieMech.position.y);
+            zombieMech.mechIndicator.update(dt);
+        } else if (player.inMech() && zombieMech != null) {
+            zombieMech.mechIndicator.show = false;
         }
 
         bodyBag.update(dt, player);

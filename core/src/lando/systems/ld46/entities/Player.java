@@ -126,14 +126,6 @@ public class Player extends MoveEntity {
         if (inMech()){
             centerOn(mech);
         }
-        if (!inMech() && this.screen.zombieMech != null) {
-            this.screen.zombieMech.mechIndicator.show = true;
-            this.screen.zombieMech.mechIndicator.setTargetPosition(this.screen.zombieMech.position.x, this.screen.zombieMech.position.y);
-            this.screen.zombieMech.mechIndicator.update(dt);
-        } else if (inMech() && this.screen.zombieMech != null) {
-            this.screen.zombieMech.mechIndicator.show = false;
-        }
-
 
         catchHell();
     }
@@ -165,9 +157,6 @@ public class Player extends MoveEntity {
     public void render(SpriteBatch batch) {
         if (hide) return;
         if (inMech()) return;
-        if (!inMech() && this.screen.zombieMech != null) {
-            this.screen.zombieMech.mechIndicator.render(batch);
-        }
         super.render(batch);
     }
 
