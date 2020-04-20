@@ -49,6 +49,7 @@ public class Level {
 
     public MapLayer objectsLayer;
     public SpawnPlayer playerSpawn;
+    public SpawnBoss bossSpawn;
     public Exit exit;
     public Array<SpawnEnemy> enemySpawns;
     public Array<PunchWall> punchWalls;
@@ -111,6 +112,7 @@ public class Level {
         // Load map objects
         exit = null;
         playerSpawn = null;
+        bossSpawn = null;
         enemySpawns = new Array<>();
         punchWalls = new Array<>();
         initialBodyPartPositions = new ObjectMap<>();
@@ -130,11 +132,15 @@ public class Level {
                 playerSpawn = new SpawnPlayer(x, y, assets);
             }
             else if ("spawn-enemy".equalsIgnoreCase(type)) {
-                EnemyType enemyType = EnemyType.valueOf((String)props.get("enemy-type"));
-                int maxSpawn = props.get("max-spawn", Integer.class);
-                float spawnRate = props.get("spawn-rate", Float.class);
-                SpawnEnemy spawn = new SpawnEnemy(gameScreen.game, enemyType, x, y, maxSpawn, spawnRate);
-                enemySpawns.add(spawn);
+                if ("boss".equalsIgnoreCase(object.getName())) {
+                    bossSpawn = new SpawnBoss(gameScreen, x, y);
+                } else {
+                    EnemyType enemyType = EnemyType.valueOf((String) props.get("enemy-type"));
+                    int maxSpawn = props.get("max-spawn", Integer.class);
+                    float spawnRate = props.get("spawn-rate", Float.class);
+                    SpawnEnemy spawn = new SpawnEnemy(gameScreen.game, enemyType, x, y, maxSpawn, spawnRate);
+                    enemySpawns.add(spawn);
+                }
             }
             else if ("exit".equalsIgnoreCase(type)) {
                 exit = new Exit(x, y, assets);

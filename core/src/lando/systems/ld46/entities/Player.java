@@ -67,7 +67,7 @@ public class Player extends MoveEntity {
             }
         }
         inMechTimer += dt;
-        if (inMech() && !mech.dead && inMechTimer > .5f) {
+        if (inMech() && !mech.dead && inMechTimer > 2f) {
             mech.takeDamage(5f);
             screen.particles.makeBloodParticles(mech.position.x, mech.position.y);
             inMechTimer = 0;
