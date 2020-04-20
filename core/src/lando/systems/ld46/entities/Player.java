@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
 import lando.systems.ld46.screens.GameScreen;
 import lando.systems.ld46.world.SpawnPlayer;
@@ -86,6 +87,35 @@ public class Player extends MoveEntity {
                     mech.resetMech();
                     jumpIn(this.screen.zombieMech);
                     screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
+                }
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            setPosition(position.x, 0);
+        }
+
+        catchHell();
+    }
+
+    private void catchHell() {
+        if (position.y < -250) {
+            Array<Rectangle> tiles = new Array<>();
+            screen.level.getTiles(position.x, position.y, position.x, 10000, tiles);
+            Rectangle r;
+            float y = 0;
+            for (int i = 0; i < tiles.size; i++) {
+                r = tiles.get(i);
+                if (r.y == y) {
+                    y += r.height;
+                } else {
+                    if (y == 0) {
+                        setPosition(screen.level.playerSpawn.pos.x, screen.level.playerSpawn.pos.y);
+                    } else {
+                        setPosition(position.x, y + collisionBounds.height / 2);
+                        velocity.set(0, 400);
+                    }
+                    break;
                 }
             }
         }
