@@ -95,6 +95,8 @@ public class Assets implements Disposable {
     public TextureAtlas atlas;
 
     public Music sampleMusic;
+    public Music barkMusic;
+    public Music ritzMusic;
 
     public Sound sampleSound;
 
@@ -122,6 +124,8 @@ public class Assets implements Disposable {
         mgr.load("i18n/tutorial", I18NBundle.class);
 
         mgr.load("audio/sample-music.wav", Music.class);
+        mgr.load("audio/bark.mp3", Music.class);
+        mgr.load("audio/ritz-loop.mp3", Music.class);
         mgr.load("audio/sample-sound.wav", Sound.class);
 
         mgr.load(pixelFont16Asset);
@@ -213,6 +217,8 @@ public class Assets implements Disposable {
 
         sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
         sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
+        barkMusic = mgr.get("audio/bark.mp3", Music.class);
+        ritzMusic = mgr.get("audio/ritz-loop.mp3", Music.class);
 
         pixelFont16 = mgr.get(pixelFont16Asset);
         pixelFont16.getData().markupEnabled = true;

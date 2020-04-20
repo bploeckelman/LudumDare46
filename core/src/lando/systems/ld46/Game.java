@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.primitives.MutableFloat;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld46.accessors.*;
 import lando.systems.ld46.screens.BaseScreen;
 import lando.systems.ld46.screens.LaunchScreen;
+import lando.systems.ld46.screens.TitleScreen;
 
 public class Game extends ApplicationAdapter {
 
@@ -72,10 +74,14 @@ public class Game extends ApplicationAdapter {
 		}
 
 		if (audio == null) {
-			audio = new Audio(true, this);
+			audio = new Audio(false, this);
 		}
 
-		setScreen(new LaunchScreen(this));
+		if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
+			setScreen(new LaunchScreen(this));
+		} else {
+			setScreen(new TitleScreen(this));
+		}
 	}
 
 	@Override

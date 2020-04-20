@@ -1,7 +1,7 @@
 package lando.systems.ld46;
 
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Sine;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class Audio implements Disposable {
-    public static final float MUSIC_VOLUME = 0.5f;
-    public static final float SOUND_VOLUME = 0.5f;
+    public static final float MUSIC_VOLUME = 0.6f;
+    public static final float SOUND_VOLUME = 0.6f;
 
     public static final boolean shutUpYourFace = false;
     public static final boolean shutUpYourTunes = false;
@@ -26,11 +26,11 @@ public class Audio implements Disposable {
     }
 
     public enum Musics {
-        sample_music
+        barkMusic, ritzMusic
     }
 
     private Array<Musics> availableThemeTracks = new Array<>(new Musics[] {
-            Musics.sample_music
+            Musics.barkMusic, Musics.ritzMusic
     });
 
     private Musics getRandomThemeMusic() {
@@ -59,16 +59,18 @@ public class Audio implements Disposable {
 
         putSound(Sounds.sample_sound, assets.sampleSound);
 
-        musics.put(Musics.sample_music, assets.sampleMusic);
+        musics.put(Musics.barkMusic, assets.barkMusic);
+        musics.put(Musics.ritzMusic, assets.ritzMusic);
 
         musicVolume = new MutableFloat(0);
+        setMusicVolume(MUSIC_VOLUME, 2f);
         if (playMusic) {
-            currentMusic = musics.get(Musics.sample_music);
-            eCurrentMusic = Musics.sample_music;
+            currentMusic = musics.get(Musics.ritzMusic);
+            eCurrentMusic = Musics.ritzMusic;
             currentMusic.setLooping(true);
             currentMusic.setVolume(0f);
             currentMusic.play();
-            setMusicVolume(MUSIC_VOLUME, 2f);
+
             // currentMusic.setOnCompletionListener(nextSong);
         }
     }
@@ -195,6 +197,21 @@ public class Audio implements Disposable {
             }
         }
         return currentMusic;
+    }
+
+    public void fadeMusic(Musics musicOption){
+        if (eCurrentMusic == musicOption) return;
+        Timeline.createSequence()
+                .push(Tween.to(musicVolume, 1, 1).target(0).ease(Linear.INOUT))
+                .push(Tween.call((type, source) -> {
+                    if (currentMusic != null) currentMusic.stop();
+                    eCurrentMusic = musicOption;
+                    currentMusic = musics.get(musicOption);
+                    currentMusic.setLooping(true);
+                    currentMusic.play();
+                }))
+                .push(Tween.to(musicVolume, 1, 1).target(MUSIC_VOLUME).ease(Linear.INOUT))
+                .start(tween);
     }
 
     public void stopMusic() {

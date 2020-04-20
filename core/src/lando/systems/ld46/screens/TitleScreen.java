@@ -1,6 +1,7 @@
 package lando.systems.ld46.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -19,7 +20,7 @@ public class TitleScreen extends BaseScreen {
         super(game);
         placeholder = new Vector2(MathUtils.random(Config.windowWidth - size), MathUtils.random(Config.windowHeight - size));
         vel = new Vector2(MathUtils.random(-1f, 1), MathUtils.random(-1f, 1f)).nor().scl(100);
-        game.audio.playMusic(Audio.Musics.sample_music);
+        game.audio.fadeMusic(Audio.Musics.ritzMusic);
     }
 
     @Override
@@ -41,6 +42,13 @@ public class TitleScreen extends BaseScreen {
         if (placeholder.y > Config.windowHeight - size) {
             placeholder.y = Config.windowHeight - size;
             vel.y *= -1;
+        }
+
+        if (Gdx.input.justTouched()){
+            game.setScreen(new GameScreen(game), assets.cubeShader, 3f);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
         }
     }
 
