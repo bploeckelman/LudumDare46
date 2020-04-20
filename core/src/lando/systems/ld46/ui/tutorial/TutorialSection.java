@@ -48,6 +48,8 @@ public class TutorialSection {
         accum = 0;
     }
 
+    private float instaAccum = 0;
+
     public void update(float dt) {
         accum += dt;
         if (typingLabel != null) {
@@ -60,10 +62,18 @@ public class TutorialSection {
                         finished = true;
                     }
                 }
+            } else {
+                if (!typingLabel.hasEnded()) {
+                    typingLabel.skipToTheEnd();
+                }
+                instaAccum += dt;
+                if (instaAccum > 2) {
+                    instaAccum = 0;
+                    accum = 0;
+                    finished = true;
+                }
             }
         }
-
-
     }
 
     public void render(SpriteBatch batch) {
@@ -77,8 +87,10 @@ public class TutorialSection {
                 GlyphLayout layout = screen.assets.layout;
                 BitmapFont font = screen.assets.pixelFont16;
                 font.setColor(1f, 1f, 1f, Math.abs(MathUtils.sin(accum * 4f)));
-                layout.setText(font, "Press Enter or Click");
-                font.draw(batch, layout, bounds.x + bounds.width - 10 - layout.width, bounds.y + 10 + layout.height);
+                if (shouldBlockInput) {
+                    layout.setText(font, "Press Enter or Click");
+                    font.draw(batch, layout, bounds.x + bounds.width - 10 - layout.width, bounds.y + 10 + layout.height);
+                }
                 font.setColor(Color.WHITE);
             }
         }

@@ -64,6 +64,7 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> playerAttackAnimation;
     public Animation<TextureRegion> playerJumpAnimation;
     public Animation<TextureRegion> playerFallAnimation;
+    public Animation<TextureRegion> playerDieAnimation;
 
     public Animation<TextureRegion> mechAnimation;
     public Animation<TextureRegion> mechMoveAnimation;
@@ -193,13 +194,14 @@ public class Assets implements Disposable {
         playerAttackAnimation = new Animation<>(0.1f, atlas.findRegions("doc-punch"), Animation.PlayMode.NORMAL);
         playerJumpAnimation = new Animation<>(0.04f, atlas.findRegions("doc-jump"), Animation.PlayMode.NORMAL);
         playerFallAnimation = new Animation<>(0.08f, atlas.findRegions("doc-fall"), Animation.PlayMode.NORMAL);
+        playerDieAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-build"), Animation.PlayMode.REVERSED);
 
         mechAnimation = new Animation<>(0.2f, atlas.findRegions("zombie-idle"), Animation.PlayMode.LOOP);
         mechMoveAnimation = new Animation<>(0.1f, atlas.findRegions("zombie-walk"), Animation.PlayMode.LOOP);
         mechAttackAnimation = new Animation<>(0.15f, atlas.findRegions("zombie-punch"), Animation.PlayMode.NORMAL);
         mechJumpAnimation = new Animation<>(0.06f, atlas.findRegions("zombie-jump"), Animation.PlayMode.NORMAL);
         mechFallAnimation = new Animation<>(0.5f, atlas.findRegions("zombie-fall"), Animation.PlayMode.NORMAL);
-        mechBuildAnimation = new Animation<>(1.0f, atlas.findRegions("zombie-build"), Animation.PlayMode.NORMAL);
+        mechBuildAnimation = new Animation<>(0.1f, atlas.findRegions("zombie-rise"), Animation.PlayMode.NORMAL);
 
         mobBossAnimation = new Animation<>(0.2f, atlas.findRegions("organ-grinder"), Animation.PlayMode.LOOP);
         mobPitchforkAnimation = new Animation<>(0.1f, atlas.findRegions("pitchfork-idle"), Animation.PlayMode.LOOP);

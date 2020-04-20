@@ -36,7 +36,7 @@ public class MoveEntity extends GameEntity {
     private float punchDamage = 0f;
     private float jumpKeyHeldTimer = 0f;
 
-    private float invulnerabilityTimer = 0;
+    protected float invulnerabilityTimer = 0;
 
     // for when doc is in the zombie
     protected boolean ignore = false;
@@ -203,10 +203,12 @@ public class MoveEntity extends GameEntity {
                 }
 
                 if (collisionBounds.overlaps(enemy.collisionBounds)) {
-                    // bounce back
-                    float distance = enemy.damage * 50; // modify for size
-                    velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
                     takeDamage(enemy.damage);
+                    if (!dead) {
+                        // bounce back if not dead
+                        float distance = enemy.damage * 50; // modify for size
+                        velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
+                    }
                     damageTaken = true;
                 }
             }

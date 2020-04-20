@@ -9,7 +9,9 @@ public class Snek extends EnemyEntity {
     public Snek(GameScreen screen) {
         super(screen, screen.assets.snakeAnimation, 2);
 
-        damage = 8;
+        //damage = 8;
+
+        damage = 100;
 
         setSounds(Audio.Sounds.snek_hurt, Audio.Sounds.snek_death);
 

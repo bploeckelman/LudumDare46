@@ -11,7 +11,10 @@ public class TutorialManager {
     Array<TutorialSection> sections;
     TutorialSection activeSection;
 
+    private GameScreen screen;
+
     public TutorialManager(GameScreen screen) {
+        this.screen = screen;
         sections = new Array<>();
         I18NBundle texts = screen.assets.tutorialText;
 
@@ -52,4 +55,31 @@ public class TutorialManager {
         return false;
     }
 
+    public void showInstantMessage(String message) {
+        TutorialSection instaMessage = new TutorialSection(screen, null, null, message, false);
+        sections.add(instaMessage);
+    }
+
+    private String[] deathMessage = {
+            "You died, but hey - it's Ludum Dare. This one is on us.",
+            "You have died, again",
+            "This is getting ridiculous",
+            "Are you even trying?",
+            "This is the last one",
+            "Ok, this is",
+            "Alright, you found the loophole",
+            "There are no more death messages",
+            "Really, that's it",
+            "Now you are just looking for witty banter",
+            "Have you tried going outside?",
+            "404 - death message not found"
+    };
+
+    // could be in a stats object, but fuck it - it's a dare
+    private int deathCount = 0;
+
+    public void showDeathMessage() {
+        int index = Math.min(deathMessage.length - 1, deathCount++);
+        showInstantMessage(deathMessage[index]);
+    }
 }

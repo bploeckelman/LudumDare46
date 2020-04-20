@@ -3,7 +3,9 @@ package lando.systems.ld46.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld46.Audio;
@@ -22,6 +24,7 @@ public class Player extends MoveEntity {
     public boolean freeze = false;
     public boolean hide = false;
 
+    private float deathTime = -1;
 
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
@@ -53,6 +56,10 @@ public class Player extends MoveEntity {
     @Override
     public void update(float dt) {
         if (freeze) return;
+
+        // death takes priority
+        if (updateDeath(dt)) return;
+
         super.update(dt);
 
         // this is the animation of starting to jump
@@ -206,5 +213,44 @@ public class Player extends MoveEntity {
     protected void updatePunchRect(Rectangle punchRect) {
         float x = (direction == Direction.left) ? collisionBounds.x - 25 : collisionBounds.x + collisionBounds.width + 15;
         punchRect.set(x, collisionBounds.y + collisionBounds.height - 25, 20, 20);
+    }
+
+    @Override
+    public void takeDamage(float damage) {
+        if (!dead) {
+            super.takeDamage(damage);
+            if (dead) {
+                deathTime = 0;
+            }
+        }
+    }
+
+    private boolean updateDeath(float dt) {
+        if (deathTime == -1 || !grounded) return false;
+
+        float deathAnimTime = 4;
+
+        Animation<TextureRegion> deathAnimation = screen.assets.playerDieAnimation;
+        float duration = deathAnimation.getAnimationDuration();
+
+        deathTime += dt;
+
+        float frameTime = deathTime;
+        if (deathTime > deathAnimTime - duration) {
+            frameTime = deathAnimTime - deathTime;
+        }
+
+        keyframe = deathAnimation.getKeyFrame(frameTime);
+
+        if (deathTime > deathAnimTime) {
+            hitPoints = maxHealth;
+            dead = false;
+            deathTime = -1;
+            invulnerabilityTimer = 4;
+            velocity.add(0, 100);
+            screen.tutorials.showDeathMessage();
+        }
+
+        return true;
     }
 }
