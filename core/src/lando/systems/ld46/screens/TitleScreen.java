@@ -44,12 +44,12 @@ public class TitleScreen extends BaseScreen {
             vel.y *= -1;
         }
 
-        if (Gdx.input.justTouched()){
+        if (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             game.setScreen(new GameScreen(game), assets.cubeShader, 3f);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
-            game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
-        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+//            game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
+//        }
     }
 
     @Override

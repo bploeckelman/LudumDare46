@@ -62,7 +62,7 @@ public class Boss {
             if (currentStage == null){
                 alive = false;
                 screen.player.playSound(Audio.Sounds.victory);
-                screen.game.setScreen(new EndScreen(screen.game));
+                screen.game.setScreen(new EndScreen(screen.game), screen.assets.heartShader, 5f);
             }
         }
         if (currentAnimation != screen.assets.bossWalkAnimation) {
