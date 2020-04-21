@@ -14,9 +14,7 @@ public class Mummy extends EnemyEntity {
 
         damage = 10f;
 
-        // hack the planet!
-        collisionBounds.set(0, 0, 30, collisionBounds.width);
-        setHealth(25f);
+        setHealth(50f);
     }
 
     @Override

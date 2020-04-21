@@ -28,7 +28,8 @@ public class MobEntity extends EnemyEntity {
 
         nextMoveTime = MathUtils.random(2f, 5f);
 
-        damage = 20;
+        setHealth(40);
+        damage = 15;
 
         initEntity(0, 0, keyframe.getRegionWidth() * 2f, keyframe.getRegionHeight() * 2f);
     }

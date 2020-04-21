@@ -27,6 +27,8 @@ public class Mob extends EnemyEntity {
             MobEntity entity = new MobEntity(this);
             mobEntities.add(entity);
         }
+
+        setHealth(50);
         damage = 30;
     }
 

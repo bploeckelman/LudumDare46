@@ -9,14 +9,13 @@ public class Snek extends EnemyEntity {
     public Snek(GameScreen screen) {
         super(screen, screen.assets.snakeAnimation, 2);
 
-        damage = 8;
-
         setSounds(Audio.Sounds.snek_hurt, Audio.Sounds.snek_death);
 
         // hack the planet!
         renderRotation = 90;
         collisionBounds.set(0, 0, 30, collisionBounds.width);
-        setHealth(25f);
+        setHealth(10f);
+        damage = 8;
     }
 
     @Override

@@ -13,9 +13,9 @@ public class Bat extends EnemyEntity {
 
         setSounds(Audio.Sounds.bat_hurt, Audio.Sounds.bat_death);
 
-        damage = 5;
         collisionBounds.height = 30;
-        setHealth(20);
+        setHealth(10);
+        damage = 5;
     }
 
     @Override

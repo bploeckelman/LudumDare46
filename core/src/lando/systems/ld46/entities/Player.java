@@ -46,7 +46,7 @@ public class Player extends MoveEntity {
         id = MoveEntityIds.Doctor;
 
         // temp
-        setHealth(8);
+        setHealth(100);
     }
 
     @Override

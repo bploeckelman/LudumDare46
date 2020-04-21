@@ -28,6 +28,8 @@ public class ZombieMech extends MoveEntity {
         initEntity(x, y, keyframe.getRegionWidth() * SCALE, keyframe.getRegionHeight() * SCALE);
 
         id = MoveEntityIds.Zombie;
+
+        setHealth(150);
     }
 
     @Override
