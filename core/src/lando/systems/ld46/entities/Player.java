@@ -24,13 +24,9 @@ public class Player extends MoveEntity {
     private float inMechTimer = 0f;
 
     // for when building the mech suit, ignore input, hide sprite while playing build animation
-    public boolean freeze = false;
     public boolean hide = false;
 
     private float deathTime = -1;
-
-    private boolean climbIn = false;
-    private boolean climbOut = false;
 
     public Player(GameScreen screen, SpawnPlayer spawn) {
         this(screen, spawn.pos.x, spawn.pos.y);
@@ -68,8 +64,6 @@ public class Player extends MoveEntity {
 
         // death takes priority
         if (updateDeath(dt)) return;
-
-        if (updateClimb(dt)) return;
 
         super.update(dt);
 
@@ -203,42 +197,17 @@ public class Player extends MoveEntity {
     }
 
     public void jumpIn(ZombieMech mech) {
-        if (inMech() || climbIn || climbOut) return;
-
-        climbTime = 0;
-        climbIn = true;
-        showHeart = false;
-
-        Timeline.createSequence()
-                .delay(assets.playerEnterMech.getAnimationDuration())
-                .push(Tween.call((type, source) -> {
-                    climbIn = false;
-                    this.mech = mech;
-                    ignore = true;
-                    mech.showHeart = true;
-                    screen.game.audio.fadeMusic(Audio.Musics.barkMusic);
-                }))
-                .start(screen.game.tween);
+        if (inMech()) return;
+        this.mech = mech;
+        screen.climbInMech();
     }
 
     public void jumpOut() {
-        if (!inMech() || climbIn || climbOut) return;
-
-        climbTime = 0;
-        climbOut = true;
-        mech.showHeart = false;
-        setPosition(mech.position.x, mech.position.y + 20);
-        ignore = false;
+        if (!inMech()) return;
+        setPosition(mech.position.x,mech.position.y + 20);
+        velocity.set(0, 20);
         mech = null;
-
-        Timeline.createSequence()
-                .delay(assets.playerLeaveMech.getAnimationDuration())
-                .push(Tween.call((type, source) -> {
-                    climbOut = false;
-                    showHeart = true;
-                    screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
-                }))
-                .start(screen.game.tween);
+        screen.game.audio.fadeMusic(Audio.Musics.ritzMusic);
     }
 
     @Override
@@ -297,19 +266,9 @@ public class Player extends MoveEntity {
     }
 
 
-    private float climbTime = 0;
-    private boolean updateClimb(float dt) {
-        if (!(climbIn || climbOut)) return false;
 
-        Animation<TextureRegion> anim = (climbIn) ? screen.assets.playerEnterMech : screen.assets.playerLeaveMech;
-        keyframe = anim.getKeyFrame(climbTime);
-        climbTime += dt;
-
-        return true;
-    }
-
-    @Override
-    public boolean showHealth() {
-        return (climbIn || climbOut) ? false : super.showHealth();
-    }
+//    @Override
+//    public boolean showHealth() {
+//        return (climbIn || climbOut) ? false : super.showHealth();
+//    }
 }

@@ -6,6 +6,7 @@ import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Config;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.backgrounds.ParallaxBackground;
@@ -62,6 +64,9 @@ public class GameScreen extends BaseScreen {
     public float zombieMechBuildAnimTime;
     public float zombieMechBuildParticleSpawnTimer;
     public boolean buildingMech;
+    public float climbAnimTime;
+    public boolean climbIn;
+    public boolean climbOut;
 
     public GameScreen(Game game) {
         super(game);
@@ -90,6 +95,8 @@ public class GameScreen extends BaseScreen {
         }
         this.bodyBag = new BodyBag(this, level.initialBodyPartPositions);
         this.zombieMechBuildAnimTime = 0f;
+        this.climbAnimTime = 0f;
+        this.climbIn = this.climbOut = false;
         this.buildingMech = false;
         // TODO: spawn the appropriate tutorial shit for whichever level this is
         this.tutorials = new TutorialManager(this);
@@ -133,20 +140,13 @@ public class GameScreen extends BaseScreen {
                 level.renderObjects(batch);
                 bodyBag.render(batch);
                 if (buildingMech) {
-                    TextureRegion frame = assets.mechBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
-                    float x = player.position.x;
-                    float y = player.collisionBounds.y;
-
-                    batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
-                            frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
-
-                    particles.draw(batch, Particles.Layer.middle);
-
-                    frame = assets.playerBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
-                    batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
-                            frame.getRegionWidth() * Player.SCALE, frame.getRegionHeight() * Player.SCALE, 1, 1, 0);
-
+                    renderMechBuild();
+                } else if (climbIn) {
+                    renderClimbIn();
+                } else if (climbOut) {
+                    renderClimbOut();
                 }
+
                 particles.draw(batch, Particles.Layer.foreground);
 
 
@@ -188,6 +188,43 @@ public class GameScreen extends BaseScreen {
             tutorials.render(batch);
         }
         batch.end();
+    }
+
+    private void renderMechBuild() {
+        TextureRegion frame = assets.mechBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
+        float x = player.position.x;
+        float y = player.collisionBounds.y;
+
+        batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
+
+        particles.draw(batch, Particles.Layer.middle);
+
+        frame = assets.playerBuildAnimation.getKeyFrame(zombieMechBuildAnimTime);
+        batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                frame.getRegionWidth() * Player.SCALE, frame.getRegionHeight() * Player.SCALE, 1, 1, 0);
+
+    }
+
+    public void renderClimbIn() {
+
+        TextureRegion frame = assets.playerEnterMech.getKeyFrame(climbAnimTime);
+        float x = player.position.x;
+        float y = player.collisionBounds.y;
+
+        batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
+
+    }
+
+    public void renderClimbOut() {
+        TextureRegion frame = assets.playerLeaveMech.getKeyFrame(climbAnimTime);
+        float x = player.position.x;
+        float y = player.collisionBounds.y;
+
+        batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
+
     }
 
     @Override
@@ -248,7 +285,11 @@ public class GameScreen extends BaseScreen {
                 zombieMechBuildParticleSpawnTimer = 0f;
                 particles.makeZombieBuildClouds(player.collisionBounds.x + player.collisionBounds.width / 2f, player.collisionBounds.y);
             }
+        } else if (climbIn || climbOut) {
+            climbAnimTime += dt;
         }
+
+
 
         for (EnemyEntity enemy : enemies) {
             enemy.update(dt);
@@ -264,8 +305,7 @@ public class GameScreen extends BaseScreen {
 
     public void buildZombieMech() {
         // hide and block input from player
-        player.hide = true;
-        player.freeze = true;
+        player.hide = player.freeze = true;
 
         // play zombie build animation right where player was standing
         buildingMech = true;
@@ -288,6 +328,58 @@ public class GameScreen extends BaseScreen {
                 .start(game.tween);
     }
 
+    public void climbInMech() {
+        pausePlayer();
+
+        climbIn = true;
+        climbAnimTime = 0f;
+
+        Timeline.createSequence()
+                .delay(assets.playerEnterMech.getAnimationDuration())
+                .push(Tween.call((type, source) -> {
+                    climbIn = false;
+                    restorePlayer();
+                    game.audio.fadeMusic(Audio.Musics.barkMusic);
+                }))
+                .start(game.tween);
+    }
+
+    private void pausePlayer() {
+        player.hide = player.freeze = true;
+
+        if (zombieMech != null) {
+            zombieMech.freeze = true;
+        }
+    }
+
+    private void restorePlayer() {
+        player.hide = player.freeze = false;
+        player.velocity.set(0, 0);
+        player.state = GameEntity.State.standing;
+
+        if (zombieMech != null) {
+            zombieMech.freeze = false;
+            zombieMech.velocity.set(0, 0);
+            zombieMech.state = GameEntity.State.standing;
+        }
+    }
+
+    // NO NO NO
+//    public void climbOutMech() {
+//        pausePlayer();
+//
+//        climbOut = true;
+//        climbAnimTime = 0f;
+//        Timeline.createSequence()
+//                .delay(assets.playerLeaveMech.getAnimationDuration())
+//                .push(Tween.call((type, source) -> {
+//                    climbOut = false;
+//                    restorePlayer();
+//                    game.audio.fadeMusic(Audio.Musics.ritzMusic);
+//                }))
+//                .start(game.tween);
+//    }
+
     private void handleDebugCommands() {
         if (Config.debug) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
@@ -300,6 +392,12 @@ public class GameScreen extends BaseScreen {
                 particles.makePhysicsParticles(touchPos.x, touchPos.y);
             }
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            buildZombieMech();
+        }
+
+
     }
 
     private void updateCamera() {

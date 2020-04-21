@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -45,6 +46,8 @@ public class MoveEntity extends GameEntity {
     // bitwise id
     public int id;
 
+    public boolean freeze = false;
+
     protected MoveEntity(GameScreen screen, Animation<TextureRegion> idle, Animation<TextureRegion> move) {
         super(screen, idle);
 
@@ -72,18 +75,18 @@ public class MoveEntity extends GameEntity {
         this.punchDamage = punchDamage;
     }
 
-    // punch rect display
-//    @Override
-//    public void render(SpriteBatch batch) {
-//        super.render(batch);
+    @Override
+    public void render(SpriteBatch batch) {
+        if (ignore || freeze) return;
+        super.render(batch);
 //        batch.setColor(Color.RED);
 //        batch.draw(screen.assets.whitePixel, punchRect.x, punchRect.y, punchRect.width, punchRect.height);
 //        batch.setColor(Color.WHITE);
-//    }
+    }
 
     @Override
     public void update(float dt) {
-        if (ignore) return;
+        if (ignore || freeze) return;
 
         super.update(dt);
 
