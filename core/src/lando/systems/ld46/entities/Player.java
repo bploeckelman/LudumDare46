@@ -110,19 +110,19 @@ public class Player extends MoveEntity {
                 }
             }
         }
-
-        ///if (Config.debug) {
-            // debug controls
-
-            // send player to hell
-            if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-                setPosition(position.x, 0);
-            }
-
-            if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-                takeDamage(100);
-            }
-        //}
+//
+//        ///if (Config.debug) {
+//            // debug controls
+//
+//            // send player to hell
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+//                setPosition(position.x, 0);
+//            }
+//
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
+//                takeDamage(100);
+//            }
+//        //}
 
         if (inMech()){
             centerOn(mech);

@@ -235,9 +235,6 @@ public class GameScreen extends BaseScreen {
         if (Gdx.app.getType() == Application.ApplicationType.Desktop && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P) && level.nextLevel == null){
-            game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
-        }
 
         handleDebugCommands();
         tutorials.update(dt);
@@ -393,13 +390,15 @@ public class GameScreen extends BaseScreen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
                 particles.makePhysicsParticles(touchPos.x, touchPos.y);
             }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                buildZombieMech();
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.P) && level.nextLevel == null){
+                game.setScreen(new EndScreen(game), assets.cubeShader, 3f);
+            }
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            buildZombieMech();
-        }
-
-
     }
 
     private void updateCamera() {
