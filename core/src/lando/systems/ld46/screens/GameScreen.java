@@ -102,6 +102,7 @@ public class GameScreen extends BaseScreen {
         this.tutorials = new TutorialManager(this);
 
         this.physicsEntities.add(player);
+        game.audio.fadeMusic(Audio.Musics.ritzMusic);
     }
 
     @Override
