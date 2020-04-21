@@ -40,7 +40,7 @@ public class Boss {
     public Boss(GameScreen screen) {
         this.screen = screen;
         this.position = new Vector3(screen.worldCamera.viewportWidth/2, screen.worldCamera.viewportHeight/3f*2f, 0);
-        currentStage = new BossStage3(this);
+        currentStage = new BossStage1(this);
         this.alive = true;
         collisionBounds= new Rectangle(this.position.x - 75, this.position.y , 150, 150);
         leftBounds = new Rectangle(this.position.x - 220, this.position.y - 200, 200, 300);
