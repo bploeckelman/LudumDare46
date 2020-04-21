@@ -53,7 +53,7 @@ public class TutorialSection {
         if (typingLabel != null) {
             typingLabel.update(dt);
             if (shouldBlockInput) {
-                if (Gdx.app.getInput().justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     if (!typingLabel.hasEnded()) {
                         typingLabel.skipToTheEnd();
                     } else {
@@ -86,7 +86,7 @@ public class TutorialSection {
                 BitmapFont font = screen.assets.pixelFont16;
                 font.setColor(1f, 1f, 1f, Math.abs(MathUtils.sin(accum * 4f)));
                 if (shouldBlockInput) {
-                    layout.setText(font, "Press Enter or Click");
+                    layout.setText(font, "Press Enter");
                     font.draw(batch, layout, bounds.x + bounds.width - 10 - layout.width, bounds.y + 10 + layout.height);
                 }
                 font.setColor(Color.WHITE);

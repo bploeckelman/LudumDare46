@@ -21,7 +21,7 @@ public class Snek extends EnemyEntity {
 
     @Override
     public void render(SpriteBatch batch) {
-        //TODO: this is janky on tutorials
+        imageBounds.setPosition(position.x - imageBounds.width / 2f, position.y - collisionBounds.height / 2f);
         imageBounds.x -= 17;
         super.render(batch);
     }
