@@ -255,12 +255,16 @@ public class GameEntity implements PhysicsComponent {
     }
 
     public void takeDamage(float damage) {
+        takeDamage(damage, true);
+    }
+
+    public void takeDamage(float damage, boolean playHurt) {
         hitPoints = Math.max(0, hitPoints - damage);
         if (hitPoints == 0) {
             dead = true;
             velocity.set(0, 0);
             playSound(deathSound);
-        } else {
+        } else if (playHurt) {
             playSound(hurtSound);
         }
     }

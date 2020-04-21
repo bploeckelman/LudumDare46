@@ -36,7 +36,7 @@ public class Player extends MoveEntity {
         super(screen, screen.game.assets.playerAnimation, screen.game.assets.playerMoveAnimation);
 
         setJump(screen.game.assets.playerJumpAnimation, Audio.Sounds.doc_jump, 370f);
-        setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.doc_punch, Audio.Sounds.doc_punch_land, new int[]{2, 3},10);
+        setPunch(screen.game.assets.playerAttackAnimation, Audio.Sounds.none, Audio.Sounds.doc_punch_land, new int[]{2, 3},10);
         setFall(screen.game.assets.playerFallAnimation);
 
         setSounds(Audio.Sounds.doc_hurt, Audio.Sounds.doc_death);
@@ -83,7 +83,7 @@ public class Player extends MoveEntity {
         }
         inMechTimer += dt;
         if (inMech() && !mech.dead && inMechTimer > 2f) {
-            mech.takeDamage(5f);
+            mech.takeDamage(10f, false);
             float offsetX = ((mech.direction == Direction.left) ? 2 : -2);
             float offsetY = mech.collisionBounds.height/2 + ((mech.velocity.y != 0) ? 10 : -10);
             screen.particles.makeBloodParticles(mech.position.x + offsetX, mech.position.y + offsetY);

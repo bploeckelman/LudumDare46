@@ -307,6 +307,7 @@ public class GameScreen extends BaseScreen {
     public void buildZombieMech() {
         // hide and block input from player
         player.hide = player.freeze = true;
+        player.velocity.set(0, 0);
 
         // play zombie build animation right where player was standing
         buildingMech = true;
@@ -347,9 +348,11 @@ public class GameScreen extends BaseScreen {
 
     private void pausePlayer() {
         player.hide = player.freeze = true;
+        player.velocity.set(0, 0);
 
         if (zombieMech != null) {
             zombieMech.freeze = true;
+            zombieMech.velocity.set(0, 0);
         }
     }
 
