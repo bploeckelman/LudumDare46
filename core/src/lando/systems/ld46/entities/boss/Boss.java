@@ -79,6 +79,7 @@ public class Boss {
         if (currentAnimation == screen.assets.bossPunchAnimation){
             int index = currentAnimation.getKeyFrameIndex(accum);
             if (index == 2 && lastPunchIndex != index){
+                if (screen.climbIn || screen.climbOut) return;
                 lastPunchIndex = index;
                 Rectangle bounds = direction == GameEntity.Direction.left ? leftBounds : rightBounds;
                 MoveEntity p = screen.player;

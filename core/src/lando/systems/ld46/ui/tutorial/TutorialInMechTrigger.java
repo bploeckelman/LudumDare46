@@ -10,5 +10,5 @@ public class TutorialInMechTrigger implements TutorialStartTrigger {
     }
     @Override
     public boolean check(float dt) {
-        return screen.player.inMech(); }
+        return screen.player.inMech() && !screen.climbIn; }
 }
