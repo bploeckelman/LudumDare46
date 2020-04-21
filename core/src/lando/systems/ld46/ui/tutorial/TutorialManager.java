@@ -25,6 +25,21 @@ public class TutorialManager {
             sections.add(section1);
             TutorialSection section2 = new TutorialSection(screen, null, null, texts.get("tutorial_2"), true);
             sections.add(section2);
+            TutorialSection section = new TutorialSection(screen, null, null, texts.get("tutorial_3"), true);
+            sections.add(section);
+
+            TutorialHasPartsTrigger trigger = new TutorialHasPartsTrigger(screen);
+            section = new TutorialSection(screen, trigger, null, texts.get("tutorial_4"), true);
+            sections.add(section);
+
+            TutorialInMechTrigger mechTrigger = new TutorialInMechTrigger(screen);
+            section = new TutorialSection(screen, mechTrigger, null, texts.get("tutorial_5"), true);
+            sections.add(section);
+            section = new TutorialSection(screen, null, null, texts.get("tutorial_6"), true);
+            sections.add(section);
+            TutorialPositionTrigger positionTrigger = new TutorialPositionTrigger(screen);
+            section = new TutorialSection(screen, positionTrigger, null, texts.get("tutorial_7"), true);
+            sections.add(section);
         }
     }
 

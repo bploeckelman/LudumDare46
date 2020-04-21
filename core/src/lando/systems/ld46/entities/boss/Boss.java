@@ -84,7 +84,7 @@ public class Boss {
                 MoveEntity p = screen.player;
                 if (screen.player.inMech()) p = screen.zombieMech;
                 if (bounds.overlaps(p.collisionBounds) && !(p.invulnerabilityTimer > 0) && !screen.buildingMech){
-                    p.impulse.set(direction == GameEntity.Direction.right ? 800 : -800, 100, .15f);
+                    p.impulse.set(direction == GameEntity.Direction.right ? 800 : -800, 60, .15f);
                     p.takeDamage(damage);
                     p.invulnerabilityTimer = 2f;
                 }

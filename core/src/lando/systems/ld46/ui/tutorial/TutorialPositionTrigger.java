@@ -1,0 +1,14 @@
+package lando.systems.ld46.ui.tutorial;
+
+import lando.systems.ld46.screens.GameScreen;
+
+public class TutorialPositionTrigger implements TutorialStartTrigger {
+    GameScreen screen;
+
+    public TutorialPositionTrigger(GameScreen screen){
+        this.screen = screen;
+    }
+    @Override
+    public boolean check(float dt) {
+        return screen.player.position.x > 1700; }
+}

@@ -244,9 +244,10 @@ public class GameScreen extends BaseScreen {
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         worldCamera.unproject(touchPos);
-        particles.update(dt);
 
         if (tutorials.shouldBlockInput()) return;
+
+        particles.update(dt);
         if (boss != null) boss.update(dt);
         level.update(dt);
 
