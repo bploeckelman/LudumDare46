@@ -210,11 +210,13 @@ public class GameScreen extends BaseScreen {
     public void renderClimbIn() {
 
         TextureRegion frame = assets.playerEnterMech.getKeyFrame(climbAnimTime);
-        float x = player.position.x;
-        float y = player.collisionBounds.y;
+        float x = zombieMech.position.x;
+        float y = zombieMech.collisionBounds.y;
 
-        batch.draw(frame, x - frame.getRegionWidth(), y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
-                frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, 1, 1, 0);
+        float scaleX = player.direction == GameEntity.Direction.left ? -1 : 1;
+
+        batch.draw(frame, x - frame.getRegionWidth()/2, y, frame.getRegionWidth()/2, frame.getRegionHeight()/2,
+                frame.getRegionWidth() * ZombieMech.SCALE, frame.getRegionHeight() * ZombieMech.SCALE, scaleX, 1, 0);
 
     }
 
