@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class Audio implements Disposable {
-    public static final float MUSIC_VOLUME = 0.6f;
-    public static final float SOUND_VOLUME = 0.6f;
+    public static final float MUSIC_VOLUME = 0.5f;
+    public static final float SOUND_VOLUME = 0.1f;
 
     public static final boolean shutUpYourFace = false;
     public static final boolean shutUpYourTunes = false;
