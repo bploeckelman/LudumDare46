@@ -95,7 +95,7 @@ public class Player extends MoveEntity {
             jump();
         }
 
-        boolean punchPressed = Gdx.input.justTouched();
+        boolean punchPressed = Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
         if (punchPressed) {
             punch();
         }

@@ -79,12 +79,12 @@ public class Boss {
         if (currentAnimation == screen.assets.bossPunchAnimation){
             int index = currentAnimation.getKeyFrameIndex(accum);
             if (index == 2 && lastPunchIndex != index){
-                if (screen.climbIn || screen.climbOut) return;
+                if (screen.climbIn || screen.climbOut || screen.buildingMech) return;
                 lastPunchIndex = index;
                 Rectangle bounds = direction == GameEntity.Direction.left ? leftBounds : rightBounds;
                 MoveEntity p = screen.player;
                 if (screen.player.inMech()) p = screen.zombieMech;
-                if (bounds.overlaps(p.collisionBounds) && !(p.invulnerabilityTimer > 0) && !screen.buildingMech){
+                if (bounds.overlaps(p.collisionBounds) && !(p.invulnerabilityTimer > 0)){
                     p.impulse.set(direction == GameEntity.Direction.right ? 800 : -800, 60, .15f);
                     p.takeDamage(damage);
                     p.invulnerabilityTimer = 2f;

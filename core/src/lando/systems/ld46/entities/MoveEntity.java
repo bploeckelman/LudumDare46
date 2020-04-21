@@ -171,6 +171,7 @@ public class MoveEntity extends GameEntity {
         int punchIndex = punchAnimation.getKeyFrameIndex(time);
         for (int index : punchFrameIndex) {
             if (index == punchIndex && index != lastPunchIndex) {
+                playSound(punchSwingSound);
                 lastPunchIndex = index;
                 return true;
             }
@@ -182,6 +183,10 @@ public class MoveEntity extends GameEntity {
     protected void updatePunchRect(Rectangle punchRect) { }
 
     protected void updateDamage() {
+        if (this instanceof Player){
+            Player p = (Player)this;
+            if (p.inMech() || screen.climbIn || screen.climbOut) return;
+        }
 
         // now player can hit multiple targets in same frame
         // cannot take damage on frame they hit - probably will next frame
@@ -264,7 +269,6 @@ public class MoveEntity extends GameEntity {
 
     public void punch() {
         if (punchTime == -1 && canPunch() && punchAnimation != null) {
-            playSound(punchSwingSound);
             punchTime = 0;
         }
     }
