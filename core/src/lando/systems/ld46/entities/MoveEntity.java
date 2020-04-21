@@ -223,8 +223,8 @@ public class MoveEntity extends GameEntity {
                         // bounce back if not dead
                         float distance = enemy.damage * 50; // modify for size
                         velocity.add((position.x > enemy.position.x) ? distance : -distance, MathUtils.random(10, 20));
+                        damageTaken = true;
                     }
-                    damageTaken = true;
                 }
             }
         }
