@@ -198,12 +198,14 @@ public class Player extends MoveEntity {
 
     public void jumpIn(ZombieMech mech) {
         if (inMech()) return;
+        ignore = true;
         this.mech = mech;
         screen.climbInMech();
     }
 
     public void jumpOut() {
         if (!inMech()) return;
+        ignore = false;
         setPosition(mech.position.x,mech.position.y + 20);
         velocity.set(0, 20);
         mech = null;
