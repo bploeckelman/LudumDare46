@@ -1,0 +1,65 @@
+# Links
+---
+
+- ** [HTML5/WebGL](https://lando.systems/games/ld46-intheflesh) **
+- ** [Desktop/Java](https://lando.systems/games/ld46-intheflesh/ld46-intheflesh.jar) **
+- ** [Source](https://github.com/bploeckelman/LudumDare46) **
+
+Ever wanted to live wriggle inside a rotting corpse? Neither does this scientist! Frankenstein together the viscera to make a strong suit to keep the weak scientist alive.
+
+
+![gameplay.gif](///raw/503/z/30204.gif)
+
+
+# Controls:
+---
+- ** Left click ** or ** Enter ** to attack
+- ** A,D ** to move
+- ** S ** key to enter Zombie suit
+
+![ss5.png](///raw/503/z/304e6.png)
+
+
+# Game:
+---
+
+Assemble zombie suit to help the scientist and ** keep it alive** .
+
+:small_blue_diamond: Platformer
+
+:small_blue_diamond: Collect parts to complete the zombie
+
+:small_blue_diamond: Beat'em up
+
+
+![ss3.png](///raw/503/z/30507.png)
+
+
+# About the Team:
+---
+
+[LandoSystems](https://lando.systems) is a group of jammers from Madison, Wisconsin that varies in size from 2 to 12 people. This is the team's 26th Ludum Dare game!! :grinning:
+
+
+# Team Members:
+---
+
+Code:
+- Doug Graham [dsgraham](https://twitter.com/dsgraham)
+- Brian Ploeckelman [PalpatinesSmile](https://twitter.com/PalpatinesSmile)
+- Brian Rossman
+- Jeffrey Hwang
+
+Art:
+- Matt Neumann
+- Luke Bain
+
+Audio:
+- Luke Bain
+
+Support Shiba:
+- Asuka!
+![shiba-w-scarf.jpg](///raw/103/z/12960.jpg)
+
+
+We hope you enjoy playing the game as much as we did making it! :fingers_crossed:
