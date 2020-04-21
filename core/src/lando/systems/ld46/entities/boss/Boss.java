@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld46.Audio;
 import lando.systems.ld46.Game;
 import lando.systems.ld46.entities.EnemyEntity;
 import lando.systems.ld46.entities.GameEntity;
@@ -60,6 +61,7 @@ public class Boss {
             currentStage = currentStage.nextStage();
             if (currentStage == null){
                 alive = false;
+                screen.player.playSound(Audio.Sounds.victory);
                 screen.game.setScreen(new EndScreen(screen.game));
             }
         }

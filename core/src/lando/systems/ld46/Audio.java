@@ -26,7 +26,7 @@ public class Audio implements Disposable {
         pickup_handgrenade, // halleyluya
         bat_attack, bat_hurt, bat_death, snek_attack, snek_hurt, snek_death, // mob_attack, mob_death,
         mob_boss_flee, // tom & jerry run sound
-        assemble_zombie
+        assemble_zombie, victory
     }
 
     public enum Musics {
@@ -85,6 +85,7 @@ public class Audio implements Disposable {
                 // mob_attack, mob_death,
         putSound(Sounds.mob_boss_flee, assets.mob_boss_flee);
         putSound(Sounds.assemble_zombie, assets.assemble_zombie);
+        putSound(Sounds.victory, assets.victory);
 
         musics.put(Musics.barkMusic, assets.barkMusic);
         musics.put(Musics.ritzMusic, assets.ritzMusic);
