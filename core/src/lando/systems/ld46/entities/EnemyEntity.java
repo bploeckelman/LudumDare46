@@ -83,7 +83,7 @@ public class EnemyEntity extends GameEntity {
         float dropValue = MathUtils.random(0, 110);
         if (dropValue < 70) {
             drop = new FleshDrop(screen);
-        } else if (dropValue < 100) {
+        } else if (dropValue < 107) {
             drop = new SyringeDrop(screen);
         } else {
             drop = new HolyHandGrenadeDrop(screen);
