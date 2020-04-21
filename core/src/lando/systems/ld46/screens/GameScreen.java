@@ -326,7 +326,7 @@ public class GameScreen extends BaseScreen {
                     physicsEntities.add(zombieMech);
                     player.hide = false;
                     player.freeze = false;
-                    player.setPosition(zombieMech.position.x, ((zombieMech.position.y + zombieMech.height + player.height)/ 2 + 1));
+                    player.setPosition(zombieMech.position.x, zombieMech.position.y - 20);
                     player.velocity.set(0, 0);
                 }))
                 .start(game.tween);
